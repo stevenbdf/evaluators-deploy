@@ -4,10 +4,10 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "bootstrap-css-only/css/bootstrap.min.css";
 import "mdbreact/dist/css/mdb.css";
 
-import Admin from './main/admin/components/admin.js';
+import App from './App.jsx';
 
 import registerServiceWorker from './registerServiceWorker';
 
-ReactDOM.render(<Admin/>, document.getElementById('root'));
+ReactDOM.render(<App/>, document.getElementById('root'));
 
 registerServiceWorker();

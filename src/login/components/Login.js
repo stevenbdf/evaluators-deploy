@@ -1,16 +1,14 @@
 import React from "react";
 import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn, MDBCard, MDBCardBody, MDBIcon } from 'mdbreact';
 import './Login.css';
-import Navbar from '../../navbar/components/Navbar.js';
+import { Link } from 'react-router-dom';
 
 const FormLoginPage = () => {
   return (
     <div>
-      <Navbar/>
-
         <MDBContainer>
           <MDBRow center className="my-5">
-            <MDBCol size="12" md="5">
+            <MDBCol size="12" md="8" lg="6">
               <MDBCard>
                 <MDBCardBody>
                   <form>
@@ -80,10 +78,12 @@ const FormLoginPage = () => {
                     </div>
 
                     <div className="text-center py-4 mt-3">
-                      <MDBBtn color="teal" type="submit">
-                        Enviar
-                        <MDBIcon icon="paper-plane" className="ml-2"/>
-                      </MDBBtn>
+                      <Link to="/admin">
+                        <MDBBtn color="teal" type="submit">
+                          Enviar
+                          <MDBIcon icon="paper-plane" className="ml-2"/>
+                        </MDBBtn>
+                      </Link>
                     </div>
                   </form>
                 </MDBCardBody>
