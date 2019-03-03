@@ -36,7 +36,7 @@ const FormLoginPage = () => {
                         label="Telefono"
                         icon="hashtag"
                         group
-                        type="text"
+                        type="number"
                         validate
                         error="wrong"
                         success="right"
