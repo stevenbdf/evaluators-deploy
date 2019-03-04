@@ -3,7 +3,8 @@ import {
     MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody, MDBCardHeader,
     MDBTableHead, MDBTable, MDBTableBody, MDBBtn, MDBIcon
 } from 'mdbreact';
-
+import dataRows from './Candidates.json';
+import Swal from 'sweetalert2'
 
 
 const columns = [
@@ -45,66 +46,42 @@ const columns = [
 
 ];
 
-const rows_regular_btn = [
-    {
-        'id': 1,
-        'nombre': 'Steven Benjamin Diaz Flores',
-        'correo': 'stevenbdf@gmail.com',
-        'telefono': '77814435',
-        'horario': 'Jueves 8:00am-12:00pm',
-        'nivel': 'Bachillerato Técnico',
-        'handle': ''
-    },
-    {
-        'id': 2,
-        'nombre': 'Steven Benjamin Diaz Flores',
-        'correo': 'stevenbdf@gmail.com',
-        'telefono': '77814435',
-        'horario': 'Jueves 8:00am-12:00pm',
-        'nivel': 'Bachillerato Técnico',
-        'handle': ''
-    },
-    {
-        'id': 3,
-        'nombre': 'Steven Benjamin Diaz Flores',
-        'correo': 'stevenbdf@gmail.com',
-        'telefono': '77814435',
-        'horario': 'Jueves 8:00am-12:00pm',
-        'nivel': 'Bachillerato Técnico',
-        'handle': ''
-    },{
-        'id': 4,
-        'nombre': 'Steven Benjamin Diaz Flores',
-        'correo': 'stevenbdf@gmail.com',
-        'telefono': '77814435',
-        'horario': 'Jueves 8:00am-12:00pm',
-        'nivel': 'Bachillerato Técnico',
-        'handle': ''
-    },
-    {
-        'id': 5,
-        'nombre': 'Steven Benjamin Diaz Flores',
-        'correo': 'stevenbdf@gmail.com',
-        'telefono': '77814435',
-        'horario': 'Jueves 8:00am-12:00pm',
-        'nivel': 'Bachillerato Técnico',
-        'handle': ''
-    },
-    {
-        'id': 6,
-        'nombre': 'Steven Benjamin Diaz Flores',
-        'correo': 'stevenbdf@gmail.com',
-        'telefono': '77814435',
-        'horario': 'Jueves 8:00am-12:00pm',
-        'nivel': 'Bachillerato Técnico',
-        'handle': ''
-    }
-];
+function aproveAlert(){
+    Swal.fire(
+        '¡Aprobado!',
+        'Evaluador aprobado.',
+        'success'
+      )
+};
+
+function rejectAlert(){
+    Swal.fire({
+        title: '¿Estas seguro?',
+        text: "No podras recuperar la información de un candidato rechazado.",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText:'Cancelar',
+        confirmButtonText: 'Si, rechazar'
+      }).then((result) => {
+        if (result.value) {
+          Swal.fire(
+            '¡Rechazado!',
+            'Evaluador rechazado.',
+            'success'
+          )
+        }
+      })
+}
 
 
-for(var i=0;i<rows_regular_btn.length;i++){
-    rows_regular_btn[i].handle = <div className="text-center"><MDBBtn color="green" size="sm"><MDBIcon icon="check" className="mr-2" /> Aprobar</MDBBtn> 
-    <MDBBtn color="red" size="sm"><MDBIcon icon="times" className="mr-2"/> Rechazar</MDBBtn></div>
+for (var i = 0; i < dataRows.length; i++) {
+    dataRows[i].handle = 
+    <div className="text-center">
+        <MDBBtn color="green" size="sm" onClick={aproveAlert}><MDBIcon icon="check" className="mr-2" /> Aprobar</MDBBtn>
+        <MDBBtn color="red" size="sm" onClick={rejectAlert}><MDBIcon icon="times" className="mr-2" /> Rechazar</MDBBtn>
+    </div>
 }
 
 
@@ -124,7 +101,7 @@ const Candidates = () => {
                             <MDBCardBody>
                                 <MDBTable btn responsive hover>
                                     <MDBTableHead columns={columns} />
-                                    <MDBTableBody rows={rows_regular_btn} />
+                                    <MDBTableBody rows={dataRows} />
                                 </MDBTable>
                             </MDBCardBody>
                         </MDBCard>

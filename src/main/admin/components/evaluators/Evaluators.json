@@ -10,7 +10,7 @@
    },
    {
       "id": 2,
-      "nombre": "Steven Benjamin Diaz Flores",
+      "nombre": "Carlos",
       "correo": "stevenbdf@gmail.com",
       "telefono": "77814435",
       "horario": "Jueves 8:00am-12:00pm",
@@ -19,16 +19,16 @@
    },
    {
       "id": 3,
-      "nombre": "Steven Benjamin Diaz Flores",
+      "nombre": "Amelia",
       "correo": "stevenbdf@gmail.com",
       "telefono": "77814435",
-      "horario": "Jueves 8:00am-12:00pm",
+      "horario": "Viernes 1:00pm-4:00pm",
       "nivel": "Bachillerato Técnico",
       "handle": ""
    },
    {
       "id": 4,
-      "nombre": "Steven Benjamin Diaz Flores",
+      "nombre": "Freddy",
       "correo": "stevenbdf@gmail.com",
       "telefono": "77814435",
       "horario": "Jueves 8:00am-12:00pm",
@@ -37,16 +37,25 @@
    },
    {
       "id": 5,
-      "nombre": "Steven Benjamin Diaz Flores",
+      "nombre": "Claudia",
       "correo": "stevenbdf@gmail.com",
       "telefono": "77814435",
-      "horario": "Jueves 8:00am-12:00pm",
+      "horario": "Viernes 1:00pm-4:00pm",
       "nivel": "Bachillerato Técnico",
       "handle": ""
    },
    {
       "id": 6,
-      "nombre": "Steven Benjamin Diaz Flores",
+      "nombre": "Rodrigo",
+      "correo": "stevenbdf@gmail.com",
+      "telefono": "77814435",
+      "horario": "Jueves 8:00am-12:00pm",
+      "nivel": "Técnico Universitario",
+      "handle": ""
+   },
+   {
+      "id": 7,
+      "nombre": "Elliot",
       "correo": "stevenbdf@gmail.com",
       "telefono": "77814435",
       "horario": "Jueves 8:00am-12:00pm",

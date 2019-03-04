@@ -5,10 +5,11 @@ import Cards from './Cards';
 const info={
     cards: [
         {id: 1, titulo:'Candidatos',icon:'plus',link:'/candidates', descripcion:'Visualiza los evaluadores que se han postulado.'},
-        {id: 2, titulo:'Evaluadores',icon:'address-card',link:'/candidates',  descripcion:'Gestiona los evaluadores ya aprobados.'},
+        {id: 2, titulo:'Evaluadores',icon:'address-card',link:'/evaluators',  descripcion:'Gestiona los evaluadores ya aprobados.'},
         {id: 3, titulo:'Asignaciones',icon:'check-square',link:'/candidates',  descripcion:'Relaciona evaluadores a sus respectivos proyectos.'},
         {id: 4, titulo:'Control',icon:'list-alt',link:'/candidates',  descripcion:'Visualiza información de los evaluadores aprobados.'},
-        {id: 5, titulo:'Estado',icon:'bolt',link:'/candidates',  descripcion:'Cambia de estado a los evaluadores aprobados.'}
+        {id: 5, titulo:'Estado',icon:'bolt',link:'/candidates',  descripcion:'Cambia de estado a los evaluadores aprobados.'},
+        {id: 6, titulo:'Usuarios',icon:'users',link:'/candidates',  descripcion:'Gestiona las personas con acceso al sistema.'}
     ]
 }
 const Admin = () => {
