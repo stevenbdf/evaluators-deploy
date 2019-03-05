@@ -52,12 +52,12 @@ self.__precacheManifest = [
     "url": "/evaluators-deploy/static/media/fa-solid-900.61969d43.woff"
   },
   {
-    "revision": "d9d17590c975aad1be0ddab673f9c769",
-    "url": "/evaluators-deploy/static/media/fa-brands-400.d9d17590.eot"
-  },
-  {
     "revision": "c39278f7abfc798a241551194f55e29f",
     "url": "/evaluators-deploy/static/media/fa-brands-400.c39278f7.ttf"
+  },
+  {
+    "revision": "d9d17590c975aad1be0ddab673f9c769",
+    "url": "/evaluators-deploy/static/media/fa-brands-400.d9d17590.eot"
   },
   {
     "revision": "e7e957c87c454bccaa3bf9fdaa6874f8",
@@ -112,12 +112,12 @@ self.__precacheManifest = [
     "url": "/evaluators-deploy/static/media/Roboto-Thin.954bbdeb.woff2"
   },
   {
-    "revision": "69f8a0617ac472f78e45841323a3df9e",
-    "url": "/evaluators-deploy/static/media/Roboto-Light.69f8a061.woff2"
-  },
-  {
     "revision": "2751ee43015f9884c3642f103b7f70c9",
     "url": "/evaluators-deploy/static/media/Roboto-Regular.2751ee43.woff2"
+  },
+  {
+    "revision": "69f8a0617ac472f78e45841323a3df9e",
+    "url": "/evaluators-deploy/static/media/Roboto-Light.69f8a061.woff2"
   },
   {
     "revision": "574fd0b50367f886d359e8264938fc37",
@@ -128,28 +128,28 @@ self.__precacheManifest = [
     "url": "/evaluators-deploy/static/media/Roboto-Bold.39b2c303.woff2"
   },
   {
-    "revision": "7500519de3d82e33d1587f8042e2afcb",
-    "url": "/evaluators-deploy/static/media/Roboto-Thin.7500519d.woff"
-  },
-  {
     "revision": "3b813c2ae0d04909a33a18d792912ee7",
     "url": "/evaluators-deploy/static/media/Roboto-Light.3b813c2a.woff"
+  },
+  {
+    "revision": "7500519de3d82e33d1587f8042e2afcb",
+    "url": "/evaluators-deploy/static/media/Roboto-Thin.7500519d.woff"
   },
   {
     "revision": "ba3dcd8903e3d0af5de7792777f8ae0d",
     "url": "/evaluators-deploy/static/media/Roboto-Regular.ba3dcd89.woff"
   },
   {
-    "revision": "fc78759e93a6cac50458610e3d9d63a0",
-    "url": "/evaluators-deploy/static/media/Roboto-Medium.fc78759e.woff"
-  },
-  {
     "revision": "dc81817def276b4f21395f7ea5e88dcd",
     "url": "/evaluators-deploy/static/media/Roboto-Bold.dc81817d.woff"
   },
   {
-    "revision": "df7b648ce5356ea1ebce435b3459fd60",
-    "url": "/evaluators-deploy/static/media/Roboto-Regular.df7b648c.ttf"
+    "revision": "fc78759e93a6cac50458610e3d9d63a0",
+    "url": "/evaluators-deploy/static/media/Roboto-Medium.fc78759e.woff"
+  },
+  {
+    "revision": "46e48ce0628835f68a7369d0254e4283",
+    "url": "/evaluators-deploy/static/media/Roboto-Light.46e48ce0.ttf"
   },
   {
     "revision": "94998475f6aea65f558494802416c1cf",
@@ -160,8 +160,8 @@ self.__precacheManifest = [
     "url": "/evaluators-deploy/static/media/Roboto-Medium.894a2ede.ttf"
   },
   {
-    "revision": "46e48ce0628835f68a7369d0254e4283",
-    "url": "/evaluators-deploy/static/media/Roboto-Light.46e48ce0.ttf"
+    "revision": "df7b648ce5356ea1ebce435b3459fd60",
+    "url": "/evaluators-deploy/static/media/Roboto-Regular.df7b648c.ttf"
   },
   {
     "revision": "b5cb061304c59d91493a",
