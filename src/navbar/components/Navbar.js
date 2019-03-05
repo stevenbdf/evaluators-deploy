@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { MDBNavbar, MDBNavbarBrand, MDBNavbarNav, MDBNavItem, MDBNavLink, MDBNavbarToggler, MDBCollapse} from "mdbreact";
-
 class NavbarPage extends Component {
 state = {
   isOpen: false
@@ -22,16 +21,13 @@ render() {
         <MDBCollapse id="navbarCollapse3" isOpen={this.state.isOpen} navbar>
           <MDBNavbarNav right>
             <MDBNavItem>
-              <MDBNavLink to="/" >Registro</MDBNavLink>
-            </MDBNavItem>
-            <MDBNavItem>
               <MDBNavLink to="/admin">Administrador</MDBNavLink>
             </MDBNavItem>
             <MDBNavItem>
               <MDBNavLink to="/admin">Usuario</MDBNavLink>
             </MDBNavItem>
             <MDBNavItem>
-              <MDBNavLink to="/">Cerrar Sesión</MDBNavLink>
+              <MDBNavLink to="/login">Cerrar Sesión</MDBNavLink>
             </MDBNavItem>
           </MDBNavbarNav>
           

@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
-import Navbar from './navbar/components/Navbar';
-import Login from './login/components/Login';
-import Admin from './main/admin/components/Admin';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import Register from './register/components/Register';
 import Candidates from './main/admin/components/candidates/Candidates';
 import Evaluators from './main/admin/components/evaluators/Evaluators';
+import Login from './login/components/login';
+import Admin from './main/admin/components/Admin';
+import {ProtectedRoute} from './login/components/protectedRoute';
 
 
 class App extends Component {
@@ -12,11 +13,14 @@ class App extends Component {
     return (
       <Router>
         <div>
-          <Navbar/>
-          <Route exact path="/" component={Login} />
-          <Route path="/admin" component={Admin} />
-          <Route path="/candidates" component={Candidates} />
-          <Route path="/evaluators" component={Evaluators} />
+          <Switch>
+            <Route exact path="/" component={Register} />
+            <ProtectedRoute exact path="/admin" component={Admin} />
+            <Route exact path="/candidates" component={Candidates} />
+            <Route exact path="/evaluators" component={Evaluators} />
+            <Route exact path="/login" component={Login} />
+            <Route path="*" component={()=> "404 not found"} />
+          </Switch>
         </div>
       </Router>
     );

@@ -3,6 +3,7 @@ import {
     MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody, MDBCardHeader,
     MDBTableHead, MDBTable, MDBTableBody, MDBBtn, MDBIcon
 } from 'mdbreact';
+import Navbar from '../../../../navbar/components/Navbar';
 import dataRows from './Candidates.json';
 import Swal from 'sweetalert2'
 
@@ -91,6 +92,7 @@ for (var i = 0; i < dataRows.length; i++) {
 const Candidates = () => {
     return (
         <div className="text-center">
+        <Navbar/>
             <MDBContainer fluid>
                 <MDBRow center className="my-5">
                     <MDBCol>

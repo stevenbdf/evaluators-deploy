@@ -4,6 +4,7 @@ import {
     MDBTableHead, MDBTable, MDBTableBody, MDBBtn, MDBIcon, MDBInput,
     MDBModal, MDBModalBody, MDBModalHeader
 } from 'mdbreact';
+import Navbar from '../../../../navbar/components/Navbar';
 import dataRows from './Evaluators.json';
 import Swal from 'sweetalert2';
 
@@ -19,7 +20,8 @@ constructor(props) {
         correo: '',
         telefono: '',
         horario: '',
-        nivel: ''
+        nivel: '',
+        vecesClick: 0
       }
     this.handleChange = this.handleChange.bind(this);
     }
@@ -34,10 +36,11 @@ toggle = (id) => {
             correo: dataRows[id-1].correo,
             telefono: dataRows[id-1].telefono,
             horario: dataRows[id-1].horario,
-            nivel: dataRows[id-1].nivel
-            
+            nivel: dataRows[id-1].nivel,
+            modal: !this.state.modal,
+            vecesClick: this.vecesClick++
         });
-    this.toggleModal()
+       
 }
 
 toggleModal = () =>{
@@ -107,18 +110,19 @@ handleChange(event) {
     });
   }
 
-
+handleClick = e => this.toggle(e.target.id);
 
 componentWillMount(){
-    const handleClick = e => this.toggle(e.target.id);
+    
 
     for (var i = 0; i < dataRows.length; i++) {
         var idActual= dataRows[i].id;
         dataRows[i].handle = 
         <div className="text-center">
-            <MDBBtn id={idActual} color="orange" size="sm" onClick={handleClick}><MDBIcon icon="pen" className="mr-2" /> Editar</MDBBtn>
+            <MDBBtn id={idActual} color="orange" size="sm" onClick={this.handleClick}><MDBIcon icon="pen" className="mr-2" /> Editar</MDBBtn>
         </div>
     }
+    
 }
 
 
@@ -126,6 +130,7 @@ render(){
     
     return (
         <div>
+            <Navbar/>
             <MDBContainer fluid>
                 <MDBRow center className="my-5">
                     <MDBCol>

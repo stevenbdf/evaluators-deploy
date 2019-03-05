@@ -1,6 +1,7 @@
 import React from "react";
 import { MDBContainer, MDBRow, MDBCol,MDBCard, MDBCardBody} from 'mdbreact';
 import Cards from './Cards';
+import Navbar from '../../../navbar/components/Navbar';
 
 const info={
     cards: [
@@ -15,6 +16,7 @@ const info={
 const Admin = () => {
   return (
     <div>
+      <Navbar/>
         <MDBContainer fluid>
           <MDBRow center className="my-5">
             <MDBCol>
