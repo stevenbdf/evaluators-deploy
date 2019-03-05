@@ -4,6 +4,7 @@ import {
     MDBTableHead, MDBTable, MDBTableBody, MDBBtn, MDBIcon, MDBInput,
     MDBModal, MDBModalBody, MDBModalHeader
 } from 'mdbreact';
+import Navbar from '../../../../navbar/components/Navbar';
 import dataRows from './Evaluators.json';
 import Swal from 'sweetalert2';
 
@@ -129,6 +130,7 @@ render(){
     
     return (
         <div>
+            <Navbar/>
             <MDBContainer fluid>
                 <MDBRow center className="my-5">
                     <MDBCol>
