@@ -4,7 +4,7 @@ self.__precacheManifest = [
     "url": "/evaluators-deploy/static/media/arrow_right.8ef6a08c.svg"
   },
   {
-    "revision": "92865e1ed926929ae393",
+    "revision": "59772cadeeb17e989cb6",
     "url": "/evaluators-deploy/static/css/main.0d5ce3e0.chunk.css"
   },
   {
@@ -52,12 +52,12 @@ self.__precacheManifest = [
     "url": "/evaluators-deploy/static/media/fa-solid-900.61969d43.woff"
   },
   {
-    "revision": "d9d17590c975aad1be0ddab673f9c769",
-    "url": "/evaluators-deploy/static/media/fa-brands-400.d9d17590.eot"
-  },
-  {
     "revision": "c39278f7abfc798a241551194f55e29f",
     "url": "/evaluators-deploy/static/media/fa-brands-400.c39278f7.ttf"
+  },
+  {
+    "revision": "d9d17590c975aad1be0ddab673f9c769",
+    "url": "/evaluators-deploy/static/media/fa-brands-400.d9d17590.eot"
   },
   {
     "revision": "e7e957c87c454bccaa3bf9fdaa6874f8",
@@ -84,8 +84,8 @@ self.__precacheManifest = [
     "url": "/evaluators-deploy/static/media/arrow_left.11911410.svg"
   },
   {
-    "revision": "92865e1ed926929ae393",
-    "url": "/evaluators-deploy/static/js/main.92865e1e.chunk.js"
+    "revision": "59772cadeeb17e989cb6",
+    "url": "/evaluators-deploy/static/js/main.59772cad.chunk.js"
   },
   {
     "revision": "dfe56a876d0282555d1e2458e278060f",
@@ -152,6 +152,10 @@ self.__precacheManifest = [
     "url": "/evaluators-deploy/static/media/Roboto-Thin.94998475.ttf"
   },
   {
+    "revision": "df7b648ce5356ea1ebce435b3459fd60",
+    "url": "/evaluators-deploy/static/media/Roboto-Regular.df7b648c.ttf"
+  },
+  {
     "revision": "46e48ce0628835f68a7369d0254e4283",
     "url": "/evaluators-deploy/static/media/Roboto-Light.46e48ce0.ttf"
   },
@@ -160,15 +164,11 @@ self.__precacheManifest = [
     "url": "/evaluators-deploy/static/media/Roboto-Medium.894a2ede.ttf"
   },
   {
-    "revision": "df7b648ce5356ea1ebce435b3459fd60",
-    "url": "/evaluators-deploy/static/media/Roboto-Regular.df7b648c.ttf"
-  },
-  {
     "revision": "b5cb061304c59d91493a",
     "url": "/evaluators-deploy/static/css/2.a8bf37c9.chunk.css"
   },
   {
-    "revision": "a44f5f5161c3180e32ac30de1c6062f1",
+    "revision": "c8c00a79ae92d88a859c53e2353e1311",
     "url": "/evaluators-deploy/index.html"
   }
 ];
