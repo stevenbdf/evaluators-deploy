@@ -1,0 +1,22 @@
+{
+    "users":[
+        {
+            "id":"1",
+            "name":"Steven Benjamin",
+            "email":"steven@momo.com",
+            "phone":"71717171",
+            "schedule":"Jueves a la noche",
+            "level":"Bachiller",
+            "handle":""
+        },
+        {
+            "id":"2",
+            "name":"Rodrigo Castillo",
+            "email":"dev.rodrig@gmail.com",
+            "phone":"73737373",
+            "schedule":"Jueves a la mañana",
+            "level":"Bachiller",
+            "handle":""
+        }
+    ]
+}
