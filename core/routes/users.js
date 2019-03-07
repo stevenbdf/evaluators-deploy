@@ -7,13 +7,8 @@ const User = require('../models/User')
 router.get('/', async (req, res) => {
     let users = await User.findAll();
     res.json({
-<<<<<<< HEAD
-        status: 200,
-        message: "Success",
-=======
         code: 200,
         message: "Ok",
->>>>>>> 272950401ecb256c4babe8381960a75160765e14
         msg:{
             users
         }
@@ -41,11 +36,6 @@ router.post('/add', async (req, res) => {
             us_email,
             us_password
         })
-<<<<<<< HEAD
-        res.redirect('/users')
-    } catch (err) {
-        console.log(err)
-=======
         res.json({
             code: 201,
             message: "Success",
@@ -61,7 +51,6 @@ router.post('/add', async (req, res) => {
                 description:""
             }
         })
->>>>>>> 272950401ecb256c4babe8381960a75160765e14
     }
 })
 

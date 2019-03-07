@@ -18,7 +18,7 @@ class RegisterPage extends Component {
     var config ={
       headers: {'Access-Control-Allow-Origin': '*'}
     }
-    axios.get(`http://10.20.10.2:3001/evaluators?status=0`)
+    axios.get(`http://localhost:3001/evaluators?status=0`)
     .then(res => {
       const persons = res.data;
       console.log(persons)
