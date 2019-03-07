@@ -8,20 +8,41 @@ var status_user
 //Get evaluator list
 router.get('/', async (req, res) => {
     status_user = req.query.status
-    if(req.query.status === '0' || req.query.status === '1'){
+    if (req.query.status === '0' || req.query.status === '1') {
         var evaluators = await Evaluator.findAll({
-            where:{
+            where: {
                 ev_status: req.query.status
-            }        
+            }
         });
     }
     res.json({
         status: 200,
         message: "Ok",
-        msg:{
+        msg: {
             evaluators
         }
     })
+})
+
+//Update a Evaluator
+router.put('/update-status', async (req, res, next) => {
+    try {
+        let obj = req.body.request.msg
+        await Evaluator.update(
+            {where: obj.id},
+            {ev_status:obj.status}
+        )
+        res.send("hola")
+    } catch (err) {
+        res.json({
+            code: 400,
+            message: " Bad Request",
+            msg: {
+                description: err
+            }
+        })
+    }
+
 })
 
 //Add a Evaluator
@@ -42,26 +63,26 @@ router.post('/add', async (req, res) => {
         let { ev_name, ev_email, ev_phone, ev_academic_level, ev_horary, ev_status } = data
 
         await Evaluator.create({
-            ev_name, 
-            ev_email, 
-            ev_phone, 
-            ev_academic_level, 
-            ev_horary, 
+            ev_name,
+            ev_email,
+            ev_phone,
+            ev_academic_level,
+            ev_horary,
             ev_status
         })
         res.json({
             code: 201,
             message: "Success",
-            msg:{
-                description:"Candidate successfully added"
+            msg: {
+                description: "Candidate successfully added"
             }
         })
     } catch (err) {
         res.json({
             code: 400,
             message: " Bad Request",
-            msg:{
-                description:""
+            msg: {
+                description: ""
             }
         })
     }
