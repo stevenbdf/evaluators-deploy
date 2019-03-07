@@ -15,16 +15,30 @@ db.authenticate()
     })
 
 const app = express()
-
 app.use(express.json());
 
 app.post('/', (request, response) => {
-    console.log(request.body);
-    response.send(request.body);
+    try {
+        var objeto = request.body;
+        console.log('Sintaxis Correcta');
+        response.json({
+            status: "success",
+            message: objeto.hello
+        })
+    }
+    catch (error) {
+        if(error instanceof SyntaxError) {
+            let mensaje = error.message;
+            console.log('ERROR EN LA SINTAXIS:', mensaje);
+        } else {
+            throw error;
+        }
+    }
 })
 
 
 app.use('/users', require('./routes/users'))
+app.use('/evaluators', require('./routes/evaluators'))
 
 app.listen(port, () => {
     console.log(`App running on port ${port}.`)
