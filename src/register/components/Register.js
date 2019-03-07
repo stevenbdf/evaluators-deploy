@@ -10,20 +10,45 @@ class RegisterPage extends Component {
     super(props);
      
     this.state ={
-      name:'hola'
+      name:'Rodrigo',
+      email:"rodrigo.castillo@gmail.com",
+      phone:"70655153",       
+      academic_level:"Doctorado",       
+      horary:"Jueves 8:00am-12:00pm",       
+      status:0 
+
     }
   } 
 
   getEvaluators = () => {
-    var config ={
-      headers: {'Access-Control-Allow-Origin': '*'}
+    axios.post('http://localhost:3001/evaluators/add', {
+      request: {
+        msg: {
+            name:this.state.name,
+            email:this.state.email,
+            phone:this.state.phone,       
+            academic_level:this.state.academic_level,       
+            horary:this.state.horary,       
+            status:0 
+        }
     }
-    axios.get(`http://localhost:3001/evaluators?status=0`)
-    .then(res => {
-      const persons = res.data;
-      console.log(persons)
-      //this.setState({name : persons[0].name});
     })
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
+
+  handleChange = (event) => {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
   }
 
   aproveAlert(){
@@ -64,6 +89,9 @@ render(){
                         <MDBInput
                           label="Correo electronico"
                           icon="envelope"
+                          name="email"
+                          value={this.state.email}
+                          onChange={this.handleChange}
                           group
                           type="email"
                           validate
@@ -73,6 +101,9 @@ render(){
                         <MDBInput
                           label="Telefono"
                           icon="hashtag"
+                          name="phone"
+                          value={this.state.phone}
+                          onChange={this.handleChange}
                           group
                           type="number"
                           validate
@@ -84,16 +115,16 @@ render(){
                             <MDBIcon icon="calendar-alt" className="iconRegister" />
                           </MDBCol>
                           <MDBCol>
-                            <select className="browser-default custom-select">
+                            <select name="horary" className="browser-default custom-select" value={this.state.horary} onChange={this.handleChange} >
                               <option>Seleccione un horario...</option>
-                              <option value="1">Jueves 8:00am-12:00pm</option>
-                              <option value="2">Jueves 1:00pm-4:00pm</option>
-                              <option value="3">Viernes 8:00am-12:00pm</option>
-                              <option value="4">Viernes 1:00pm-4:00pm</option>
-                              <option value="5">Sabado 8:00am-12:00pm</option>
-                              <option value="6">Sabado 1:00pm-4:00pm</option>
-                              <option value="7">Domingo 8:00am-12:00pm</option>
-                              <option value="8">Domingo 1:00pm-4:00pm</option>
+                              <option value="Jueves 8:00am-12:00pm">Jueves 8:00am-12:00pm</option>
+                              <option value="Jueves 1:00pm-4:00pm">Jueves 1:00pm-4:00pm</option>
+                              <option value="Viernes 8:00am-12:00pm">Viernes 8:00am-12:00pm</option>
+                              <option value="Viernes 1:00pm-4:00pm">Viernes 1:00pm-4:00pm</option>
+                              <option value="Sabado 8:00am-12:00pm">Sabado 8:00am-12:00pm</option>
+                              <option value="Sabado 1:00pm-4:00pm">Sabado 1:00pm-4:00pm</option>
+                              <option value="Domingo 8:00am-12:00pm">Domingo 8:00am-12:00pm</option>
+                              <option value="Domingo 1:00pm-4:00pm">Domingo 1:00pm-4:00pm</option>
                             </select>
                           </MDBCol>
                         </MDBRow>
@@ -102,14 +133,14 @@ render(){
                             <MDBIcon icon="university" className="iconRegister" />
                           </MDBCol>
                           <MDBCol>
-                            <select className="browser-default custom-select">
+                            <select name="academic_level" className="browser-default custom-select" value={this.state.academic_level} onChange={this.handleChange} >
                               <option>Seleccione un grado academico...</option>
-                              <option value="1">Bachillerato Técnico</option>
-                              <option value="2">Tecnico Universitario</option>
-                              <option value="3">Ingenieria</option>
-                              <option value="4">Licenciatura</option>
-                              <option value="5">Maestria</option>
-                              <option value="6">Doctorado</option>
+                              <option value="Bachillerato Técnico">Bachillerato Técnico</option>
+                              <option value="Tecnico Universitario">Tecnico Universitario</option>
+                              <option value="Ingenieria">Ingenieria</option>
+                              <option value="Licenciatura">Licenciatura</option>
+                              <option value="Maestria">Maestria</option>
+                              <option value="Doctorado">Doctorado</option>
                             </select>
                           </MDBCol>
                         </MDBRow>
