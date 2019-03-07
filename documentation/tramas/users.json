@@ -1,0 +1,10 @@
+{
+    "request": {
+        "msg": {
+            "name":"Rodrigo",
+            "lastname":"Castillo",
+            "email":"rodrigo.castillo@gmail.com",
+            "password":"qwerty 123"            
+        }
+    }
+}

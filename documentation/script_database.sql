@@ -9,7 +9,6 @@ CREATE TABLE users(
 CREATE TABLE evaluators(
 	ev_id SERIAL NOT NULL PRIMARY KEY,
 	ev_name VARCHAR(60) NOT NULL,
-	ev_lastname VARCHAR(60) NOT NULL,
 	ev_email VARCHAR(100) NOT NULL,
 	ev_phone VARCHAR(20) NOT NULL
 );
