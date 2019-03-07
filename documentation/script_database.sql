@@ -44,15 +44,8 @@ CREATE TABLE courses(
 	lc_id INT NOT NULL REFERENCES locals(lc_id)
 );
 
-CREATE TABLE projects(
-	pj_id SERIAL NOT NULL PRIMARY KEY,
-	pj_name VARCHAR(200) NOT NULL,
-	pj_registry_number INT NOT NULL,
-	cou_id INT NOT NULL REFERENCES courses(cou_id)
-);
-
 CREATE TABLE assignments(
 	asg_id SERIAL NOT NULL PRIMARY KEY,
-	pj_id INT NOT NULL REFERENCES projects(pj_id),
+	cou_id INT NOT NULL REFERENCES courses(cou_id),
 	ev_id INT NOT NULL REFERENCES evaluators(ev_id)
 );
