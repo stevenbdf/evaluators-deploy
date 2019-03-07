@@ -1,0 +1,12 @@
+{
+    "request": {
+        "msg": {
+            "name":"Rodrigo",
+            "email":"rodrigo.castillo@gmail.com",
+            "phone":"70655153",       
+            "academic_level":"bien prron",       
+            "horary":"jueves y viernes prro",       
+            "status":"0" 
+        }
+    }
+}
