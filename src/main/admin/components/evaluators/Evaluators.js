@@ -159,7 +159,7 @@ render(){
                             <MDBInput label="Correo:" name="correo" value={(this.state.correo)} type="email" onChange={this.handleChange} />
                             <MDBInput label="Telefono:" name="telefono" value={(this.state.telefono).toString()} type="text" onChange={this.handleChange} />
                             <label className="d-block">Horario:
-                                <select className="browser-default custom-select" value={this.state.horario} onChange={this.handleChange} >
+                                <select name="horario" className="browser-default custom-select" value={this.state.horario} onChange={this.handleChange} >
                                     <option value="Jueves 8:00am-12:00pm">Jueves 8:00am-12:00pm</option>
                                     <option value="Jueves 1:00pm-4:00pm">Jueves 1:00pm-4:00pm</option>
                                     <option value="Viernes 8:00am-12:00pm">Viernes 8:00am-12:00pm</option>
@@ -172,7 +172,7 @@ render(){
                             </label>
                             <label className="d-block">
                             Nivel Academico:
-                                <select className="browser-default custom-select" value={this.state.nivel} onChange={this.handleChange} >
+                                <select name="nivel" className="browser-default custom-select" value={this.state.nivel} onChange={this.handleChange} >
                                 <option value="Bachillerato Técnico">Bachillerato Técnico</option>
                                 <option value="Técnico Universitario">Técnico Universitario</option>
                                 <option value="Ingenieria">Ingenieria</option>
