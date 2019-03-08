@@ -6,15 +6,21 @@ CREATE TABLE users(
 	us_password VARCHAR(255) NOT NULL
 );
 
+CREATE TABLE schedules{
+	sch_id SERIAL NOT NULL PRIMARY KEY,
+	sch_shedule VARCHAR(200) NOT NULL
+};
+
 CREATE TABLE evaluators(
 	ev_id SERIAL NOT NULL PRIMARY KEY,
 	ev_name VARCHAR(60) NOT NULL,
 	ev_email VARCHAR(100) NOT NULL,
 	ev_phone VARCHAR(20) NOT NULL,
-	ev_horary VARCHAR(200) NOT NULL,
 	ev_academic_level VARCHAR(150) NOT NULL,
-	ev_status INT NOT NULL
+	ev_status INT NOT NULL,
+	sch_id INT NOT NULL REFERENCES schedules(sch_id)
 );
+
 
 CREATE TABLE binnacles(
 	bin_id SERIAL NOT NULL PRIMARY KEY,

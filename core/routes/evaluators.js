@@ -25,25 +25,17 @@ router.get('/', async (req, res) => {
 })
 
 //Update a Evaluator
-router.put('/update-status', async (req, res, next) => {
-    try {
-        let obj = req.body.request.msg
-        await Evaluator.update(
-            {where: obj.id},
-            {ev_status:obj.status}
-        )
-        res.send("hola")
-    } catch (err) {
-        res.json({
-            code: 400,
-            message: " Bad Request",
-            msg: {
-                description: err
-            }
-        })
-    }
 
-})
+router.put('/update-status/:id',  async (req, res) => {
+    let obj = req.body.request.msg
+    await Evaluator.update(
+      {ev_status:obj.status},
+      {returning: true, where: {ev_id: req.params.id} }
+    )
+    res.send('yes')
+   })
+
+
 
 //Add a Evaluator
 router.post('/add', async (req, res) => {
@@ -55,20 +47,20 @@ router.post('/add', async (req, res) => {
             ev_name: obj.name,
             ev_email: obj.email,
             ev_phone: obj.phone,
-            ev_academic_level: obj.academic_level,
-            ev_horary: obj.horary,
-            ev_status: obj.status,
+            ev_academic_level: obj.academic_level,            
+            ev_status: obj.status,            
+            sch_id: obj.horary,
         }
 
-        let { ev_name, ev_email, ev_phone, ev_academic_level, ev_horary, ev_status } = data
+        let { ev_name, ev_email, ev_phone, ev_academic_level, ev_status, sch_id } = data
 
         await Evaluator.create({
             ev_name,
             ev_email,
             ev_phone,
-            ev_academic_level,
-            ev_horary,
-            ev_status
+            ev_academic_level,            
+            ev_status,
+            sch_id,
         })
         res.json({
             code: 201,
