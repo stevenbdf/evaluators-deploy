@@ -3,7 +3,8 @@ CREATE TABLE users(
 	us_email VARCHAR(100) NOT NULL,
 	us_name VARCHAR(60) NOT NULL,
 	us_lastname VARCHAR(60) NOT NULL,
-	us_password VARCHAR(255) NOT NULL
+	us_password VARCHAR(255) NOT NULL,
+	handle VARCHAR(1) NULL
 );
 
 CREATE TABLE schedules(
@@ -18,7 +19,8 @@ CREATE TABLE evaluators(
 	ev_phone VARCHAR(20) NOT NULL,
 	ev_academic_level VARCHAR(150) NOT NULL,
 	ev_status INT NOT NULL,
-	sch_id INT NOT NULL REFERENCES schedules(sch_id)
+	sch_id INT NOT NULL REFERENCES schedules(sch_id),
+	handle VARCHAR(1) NULL
 );
 
 

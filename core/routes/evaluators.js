@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const db = require('../config/database')
 const Evaluator = require('../models/Evaluator')
+const Schedule = require('../models/Schedule')
 
 var status_user
 
@@ -13,6 +14,13 @@ router.get('/:status', async (req, res) => {
             where: {
                 ev_status: req.params.status
             }
+        })
+        let i = 0
+        evaluators.forEach(async element => {
+            console.log(element.sch_id)
+            let schedule = await Schedule.findByPk(element.sch_id)
+            console.log(element.sch_id)
+            i++
         });
     }
     if (evaluators[0] == undefined) {
@@ -49,7 +57,7 @@ router.get('/findById/:id', async (req, res) => {
                 status: 200,
                 message: "Ok",
                 msg: {
-                    evaluators
+                    evaluator
                 }
             })
         }
@@ -112,12 +120,9 @@ router.put('/update/:id', async (req, res) => {
             }
         )
         res.json({
-            code: 201,
-            message: "Success",
-            msg: {
-                description: "rows affected (" + row_update[0] + ")",
-                new_row: row_update[1]
-            }
+            code: 205,
+            message: "Reset Content",
+            msg: {}
         })
     } catch (err) {
         res.json({
@@ -131,20 +136,17 @@ router.put('/update/:id', async (req, res) => {
 })
 
 //UpdateStatus a Evaluator
-router.put('/update-status/:id', async (req, res) => {
+router.post('/update-status/:id', async (req, res) => {
     try {
         let obj = req.body.request.msg
-        let row_update = await Evaluator.update(
+        await Evaluator.update(
             { ev_status: obj.status },
             { returning: true, where: { ev_id: req.params.id } }
         )
         res.json({
-            code: 201,
-            message: "Success",
-            msg: {
-                description: "rows affected (" + row_update[0] + ")",
-                new_row: row_update[1]
-            }
+            code: 205,
+            message: "Reset Content",
+            msg: {}
         })
     } catch (err) {
         res.json({
@@ -183,18 +185,16 @@ router.post('/add', async (req, res) => {
             sch_id,
         })
         res.json({
-            code: 201,
-            message: "Success",
-            msg: {
-                description: "Candidate successfully added"
-            }
+            code: 205,
+            message: "Reset Content",
+            msg: {}
         })
     } catch (err) {
         res.json({
             code: 400,
             message: " Bad Request",
             msg: {
-                description: ""
+                description: err
             }
         })
     }

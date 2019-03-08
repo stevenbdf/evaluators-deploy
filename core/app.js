@@ -15,6 +15,7 @@ db.authenticate()
     })
 
 const app = express()
+
 app.use(express.json());
 
 app.get('/', (request, response) => {
@@ -26,6 +27,7 @@ app.get('/', (request, response) => {
 
 app.use('/users', require('./routes/users'))
 app.use('/evaluators', require('./routes/evaluators'))
+app.use('/schedules', require('./routes/schedules'))
 
 app.listen(port, () => {
     console.log(`App running on port ${port}.`)
