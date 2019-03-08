@@ -1,105 +1,169 @@
-import React from "react";
+import React, {Component} from "react";
 import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn, MDBCard, MDBCardBody, MDBIcon } from 'mdbreact';
 import './Register.css';
 import Swal from 'sweetalert2';
+import axios from 'axios';
 
-function aproveAlert(){
-  Swal.fire(
-      '¡Enviado!',
-      'Registro enviado, espera a ser contactado por personal del ITR.',
-      'success'
-    )
-};
+class RegisterPage extends Component {
 
-const RegisterPage = () => {
-  return (
-    <div>
-        <MDBContainer>
-          <MDBRow center className="my-5">
-            <MDBCol size="12" md="8" lg="6">
-              <MDBCard>
-                <MDBCardBody>
-                  <form>
-                    <p className="h4 text-center py-4">Registro de Evaluadores</p>
-                    <div className="teal-text">
-                      <MDBInput
-                        label="Nombre completo"
-                        icon="user"
-                        group
-                        type="text"
-                        validate
-                        error="wrong"
-                        success="right"
-                      />
-                      <MDBInput
-                        label="Correo electronico"
-                        icon="envelope"
-                        group
-                        type="email"
-                        validate
-                        error="wrong"
-                        success="right"
-                      />
-                      <MDBInput
-                        label="Telefono"
-                        icon="hashtag"
-                        group
-                        type="number"
-                        validate
-                        error="wrong"
-                        success="right"
-                      />
-                      <MDBRow className="mb-4">
-                        <MDBCol size="1">
-                          <MDBIcon icon="calendar-alt" className="iconRegister" />
-                        </MDBCol>
-                        <MDBCol>
-                          <select className="browser-default custom-select">
-                            <option>Seleccione un horario...</option>
-                            <option value="1">Jueves 8:00am-12:00pm</option>
-                            <option value="2">Jueves 1:00pm-4:00pm</option>
-                            <option value="3">Viernes 8:00am-12:00pm</option>
-                            <option value="4">Viernes 1:00pm-4:00pm</option>
-                            <option value="5">Sabado 8:00am-12:00pm</option>
-                            <option value="6">Sabado 1:00pm-4:00pm</option>
-                            <option value="7">Domingo 8:00am-12:00pm</option>
-                            <option value="8">Domingo 1:00pm-4:00pm</option>
-                          </select>
-                        </MDBCol>
-                      </MDBRow>
-                      <MDBRow className="mt-4 pt-2">
-                        <MDBCol size="1">
-                          <MDBIcon icon="university" className="iconRegister" />
-                        </MDBCol>
-                        <MDBCol>
-                          <select className="browser-default custom-select">
-                            <option>Seleccione un grado academico...</option>
-                            <option value="1">Bachillerato Técnico</option>
-                            <option value="2">Tecnico Universitario</option>
-                            <option value="3">Ingenieria</option>
-                            <option value="4">Licenciatura</option>
-                            <option value="5">Maestria</option>
-                            <option value="6">Doctorado</option>
-                          </select>
-                        </MDBCol>
-                      </MDBRow>
-                    </div>
+  constructor(props) {
+    super(props);
+     
+    this.state ={
+      name:'Rodrigo',
+      email:"rodrigo.castillo@gmail.com",
+      phone:"70655153",       
+      academic_level:"Doctorado",       
+      horary:"Jueves 8:00am-12:00pm",       
+      status:0 
 
-                    <div className="text-center py-4 mt-3">
-                        <MDBBtn color="teal"  onClick={aproveAlert}>
-                          Enviar
-                          <MDBIcon icon="paper-plane" className="ml-2"/>
-                        </MDBBtn>
-                    </div>
-                  </form>
-                </MDBCardBody>
-              </MDBCard>
-            </MDBCol>
-          </MDBRow> 
-        </MDBContainer>
-      </div>
-      
-  );
-};
+    }
+  } 
+
+  getEvaluators = () => {
+    axios.post('http://localhost:3001/evaluators/add', {
+      request: {
+        msg: {
+            name:this.state.name,
+            email:this.state.email,
+            phone:this.state.phone,       
+            academic_level:this.state.academic_level,       
+            horary:this.state.horary,       
+            status:0 
+        }
+    }
+    })
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
+
+  handleChange = (event) => {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
+  }
+
+  aproveAlert(){
+    Swal.fire(
+        '¡Enviado!',
+        'Registro enviado, espera a ser contactado por personal del ITR.',
+        'success'
+      )
+  };
+
+
+
+
+  
+render(){
+    return (
+      <div>
+          <MDBContainer>
+            <MDBRow center className="my-5">
+              <MDBCol size="12" md="8" lg="6">
+                <MDBCard>
+                  <MDBCardBody>
+                    <form>
+                      <p className="h4 text-center py-4">Registro de Evaluadores</p>
+                      <div className="teal-text">
+                        <MDBInput
+                          label="Nombre completo"
+                          name="name"
+                          value={this.state.name}
+                          onChange={this.handleChange}
+                          icon="user"
+                          group
+                          type="text"
+                          validate
+                          error="wrong"
+                          success="right"
+                        />
+                        <MDBInput
+                          label="Correo electronico"
+                          icon="envelope"
+                          name="email"
+                          value={this.state.email}
+                          onChange={this.handleChange}
+                          group
+                          type="email"
+                          validate
+                          error="wrong"
+                          success="right"
+                        />
+                        <MDBInput
+                          label="Telefono"
+                          icon="hashtag"
+                          name="phone"
+                          value={this.state.phone}
+                          onChange={this.handleChange}
+                          group
+                          type="number"
+                          validate
+                          error="wrong"
+                          success="right"
+                        />
+                        <MDBRow className="mb-4">
+                          <MDBCol size="1">
+                            <MDBIcon icon="calendar-alt" className="iconRegister" />
+                          </MDBCol>
+                          <MDBCol>
+                            <select name="horary" className="browser-default custom-select" value={this.state.horary} onChange={this.handleChange} >
+                              <option>Seleccione un horario...</option>
+                              <option value="Jueves 8:00am-12:00pm">Jueves 8:00am-12:00pm</option>
+                              <option value="Jueves 1:00pm-4:00pm">Jueves 1:00pm-4:00pm</option>
+                              <option value="Viernes 8:00am-12:00pm">Viernes 8:00am-12:00pm</option>
+                              <option value="Viernes 1:00pm-4:00pm">Viernes 1:00pm-4:00pm</option>
+                              <option value="Sabado 8:00am-12:00pm">Sabado 8:00am-12:00pm</option>
+                              <option value="Sabado 1:00pm-4:00pm">Sabado 1:00pm-4:00pm</option>
+                              <option value="Domingo 8:00am-12:00pm">Domingo 8:00am-12:00pm</option>
+                              <option value="Domingo 1:00pm-4:00pm">Domingo 1:00pm-4:00pm</option>
+                            </select>
+                          </MDBCol>
+                        </MDBRow>
+                        <MDBRow className="mt-4 pt-2">
+                          <MDBCol size="1">
+                            <MDBIcon icon="university" className="iconRegister" />
+                          </MDBCol>
+                          <MDBCol>
+                            <select name="academic_level" className="browser-default custom-select" value={this.state.academic_level} onChange={this.handleChange} >
+                              <option>Seleccione un grado academico...</option>
+                              <option value="Bachillerato Técnico">Bachillerato Técnico</option>
+                              <option value="Tecnico Universitario">Tecnico Universitario</option>
+                              <option value="Ingenieria">Ingenieria</option>
+                              <option value="Licenciatura">Licenciatura</option>
+                              <option value="Maestria">Maestria</option>
+                              <option value="Doctorado">Doctorado</option>
+                            </select>
+                          </MDBCol>
+                        </MDBRow>
+                      </div>
+  
+                      <div className="text-center py-4 mt-3">
+                          <MDBBtn color="teal"  onClick={this.getEvaluators}>
+                            Enviar
+                            <MDBIcon icon="paper-plane" className="ml-2"/>
+                          </MDBBtn>
+                      </div>
+                    </form>
+                  </MDBCardBody>
+                </MDBCard>
+              </MDBCol>
+            </MDBRow> 
+          </MDBContainer>
+        </div>
+        
+    );
+  };
+}
+
+
 
 export default RegisterPage;

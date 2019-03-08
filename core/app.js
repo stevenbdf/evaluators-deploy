@@ -15,16 +15,17 @@ db.authenticate()
     })
 
 const app = express()
-
 app.use(express.json());
 
-app.post('/', (request, response) => {
-    console.log(request.body);
-    response.send(request.body);
+app.get('/', (request, response) => {
+    response.json({
+        message: "Hola mundo"
+    })
 })
 
 
 app.use('/users', require('./routes/users'))
+app.use('/evaluators', require('./routes/evaluators'))
 
 app.listen(port, () => {
     console.log(`App running on port ${port}.`)

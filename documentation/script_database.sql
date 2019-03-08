@@ -6,13 +6,21 @@ CREATE TABLE users(
 	us_password VARCHAR(255) NOT NULL
 );
 
+CREATE TABLE schedules{
+	sch_id SERIAL NOT NULL PRIMARY KEY,
+	sch_shedule VARCHAR(200) NOT NULL
+};
+
 CREATE TABLE evaluators(
 	ev_id SERIAL NOT NULL PRIMARY KEY,
 	ev_name VARCHAR(60) NOT NULL,
-	ev_lastname VARCHAR(60) NOT NULL,
 	ev_email VARCHAR(100) NOT NULL,
-	ev_phone VARCHAR(20) NOT NULL
+	ev_phone VARCHAR(20) NOT NULL,
+	ev_academic_level VARCHAR(150) NOT NULL,
+	ev_status INT NOT NULL,
+	sch_id INT NOT NULL REFERENCES schedules(sch_id)
 );
+
 
 CREATE TABLE binnacles(
 	bin_id SERIAL NOT NULL PRIMARY KEY,
@@ -42,15 +50,8 @@ CREATE TABLE courses(
 	lc_id INT NOT NULL REFERENCES locals(lc_id)
 );
 
-CREATE TABLE projects(
-	pj_id SERIAL NOT NULL PRIMARY KEY,
-	pj_name VARCHAR(200) NOT NULL,
-	pj_registry_number INT NOT NULL,
-	cou_id INT NOT NULL REFERENCES courses(cou_id)
-);
-
 CREATE TABLE assignments(
 	asg_id SERIAL NOT NULL PRIMARY KEY,
-	pj_id INT NOT NULL REFERENCES projects(pj_id),
+	cou_id INT NOT NULL REFERENCES courses(cou_id),
 	ev_id INT NOT NULL REFERENCES evaluators(ev_id)
 );
