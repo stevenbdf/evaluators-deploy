@@ -29,9 +29,9 @@ class RegisterPage extends Component {
             name:this.state.name,
             email:this.state.email,
             phone:this.state.phone,       
-            academic_level:this.state.academic_level,       
-            horary: horarySelected,       
+            academic_level:this.state.academic_level, 
             status:0,
+            sch_id: horarySelected
 
         }
     }
