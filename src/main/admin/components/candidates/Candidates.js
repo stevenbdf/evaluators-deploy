@@ -6,7 +6,7 @@ import {
 import Navbar from '../../../../navbar/components/Navbar';
 import dataRows from './Candidates.json';
 import Swal from 'sweetalert2';
-import axios from 'axios';
+import axios from './axios.js';
 
 class Candidates extends Component{
     constructor(props) {
@@ -62,12 +62,19 @@ class Candidates extends Component{
     
     ];
     
-    async aproveAlert(){
+     componentDidMount(){
 
-       
-        const res = await axios.get(`https://localhost:3001/evaluators/0`)
-        console.log(persons)
+        axios.get(`evaluators/0`)
+        .then(res => {
+          const persons = res.data;
+          console.log(persons)
+        })
         
+        /*
+        const response = await fetch('https://10.20.10.5:3001/evaluators/0')
+            const data = await response.json()
+            console.log(data)
+        */
 
 
         /*
