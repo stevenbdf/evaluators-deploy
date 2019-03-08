@@ -1,12 +1,37 @@
-{
-    "request": {
-        "msg": {
-            "name":"Rodrigo",
-            "email":"rodrigo.castillo@gmail.com",
-            "phone":"70655153",       
-            "academic_level":"bien prron",       
-            "horary":"1",       
-            "status":"0" 
+[
+    //Seleccionar todos los candidatos
+    {
+        "url": "http://localhost:3001/evaluators/:status",
+        "method": "get"
+    },
+
+    //Agregar evaluator como candidato
+    {
+        "url": "http://localhost:3001/evaluators/add",
+        "method": "post"
+    },
+    {
+        "request": {
+            "msg": {
+                "name": "Rodrigo",
+                "email": "rodrigo.castillo@gmail.com",
+                "phone": "70655153",
+                "academic_level": "bien prron",
+                "horary": "1",
+                "status": "0"
+            }
+        }
+    },
+    //Actualizar candidato a evaluador
+    {
+        "url": "http://localhost:3001/evaluators/update-status/:id",
+        "method": "put"
+    },
+    {
+        "request": {
+            "msg": {
+                "status": "1"
+            }
         }
     }
-}
+]

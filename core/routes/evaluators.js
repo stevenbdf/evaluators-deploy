@@ -6,12 +6,12 @@ const Evaluator = require('../models/Evaluator')
 var status_user
 
 //Get evaluator list
-router.get('/', async (req, res) => {
+router.get('/:status', async (req, res) => {
     status_user = req.query.status
-    if (req.query.status === '0' || req.query.status === '1') {
+    if (req.params.status === '0' || req.params.status === '1') {
         var evaluators = await Evaluator.findAll({
             where: {
-                ev_status: req.query.status
+                ev_status: req.params.status
             }
         });
     }
@@ -24,18 +24,122 @@ router.get('/', async (req, res) => {
     })
 })
 
-//Update a Evaluator
+//FindById Evaluator
+router.get('/findById/:id', async (req, res) => {
+    try {
+        let evaluator = await Evaluator.findById(req.params.id)
+        res.json({
+            status: 200,
+            message: "Ok",
+            msg: {
+                evaluator
+            }
+        })
+    } catch (err) {
+        res.json({
+            code: 400,
+            message: " Bad Request",
+            msg: {
+                description: ""
+            }
+        })
+    }
+})
 
-router.put('/update-status/:id',  async (req, res) => {
-    let obj = req.body.request.msg
-    await Evaluator.update(
-      {ev_status:obj.status},
-      {returning: true, where: {ev_id: req.params.id} }
-    )
-    res.send('yes')
-   })
+//Delete a Evaluator
+router.delete('/delete', async (req, res) => {
+    try {
+        let obj = req.body.request.msg
+        let row_delete = await Evaluator.destroy({
+            where: {
+                ev_id: obj.id
+            }
+        })
+        res.json({
+            code: 200,
+            message: "Success",
+            msg: {
+                description: "row deleted",
+            }
+        })
+    } catch (err) {
+        res.json({
+            code: 400,
+            message: " Bad Request",
+            msg: {
+                description: ""
+            }
+        })
+    }
+})
 
+//Update Evaluator
+router.put('/update/:id', async (req, res) => {
+    try {
+        let evaluator = await Evaluator.findAll({ where: { ev_id: req.params.id } })
 
+        let obj = req.body.request.msg
+        let row_update = await Evaluator.update(
+            {
+                ev_name: (obj.name === '') ? evaluator.ev_name : obj.name,
+                ev_email: (obj.email === '') ? evaluator.ev_email : obj.email,
+                ev_phone: (obj.phone === '') ? evaluator.ev_phone : obj.phone,
+                ev_academic_level: (obj.academic_level === '') ? evaluator.ev_academic_level : obj.academic_level,
+                ev_status: (obj.status === '') ? evaluator.ev_status : obj.status,
+                sch_id: (obj.sch_id === '') ? evaluator.sch_id : obj.sch_id
+            }, {
+                returning: true,
+                where:
+                {
+                    ev_id: req.params.id
+                }
+            }
+        )
+        res.json({
+            code: 201,
+            message: "Success",
+            msg: {
+                description: "rows affected (" + row_update[0] + ")",
+                new_row: row_update[1]
+            }
+        })
+    } catch (err) {
+        res.json({
+            code: 400,
+            message: " Bad Request",
+            msg: {
+                description: ''
+            }
+        })
+    }
+})
+
+//UpdateStatus a Evaluator
+router.put('/update-status/:id', async (req, res) => {
+    try {
+        let obj = req.body.request.msg
+        let row_update = await Evaluator.update(
+            { ev_status: obj.status },
+            { returning: true, where: { ev_id: req.params.id } }
+        )
+        res.json({
+            code: 201,
+            message: "Success",
+            msg: {
+                description: "rows affected (" + row_update[0] + ")",
+                new_row: row_update[1]
+            }
+        })
+    } catch (err) {
+        res.json({
+            code: 400,
+            message: " Bad Request",
+            msg: {
+                description: ""
+            }
+        })
+    }
+})
 
 //Add a Evaluator
 router.post('/add', async (req, res) => {
@@ -47,8 +151,8 @@ router.post('/add', async (req, res) => {
             ev_name: obj.name,
             ev_email: obj.email,
             ev_phone: obj.phone,
-            ev_academic_level: obj.academic_level,            
-            ev_status: obj.status,            
+            ev_academic_level: obj.academic_level,
+            ev_status: obj.status,
             sch_id: obj.horary,
         }
 
@@ -58,7 +162,7 @@ router.post('/add', async (req, res) => {
             ev_name,
             ev_email,
             ev_phone,
-            ev_academic_level,            
+            ev_academic_level,
             ev_status,
             sch_id,
         })
