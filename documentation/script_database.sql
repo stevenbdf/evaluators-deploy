@@ -6,10 +6,10 @@ CREATE TABLE users(
 	us_password VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE schedules{
+CREATE TABLE schedules(
 	sch_id SERIAL NOT NULL PRIMARY KEY,
 	sch_shedule VARCHAR(200) NOT NULL
-};
+);
 
 CREATE TABLE evaluators(
 	ev_id SERIAL NOT NULL PRIMARY KEY,
