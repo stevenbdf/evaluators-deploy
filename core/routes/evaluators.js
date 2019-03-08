@@ -15,26 +15,44 @@ router.get('/:status', async (req, res) => {
             }
         });
     }
-    res.json({
-        status: 200,
-        message: "Ok",
-        msg: {
-            evaluators
-        }
-    })
+    if (evaluators[0] == undefined) {
+        res.json({
+            status: 204,
+            message: "No Content",
+            msg: {                
+            }
+        })
+    } else {
+        res.json({
+            status: 200,
+            message: "Ok",
+            msg: {
+                evaluators
+            }
+        })
+    }
 })
 
 //FindById Evaluator
 router.get('/findById/:id', async (req, res) => {
     try {
-        let evaluator = await Evaluator.findById(req.params.id)
-        res.json({
-            status: 200,
-            message: "Ok",
-            msg: {
-                evaluator
-            }
-        })
+        let evaluator = await Evaluator.findByPk(req.params.id)
+        if (evaluator == null) {
+            res.json({
+                status: 204,
+                message: "No Content",
+                msg: {                
+                }
+            })
+        } else {
+            res.json({
+                status: 200,
+                message: "Ok",
+                msg: {
+                    evaluators
+                }
+            })
+        }
     } catch (err) {
         res.json({
             code: 400,
@@ -50,17 +68,15 @@ router.get('/findById/:id', async (req, res) => {
 router.delete('/delete', async (req, res) => {
     try {
         let obj = req.body.request.msg
-        let row_delete = await Evaluator.destroy({
+        await Evaluator.destroy({
             where: {
                 ev_id: obj.id
             }
         })
         res.json({
-            code: 200,
-            message: "Success",
-            msg: {
-                description: "row deleted",
-            }
+            code: 205,
+            message: "Reset Content",
+            msg: {}
         })
     } catch (err) {
         res.json({
@@ -153,7 +169,7 @@ router.post('/add', async (req, res) => {
             ev_phone: obj.phone,
             ev_academic_level: obj.academic_level,
             ev_status: obj.status,
-            sch_id: obj.horary,
+            sch_id: obj.sch_id,
         }
 
         let { ev_name, ev_email, ev_phone, ev_academic_level, ev_status, sch_id } = data
