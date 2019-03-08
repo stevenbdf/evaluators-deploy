@@ -23,7 +23,7 @@ class RegisterPage extends Component {
   addEvaluator = () => {
     var horarySelected = this.getScheduleId()
     console.log(horarySelected)
-    axios.post('http://localhost:3001/evaluators/add', {
+    axios.post('http://10.20.10.2:3001/evaluators/add', {
       request: {
         msg: {
             name:this.state.name,
@@ -31,12 +31,14 @@ class RegisterPage extends Component {
             phone:this.state.phone,       
             academic_level:this.state.academic_level, 
             status:0,
-            sch_id: horarySelected
-
+            sch_id: horarySelected,
+            handle : ''
         }
     }
     })
-    .then(this.aproveAlert)
+    .then(function(res){
+      console.log(res)
+    })
     .catch(function (error) {
       console.log(error);
     });

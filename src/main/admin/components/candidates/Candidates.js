@@ -4,7 +4,6 @@ import {
     MDBTableHead, MDBTable, MDBTableBody, MDBBtn, MDBIcon
 } from 'mdbreact';
 import Navbar from '../../../../navbar/components/Navbar';
-import dataRows from './Candidates.json';
 import Swal from 'sweetalert2';
 import axios from './axios.js';
 
@@ -13,13 +12,7 @@ class Candidates extends Component{
         super(props);
          
         this.state ={
-          name:'',
-          email:"",
-          phone:"",       
-          academic_level:"",       
-          sch_id:0,       
-          status:0 
-    
+            evaluators:[]
         }
     } 
 
@@ -45,13 +38,13 @@ class Candidates extends Component{
             sort: 'asc'
         },
         {
-            label: 'Horario',
-            field: 'horario',
+            label: 'Nivel Academico',
+            field: 'nivel',
             sort: 'asc'
         },
         {
-            label: 'Nivel Academico',
-            field: 'nivel',
+            label: 'Horario',
+            field: 'horario',
             sort: 'asc'
         },
         {
@@ -62,28 +55,39 @@ class Candidates extends Component{
     
     ];
     
-     componentDidMount(){
+     async componentDidMount(){
 
-        axios.get(`evaluators/0`)
+        await axios.get(`evaluators/0`)
         .then(res => {
-          const persons = res.data;
-          console.log(persons)
+          const respuesta = res.data.msg;
+            this.setState({
+                evaluators: respuesta.evaluators
+            });
         })
-        
-        /*
-        const response = await fetch('https://10.20.10.5:3001/evaluators/0')
-            const data = await response.json()
-            console.log(data)
-        */
+    };
 
+    approveAlert(ev_id){
 
-        /*
-        Swal.fire(
+        axios.post(`http://10.20.10.2:3001/evaluators/update-status/${ev_id}`, {
+            request: {
+              msg: {
+                  status : 1
+              }
+          }
+          })
+          .then(Swal.fire(
             '¡Aprobado!',
             'Evaluador aprobado.',
             'success'
-          )*/
-    };
+          ))
+          .catch(function (error) {
+            console.log(error);
+          });
+
+        /*
+        
+          */
+    }
     
     rejectAlert(){
         Swal.fire({
@@ -106,21 +110,19 @@ class Candidates extends Component{
           })
     }
     
-    
-    
-    
-    
-    
-    
+    handleClick = e => this.approveAlert(e.target.id);
     
     render(){
-        for (var i = 0; i < dataRows.length; i++) {
-            dataRows[i].handle = 
+        this.state.evaluators.forEach(element => {
+            delete element.ev_status;
+            var idActual= element.ev_id;
+            element.handle = 
             <div className="text-center">
-                <MDBBtn color="green" size="sm" onClick={this.aproveAlert}><MDBIcon icon="check" className="mr-2" /> Aprobar</MDBBtn>
-                <MDBBtn color="red" size="sm" onClick={this.rejectAlert}><MDBIcon icon="times" className="mr-2" /> Rechazar</MDBBtn>
+                <MDBBtn id={idActual} color="green" size="sm" onClick={this.handleClick}><MDBIcon icon="check" className="mr-2" /> Aprobar</MDBBtn>
+                <MDBBtn  color="red" size="sm" onClick={this. rejectAlert}><MDBIcon icon="times" className="mr-2" /> Rechazar</MDBBtn>
             </div>
-        }
+            console.log(this.state.evaluators)
+        });
         return (
             <div className="text-center">
             <Navbar/>
@@ -134,7 +136,7 @@ class Candidates extends Component{
                                 <MDBCardBody>
                                     <MDBTable btn responsive hover>
                                         <MDBTableHead columns={this.columns} />
-                                        <MDBTableBody rows={dataRows} />
+                                        <MDBTableBody rows={this.state.evaluators} />
                                     </MDBTable>
                                 </MDBCardBody>
                             </MDBCard>

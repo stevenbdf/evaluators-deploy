@@ -33,7 +33,8 @@ app.use(function(req, res, next) {
         next();
     });
 
-app.get('/', (request, response) => {
+
+    app.get('/', (request, response) => {
     response.json({
         message: "Hola mundo"
     })
