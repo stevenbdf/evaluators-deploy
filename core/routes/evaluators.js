@@ -131,20 +131,17 @@ router.put('/update/:id', async (req, res) => {
 })
 
 //UpdateStatus a Evaluator
-router.put('/update-status/:id', async (req, res) => {
+router.post('/update-status/:id', async (req, res) => {
     try {
         let obj = req.body.request.msg
-        let row_update = await Evaluator.update(
+        await Evaluator.update(
             { ev_status: obj.status },
             { returning: true, where: { ev_id: req.params.id } }
         )
         res.json({
-            code: 201,
-            message: "Success",
-            msg: {
-                description: "rows affected (" + row_update[0] + ")",
-                new_row: row_update[1]
-            }
+            code: 205,
+            message: "Reset Content",
+            msg: {}
         })
     } catch (err) {
         res.json({

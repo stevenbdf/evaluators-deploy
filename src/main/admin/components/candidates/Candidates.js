@@ -68,7 +68,7 @@ class Candidates extends Component{
 
     approveAlert(ev_id){
 
-        axios.post(`http://10.20.10.2:3001/evaluators/update-status/${ev_id}`, {
+        axios.post(`http://localhost:3001/evaluators/update-status/${ev_id}`, {
             request: {
               msg: {
                   status : 1
@@ -83,10 +83,6 @@ class Candidates extends Component{
           .catch(function (error) {
             console.log(error);
           });
-
-        /*
-        
-          */
     }
     
     rejectAlert(){
@@ -119,7 +115,7 @@ class Candidates extends Component{
             element.handle = 
             <div className="text-center">
                 <MDBBtn id={idActual} color="green" size="sm" onClick={this.handleClick}><MDBIcon icon="check" className="mr-2" /> Aprobar</MDBBtn>
-                <MDBBtn  color="red" size="sm" onClick={this. rejectAlert}><MDBIcon icon="times" className="mr-2" /> Rechazar</MDBBtn>
+                <MDBBtn color="red" size="sm" onClick={this.rejectAlert}><MDBIcon icon="times" className="mr-2" /> Rechazar</MDBBtn>
             </div>
             console.log(this.state.evaluators)
         });
