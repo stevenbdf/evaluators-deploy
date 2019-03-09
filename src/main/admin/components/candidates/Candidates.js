@@ -12,7 +12,7 @@ class Candidates extends Component{
         super(props);
          
         this.state ={
-            evaluators:[]
+            evaluators:undefined
         }
     } 
 
@@ -55,7 +55,7 @@ class Candidates extends Component{
     
     ];
     
-     async componentDidMount(){
+     async componentWillMount(){
 
         await axios.get(`evaluators/0`)
         .then(res => {
@@ -63,11 +63,14 @@ class Candidates extends Component{
             this.setState({
                 evaluators: respuesta.evaluators
             });
+            
         })
+
+        
     };
 
     approveAlert(ev_id){
-
+        console.log(ev_id)
         axios.post(`http://localhost:3001/evaluators/update-status/${ev_id}`, {
             request: {
               msg: {
@@ -107,18 +110,27 @@ class Candidates extends Component{
     }
     
     handleClick = e => this.approveAlert(e.target.id);
+
     
     render(){
-        this.state.evaluators.forEach(element => {
-            delete element.ev_status;
-            var idActual= element.ev_id;
-            element.handle = 
-            <div className="text-center">
-                <MDBBtn id={idActual} color="green" size="sm" onClick={this.handleClick}><MDBIcon icon="check" className="mr-2" /> Aprobar</MDBBtn>
-                <MDBBtn color="red" size="sm" onClick={this.rejectAlert}><MDBIcon icon="times" className="mr-2" /> Rechazar</MDBBtn>
-            </div>
-            console.log(this.state.evaluators)
-        });
+        
+        const evaluatorValue =this.state.evaluators
+
+        if(evaluatorValue===undefined){
+            console.log('No hay candidatos que mostrar')
+        }else{
+            evaluatorValue.forEach(element => {
+                delete element.ev_status;
+                var idActual= element.ev_id;
+                element.handle = 
+                <div className="text-center">
+                    <MDBBtn id={idActual} color="green" size="sm" onClick={this.handleClick}><MDBIcon icon="check" className="mr-2" /> Aprobar</MDBBtn>
+                    <MDBBtn color="red" size="sm" onClick={this.rejectAlert}><MDBIcon icon="times" className="mr-2" /> Rechazar</MDBBtn>
+                </div>
+            });
+        }
+        
+
         return (
             <div className="text-center">
             <Navbar/>
