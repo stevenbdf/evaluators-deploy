@@ -15,13 +15,7 @@ router.get('/:status', async (req, res) => {
                 ev_status: req.params.status
             }
         })
-        let i = 0
-        evaluators.forEach(async element => {
-            console.log(element.sch_id)
-            let schedule = await Schedule.findByPk(element.sch_id)
-            console.log(element.sch_id)
-            i++
-        });
+        
     }
     if (evaluators[0] == undefined) {
         res.json({
@@ -73,7 +67,7 @@ router.get('/findById/:id', async (req, res) => {
 })
 
 //Delete a Evaluator
-router.delete('/delete', async (req, res) => {
+router.post('/delete', async (req, res) => {
     try {
         let obj = req.body.request.msg
         await Evaluator.destroy({

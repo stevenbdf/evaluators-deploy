@@ -36,9 +36,9 @@ class RegisterPage extends Component {
         }
     }
     })
-    .then(function(res){
-      console.log(res)
-    })
+    .then(
+      this.aproveAlert
+    )
     .catch(function (error) {
       console.log(error);
     });
