@@ -10,35 +10,73 @@ class RegisterPage extends Component {
     super(props);
      
     this.state ={
-      name:'Rodrigo',
-      email:"rodrigo.castillo@gmail.com",
-      phone:"70655153",       
-      academic_level:"Doctorado",       
-      horary:"Jueves 8:00am-12:00pm",       
+      name:'',
+      email:"",
+      phone:"",       
+      academic_level:"",       
+      horary:"",       
       status:0 
 
     }
   } 
 
-  getEvaluators = () => {
+  addEvaluator = () => {
+    var horarySelected = this.getScheduleId()
+    console.log(horarySelected)
     axios.post('http://localhost:3001/evaluators/add', {
       request: {
         msg: {
             name:this.state.name,
             email:this.state.email,
             phone:this.state.phone,       
-            academic_level:this.state.academic_level,       
-            horary:this.state.horary,       
-            status:0 
+            academic_level:this.state.academic_level, 
+            status:0,
+            sch_id: horarySelected,
+            handle : ''
         }
     }
     })
-    .then(function (response) {
-      console.log(response);
+    .then(function(res){
+      console.log(res)
     })
     .catch(function (error) {
       console.log(error);
     });
+  }
+  getScheduleId = () =>{
+    var horarioString = this.state.horary
+    var horarioNum
+    console.log(horarioString)
+    switch(horarioString  ){
+      case 'Jueves 8:00am-12:00pm':
+        horarioNum = 1
+        break;
+      case 'Jueves 1:00pm-4:00pm':
+        horarioNum = 2
+        break;
+      case 'Viernes 8:00am-12:00pm':
+        horarioNum = 3
+        break;
+      case 'Viernes 1:00pm-4:00pm':
+        horarioNum = 4
+          break;
+      case 'Sabado 8:00am-12:00pm':
+        horarioNum = 5
+        break;
+      case 'Sabado 1:00pm-4:00pm':
+        horarioNum = 6
+        break;
+      case 'Domingo 8:00am-12:00pm':
+        horarioNum = 7
+        break;
+      case 'Domingo 1:00pm-4:00pm':
+        horarioNum = 8
+          break;
+      default:
+        horarioNum = 0
+          break;
+    }
+    return horarioNum;
   }
 
   handleChange = (event) => {
@@ -147,7 +185,7 @@ render(){
                       </div>
   
                       <div className="text-center py-4 mt-3">
-                          <MDBBtn color="teal"  onClick={this.getEvaluators}>
+                          <MDBBtn color="teal"  onClick={this.addEvaluator}>
                             Enviar
                             <MDBIcon icon="paper-plane" className="ml-2"/>
                           </MDBBtn>
