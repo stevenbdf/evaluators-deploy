@@ -72,7 +72,7 @@ router.get('/findById/:id', async (req, res) => {
 })
 
 //Delete a Evaluator
-router.delete('/delete', async (req, res) => {
+router.post('/delete', async (req, res) => {
     try {
         let obj = req.body.request.msg
         await Evaluator.destroy({

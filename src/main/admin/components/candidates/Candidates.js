@@ -12,7 +12,7 @@ class Candidates extends Component{
         super(props);
          
         this.state ={
-            evaluators:[]
+            evaluators:undefined
         }
     } 
 
@@ -55,19 +55,35 @@ class Candidates extends Component{
     
     ];
     
-     async componentDidMount(){
-
-        await axios.get(`evaluators/0`)
+     componentDidMount(){
+        console.log('mount')
+        axios.get(`evaluators/0`)
         .then(res => {
           const respuesta = res.data.msg;
             this.setState({
                 evaluators: respuesta.evaluators
             });
+            
         })
+        
+    };
+    componentDidUpdate(){
+        if(this.state.evaluators===undefined){
+            
+        }else{
+            axios.get(`evaluators/0`)
+        .then(res => {
+          const respuesta = res.data.msg;
+            this.setState({
+                evaluators: respuesta.evaluators
+            });
+            
+        })
+        }
     };
 
     approveAlert(ev_id){
-
+        console.log(ev_id)
         axios.post(`http://localhost:3001/evaluators/update-status/${ev_id}`, {
             request: {
               msg: {
@@ -84,8 +100,28 @@ class Candidates extends Component{
             console.log(error);
           });
     }
+
+    async deleteEvaluator (ev_id){
+        await axios.post('http://localhost:3001/evaluators/delete', {
+      request: {
+            msg: {
+                id: ev_id
+            }
+        }
+    })
+    .then(
+      Swal.fire(
+                '¡Rechazado!',
+                'Evaluador rechazado.',
+                'success'
+              )
+    )
+    .catch(function (error) {
+      console.log(error);
+    });
+    }
     
-    rejectAlert(){
+    rejectAlert(ev_id){
         Swal.fire({
             title: '¿Estas seguro?',
             text: "No podras recuperar la información de un candidato rechazado.",
@@ -95,30 +131,34 @@ class Candidates extends Component{
             cancelButtonColor: '#d33',
             cancelButtonText:'Cancelar',
             confirmButtonText: 'Si, rechazar'
-          }).then((result) => {
-            if (result.value) {
-              Swal.fire(
-                '¡Rechazado!',
-                'Evaluador rechazado.',
-                'success'
-              )
-            }
-          })
+          }).then(() => {
+                this.deleteEvaluator(ev_id)
+            })
     }
     
     handleClick = e => this.approveAlert(e.target.id);
+
+    handleClickDelete = e => this.rejectAlert(e.target.id);
+
     
     render(){
-        this.state.evaluators.forEach(element => {
-            delete element.ev_status;
-            var idActual= element.ev_id;
-            element.handle = 
-            <div className="text-center">
-                <MDBBtn id={idActual} color="green" size="sm" onClick={this.handleClick}><MDBIcon icon="check" className="mr-2" /> Aprobar</MDBBtn>
-                <MDBBtn color="red" size="sm" onClick={this.rejectAlert}><MDBIcon icon="times" className="mr-2" /> Rechazar</MDBBtn>
-            </div>
-            console.log(this.state.evaluators)
-        });
+        const evaluatorValue =this.state.evaluators
+
+        if(evaluatorValue===undefined){
+            console.log('No hay candidatos que mostrar')
+        }else{
+            evaluatorValue.forEach(element => {
+                delete element.ev_status;
+                var idActual= element.ev_id;
+                element.handle = 
+                <div className="text-center">
+                    <MDBBtn id={idActual} color="green" size="sm" onClick={this.handleClick}><MDBIcon icon="check" className="mr-2" /> Aprobar</MDBBtn>
+                    <MDBBtn id={idActual} color="red" size="sm" onClick={this.handleClickDelete}><MDBIcon icon="times" className="mr-2" /> Rechazar</MDBBtn>
+                </div>
+            });
+        }
+        
+
         return (
             <div className="text-center">
             <Navbar/>
