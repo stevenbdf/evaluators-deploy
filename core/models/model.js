@@ -27,6 +27,7 @@ const Schedule = db.define('schedules', {
         autoIncrement: true
     },
     sch_schedule: Sequelize.STRING,
+    handle: Sequelize.STRING
 }, {
         timestamps: false,
     }

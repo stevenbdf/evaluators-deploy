@@ -9,7 +9,8 @@ CREATE TABLE users(
 
 CREATE TABLE schedules(
 	sch_id SERIAL NOT NULL PRIMARY KEY,
-	sch_schedule VARCHAR(200) NOT NULL
+	sch_schedule VARCHAR(200) NOT NULL,
+	handle VARCHAR(1) NULL
 );
 
 CREATE TABLE evaluators(
