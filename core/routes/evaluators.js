@@ -1,8 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const db = require('../config/database')
-const Evaluator = require('../models/Evaluator')
-const Schedule = require('../models/Schedule')
+const Model = require('../models/model')
 
 var status_user
 
@@ -10,18 +9,15 @@ var status_user
 router.get('/:status', async (req, res) => {
     status_user = req.query.status
     if (req.params.status === '0' || req.params.status === '1') {
-        var evaluators = await Evaluator.findAll({
+        var evaluators = await Model.Evaluator.findAll({
+            attributes:['ev_id','ev_name','ev_email','ev_phone','ev_academic_level'],
             where: {
                 ev_status: req.params.status
-            }
+            },
+            include: [
+                {model: Model.Schedule, as: 'schedules', attributes:['sch_schedule']}
+            ]
         })
-        let i = 0
-        evaluators.forEach(async element => {
-            console.log(element.sch_id)
-            let schedule = await Schedule.findByPk(element.sch_id)
-            console.log(element.sch_id)
-            i++
-        });
     }
     if (evaluators[0] == undefined) {
         res.json({
@@ -31,6 +27,9 @@ router.get('/:status', async (req, res) => {
             }
         })
     } else {
+        evaluators.forEach((item)=>{
+            item.handle= ''
+        })
         res.json({
             status: 200,
             message: "Ok",
@@ -44,7 +43,7 @@ router.get('/:status', async (req, res) => {
 //FindById Evaluator
 router.get('/findById/:id', async (req, res) => {
     try {
-        let evaluator = await Evaluator.findByPk(req.params.id)
+        let evaluator = await Model.Evaluator.findByPk(req.params.id)
         if (evaluator == null) {
             res.json({
                 status: 204,
@@ -98,12 +97,11 @@ router.delete('/delete', async (req, res) => {
 })
 
 //Update Evaluator
-router.put('/update/:id', async (req, res) => {
+router.post('/update/:id', async (req, res) => {
     try {
-        let evaluator = await Evaluator.findAll({ where: { ev_id: req.params.id } })
-
+        let evaluator = await Model.Evaluator.findAll({ where: { ev_id: req.params.id } })
         let obj = req.body.request.msg
-        let row_update = await Evaluator.update(
+        await Evaluator.update(
             {
                 ev_name: (obj.name === '') ? evaluator.ev_name : obj.name,
                 ev_email: (obj.email === '') ? evaluator.ev_email : obj.email,
@@ -129,7 +127,7 @@ router.put('/update/:id', async (req, res) => {
             code: 400,
             message: " Bad Request",
             msg: {
-                description: ''
+                description: err
             }
         })
     }
@@ -139,7 +137,7 @@ router.put('/update/:id', async (req, res) => {
 router.post('/update-status/:id', async (req, res) => {
     try {
         let obj = req.body.request.msg
-        await Evaluator.update(
+        await Model.Evaluator.update(
             { ev_status: obj.status },
             { returning: true, where: { ev_id: req.params.id } }
         )
@@ -176,7 +174,7 @@ router.post('/add', async (req, res) => {
 
         let { ev_name, ev_email, ev_phone, ev_academic_level, ev_status, sch_id } = data
 
-        await Evaluator.create({
+        await Model.Evaluator.create({
             ev_name,
             ev_email,
             ev_phone,
