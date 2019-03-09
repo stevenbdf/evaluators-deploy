@@ -1,54 +1,93 @@
 const express = require('express')
 const router = express.Router()
-const db = require('../config/database')
 const Model = require('../models/model')
 
 var status_user
 
-//Get evaluator list
+//Get evaluator list by sttus
 router.get('/:status', async (req, res) => {
     status_user = req.query.status
     if (req.params.status === '0' || req.params.status === '1') {
         var evaluators = await Model.Evaluator.findAll({
-            attributes:['ev_id','ev_name','ev_email','ev_phone','ev_academic_level'],
+            attributes: ['ev_id', 'ev_name', 'ev_email', 'ev_phone', 'ev_academic_level'],
             where: {
                 ev_status: req.params.status
             },
             include: [
-                {model: Model.Schedule, as: 'schedules', attributes:['sch_schedule']}
+                { model: Model.Schedule, as: 'schedules', attributes: ['sch_schedule'] }
             ]
         })
-    }
-    if (evaluators[0] == undefined) {
-        res.json({
-            status: 204,
-            message: "No Content",
-            msg: {                
-            }
+        if (evaluators[0] == undefined) {
+            res.json({
+                status: 204,
+                message: "No Content",
+                msg: {
+                }
+            })
+        } else {
+            evaluators.forEach((item) => {
+                item.handle = ''
+            })
+            res.json({
+                status: 200,
+                message: "Ok",
+                msg: {
+                    evaluators
+                }
+            })
+        }
+    } else if (req.params.status === '-1') {
+        var evaluators = await Model.Evaluator.findAll({
+            attributes: ['ev_id', 'ev_name', 'ev_email', 'ev_phone', 'ev_academic_level', 'ev_status'],
+            include: [
+                { model: Model.Schedule, as: 'schedules', attributes: ['sch_schedule'] }
+            ]
         })
+        if (evaluators[0] == undefined) {
+            res.json({
+                status: 204,
+                message: "No Content",
+                msg: {
+                }
+            })
+        } else {
+            evaluators.forEach((item) => {
+                item.handle = ''
+            })
+            res.json({
+                status: 200,
+                message: "Ok",
+                msg: {
+                    evaluators
+                }
+            })
+        }
     } else {
-        evaluators.forEach((item)=>{
-            item.handle= ''
-        })
         res.json({
-            status: 200,
-            message: "Ok",
+            code: 404,
+            message: " Not found",
             msg: {
-                evaluators
+                description: ""
             }
         })
     }
+
 })
 
 //FindById Evaluator
 router.get('/findById/:id', async (req, res) => {
     try {
-        let evaluator = await Model.Evaluator.findByPk(req.params.id)
+        let evaluator = await Model.Evaluator.findByPk(req.params.id, {
+            attributes: ['ev_id', 'ev_name', 'ev_email', 'ev_phone', 'ev_academic_level', 'ev_status'],
+            include: [
+                { model: Model.Schedule, as: 'schedules' }
+            ]
+        })
         if (evaluator == null) {
             res.json({
-                status: 204,
-                message: "No Content",
-                msg: {                
+                status: 404,
+                message: "Not found",
+                msg: {
                 }
             })
         } else {
@@ -65,7 +104,7 @@ router.get('/findById/:id', async (req, res) => {
             code: 400,
             message: " Bad Request",
             msg: {
-                description: ""
+                description: err
             }
         })
     }
@@ -75,22 +114,33 @@ router.get('/findById/:id', async (req, res) => {
 router.post('/delete', async (req, res) => {
     try {
         let obj = req.body.request.msg
-        await Evaluator.destroy({
-            where: {
-                ev_id: obj.id
-            }
-        })
-        res.json({
-            code: 205,
-            message: "Reset Content",
-            msg: {}
-        })
+        let ev = await Model.Evaluator.findByPk(obj.id)
+        if (ev == null) {
+            res.json({
+                status: 404,
+                message: "Not found",
+                msg: {
+                }
+            })
+        } else {
+            await Model.Evaluator.destroy({
+                where: {
+                    ev_id: obj.id
+                }
+            })
+            res.json({
+                code: 205,
+                message: "Reset Content",
+                msg: {}
+            })
+        }
     } catch (err) {
+
         res.json({
             code: 400,
-            message: " Bad Request",
+            message: " Bad Requested",
             msg: {
-                description: ""
+                description: err
             }
         })
     }
@@ -99,29 +149,37 @@ router.post('/delete', async (req, res) => {
 //Update Evaluator
 router.post('/update/:id', async (req, res) => {
     try {
-        let evaluator = await Model.Evaluator.findAll({ where: { ev_id: req.params.id } })
-        let obj = req.body.request.msg
-        await Evaluator.update(
-            {
-                ev_name: (obj.name === '') ? evaluator.ev_name : obj.name,
-                ev_email: (obj.email === '') ? evaluator.ev_email : obj.email,
-                ev_phone: (obj.phone === '') ? evaluator.ev_phone : obj.phone,
-                ev_academic_level: (obj.academic_level === '') ? evaluator.ev_academic_level : obj.academic_level,
-                ev_status: (obj.status === '') ? evaluator.ev_status : obj.status,
-                sch_id: (obj.sch_id === '') ? evaluator.sch_id : obj.sch_id
-            }, {
-                returning: true,
-                where:
+        let evaluator = await Model.Evaluator.findByPk(req.params.id)
+        if (evaluator != null) {
+            let obj = req.body.request.msg
+            await Model.Evaluator.update(
                 {
-                    ev_id: req.params.id
+                    ev_name: (obj.name === '') ? evaluator.ev_name : obj.name,
+                    ev_email: (obj.email === '') ? evaluator.ev_email : obj.email,
+                    ev_phone: (obj.phone === '') ? evaluator.ev_phone : obj.phone,
+                    ev_academic_level: (obj.academic_level === '') ? evaluator.ev_academic_level : obj.academic_level,
+                    ev_status: (obj.status === '') ? evaluator.ev_status : obj.status,
+                    sch_id: (obj.sch_id === '') ? evaluator.sch_id : obj.sch_id
+                }, {
+                    returning: true,
+                    where:
+                    {
+                        ev_id: req.params.id
+                    }
                 }
-            }
-        )
-        res.json({
-            code: 205,
-            message: "Reset Content",
-            msg: {}
-        })
+            )
+            res.json({
+                code: 205,
+                message: "Reset Content",
+                msg: {}
+            })
+        } else {
+            res.json({
+                code: 404,
+                message: "Not found",
+                msg: {}
+            })
+        }
     } catch (err) {
         res.json({
             code: 400,
@@ -137,15 +195,24 @@ router.post('/update/:id', async (req, res) => {
 router.post('/update-status/:id', async (req, res) => {
     try {
         let obj = req.body.request.msg
-        await Model.Evaluator.update(
-            { ev_status: obj.status },
-            { returning: true, where: { ev_id: req.params.id } }
-        )
-        res.json({
-            code: 205,
-            message: "Reset Content",
-            msg: {}
-        })
+        let evaluator = await Model.Evaluator.findByPk(req.params.id)
+        if (evaluator != null) {
+            await Model.Evaluator.update(
+                { ev_status: obj.status },
+                { where: { ev_id: req.params.id } }
+            )
+            res.json({
+                code: 205,
+                message: "Reset Content",
+                msg: {}
+            })
+        }else{
+            res.json({
+                code: 404,
+                message: "Not found",
+                msg: {}
+            })
+        }
     } catch (err) {
         res.json({
             code: 400,

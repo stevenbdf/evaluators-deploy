@@ -4,7 +4,6 @@
         "url": "http://localhost:3001/evaluators/:status",
         "method": "get"
     },
-
     //Agregar evaluator como candidato
     {
         "url": "http://localhost:3001/evaluators/add",
@@ -13,19 +12,19 @@
     {
         "request": {
             "msg": {
-                "name": "Rodrigo",
-                "email": "rodrigo.castillo@gmail.com",
-                "phone": "70655153",
+                "name": "Cariltos",
+                "email": "stedsaf.castillo@gmail.com",
+                "phone": "sadf",
                 "academic_level": "bien prron",
-                "horary": "1",
-                "status": "0"
+                "status": "0",
+                "sch_id": "1"
             }
         }
     },
-    //Actualizar candidato a evaluador
+    //Actualizar estado candidato a evaluador
     {
         "url": "http://localhost:3001/evaluators/update-status/:id",
-        "method": "put"
+        "method": "post"
     },
     {
         "request": {
@@ -33,5 +32,39 @@
                 "status": "1"
             }
         }
+    },
+    //Actualizar evaluador
+    {
+        "url": "http://localhost:3001/evaluators/update/:id",
+        "method": "post"
+    },
+    {
+        "request": {
+            "msg": {
+                "name": "Steven",
+                "email": "steven.pipian@gmail.com",
+                "phone": "65446545",
+                "academic_level": "",
+                "status": "0",
+                "sch_id": ""
+            }
+        }
+    },
+    //Eliminar evaluador
+    {
+        "url": "http://localhost:3001/evaluators/delete",
+        "method": "post"
+    },
+    {
+        "request": {
+            "msg": {
+                "id": "341"
+            }
+        }
+    },
+    //Seleccionar por id
+    {
+        "url": "http://localhost:3001/evaluators/findById/:id",
+        "method": "get"
     }
 ]
