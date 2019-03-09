@@ -6,13 +6,22 @@ const User = require('../models/User')
 //Get user list
 router.get('/', async (req, res) => {
     let users = await User.findAll();
-    res.json({
-        code: 200,
-        message: "Ok",
-        msg:{
-            users
-        }
-    })
+    if (users[0] == undefined) {
+        res.json({
+            status: 204,
+            message: "No Content",
+            msg: {                
+            }
+        })
+    } else {
+        res.json({
+            status: 200,
+            message: "Ok",
+            msg: {
+                users
+            }
+        })
+    }
 })
 
 //Add a user
@@ -37,11 +46,9 @@ router.post('/add', async (req, res) => {
             us_password
         })
         res.json({
-            code: 201,
-            message: "Success",
-            msg:{
-                description:"User successfully added"
-            }
+            code: 205,
+            message: "Reset Content",
+            msg: {}
         })
     } catch (err) {
         res.json({
@@ -53,5 +60,8 @@ router.post('/add', async (req, res) => {
         })
     }
 })
+
+//findById
+
 
 module.exports = router
