@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const db = require('../config/database')
-const User = require('../models/User')
+const User = require('../models/model')
 
 //Get user list
 router.get('/', async (req, res) => {

@@ -33,9 +33,39 @@ const Schedule = db.define('schedules', {
     }
 )
 
-Evaluator.belongsTo(Schedule, {as: 'schedules', foreignKey: 'sch_id'})
+const User = db.define('users', {
+    us_id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+    us_name: Sequelize.STRING,
+    us_lastname: Sequelize.STRING,
+    us_email: Sequelize.STRING,
+    us_password: Sequelize.STRING,
+}, {
+        timestamps: false,
+    }
+)
 
-module.exports =  {
+const Binnacle = db.define('binnacles', {
+    bin_id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    bin_return_code: Sequelize.INTEGER,
+    bin_message: Sequelize.STRING,
+    bin_datetime: Sequelize.DATE
+
+}, {
+        timestamps: false,
+    }
+)
+
+Binnacle.belongsTo(Evaluator, {as: 'evaluators', foreignKey: 'id_author'})
+Binnacle.belongsTo(User, {as: 'users', foreignKey: 'id_author'})
+Evaluator.belongsTo(Schedule, { as: 'schedules', foreignKey: 'sch_id' })
+
+module.exports = {
     Schedule,
-    Evaluator
+    Evaluator, 
+    User,
+    Binnacle
 }

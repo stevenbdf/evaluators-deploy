@@ -17,7 +17,7 @@ db.authenticate()
 const app = express()
 
 app.use(express.json());
-
+app.set('trust proxy', true);
 app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Credentials', true);
     res.header('Access-Control-Allow-Origin', req.headers.origin);

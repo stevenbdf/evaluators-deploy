@@ -14,9 +14,10 @@ router.get('/:status', async (req, res) => {
                 ev_status: req.params.status
             },
             include: [
-                { model: Model.Schedule, as: 'schedules', attributes: ['sch_schedule'] }
+                { model: Model.Schedule, as: 'schedules' }
             ]
         })
+        console.log(req.connection.remoteAddress.split(':')[3]+' evaluators findAll by status '+req.params.status)
         if (evaluators[0] == undefined) {
             res.json({
                 status: 204,
@@ -40,7 +41,7 @@ router.get('/:status', async (req, res) => {
         var evaluators = await Model.Evaluator.findAll({
             attributes: ['ev_id', 'ev_name', 'ev_email', 'ev_phone', 'ev_academic_level', 'ev_status'],
             include: [
-                { model: Model.Schedule, as: 'schedules', attributes: ['sch_schedule'] }
+                { model: Model.Schedule, as: 'schedules' }
             ]
         })
         if (evaluators[0] == undefined) {
@@ -163,9 +164,9 @@ router.post('/update/:id', async (req, res) => {
                 }, {
                     returning: true,
                     where:
-                    {
-                        ev_id: req.params.id
-                    }
+                        {
+                            ev_id: req.params.id
+                        }
                 }
             )
             res.json({
@@ -206,7 +207,7 @@ router.post('/update-status/:id', async (req, res) => {
                 message: "Reset Content",
                 msg: {}
             })
-        }else{
+        } else {
             res.json({
                 code: 404,
                 message: "Not found",
@@ -241,19 +242,30 @@ router.post('/add', async (req, res) => {
 
         let { ev_name, ev_email, ev_phone, ev_academic_level, ev_status, sch_id } = data
 
-        await Model.Evaluator.create({
-            ev_name,
-            ev_email,
-            ev_phone,
-            ev_academic_level,
-            ev_status,
-            sch_id,
-        })
-        res.json({
-            code: 205,
-            message: "Reset Content",
-            msg: {}
-        })
+        if (ev_name.trim().length == 0 || ev_email.trim().length == 0 || ev_phone.trim().length == 0 || ev_academic_level.trim().length == 0 ||
+            ev_status.trim().length == 0 || sch_id.trim().length == 0) {
+                res.json({esta_mierda:'esta vacia'})
+        } else {
+            let row = await Model.Evaluator.create({
+                ev_name,
+                ev_email,
+                ev_phone,
+                ev_academic_level,
+                ev_status,
+                sch_id,
+            })
+
+            res.json({ row })
+
+            res.json({
+                code: 205,
+                message: "Reset Content",
+                msg: {}
+            })
+        }
+
+
+
     } catch (err) {
         res.json({
             code: 400,
