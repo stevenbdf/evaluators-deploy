@@ -1,8 +1,8 @@
 const Sequelize = require('sequelize')
 
 module.exports = new Sequelize('bd_evaluators', 'evaluatorsDS', 'evaluatorssys', {
-    host: 'localhost',
-    port:5433,
+    host: '10.20.10.2',
+    port:5432,
     dialect: 'postgres',
     pool: {
         max: 5,
