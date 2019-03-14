@@ -149,7 +149,7 @@ class Candidates extends Component{
        //if data exists
        if(this.state.ordenados){
             this.state.evaluators.forEach(element => {
-                var idActual= element.ev_id;
+                var idActual = element.ev_id;
                 delete element.ev_status;
                 element.schedules = element.schedules.sch_schedule
                 element.handle = 

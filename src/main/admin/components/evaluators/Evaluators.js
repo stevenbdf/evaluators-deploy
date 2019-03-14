@@ -5,28 +5,22 @@ import {
     MDBModal, MDBModalBody, MDBModalHeader
 } from 'mdbreact';
 import Navbar from '../../../../navbar/components/Navbar';
-import Swal from 'sweetalert2';
 import axios from '../candidates/axios';
 
 const url = "localhost";
 
-var skere = ''
+let evaluatorsCopy = []
 
 class Evaluators extends Component{
 
 constructor(props) {
     super(props);
-    this.state = {
+    this.state = {  
         modal: false,
-        firstTime: true,
         evaluators: undefined,
         ordenados: false,
-        id: ' ',
-        nombre: ' ',
-        correo: ' ',
-        telefono: ' ',
-        horario: ' ',
-        nivel: ' '
+        id: 0,nombre: undefined,correo: undefined, telefono: undefined,horario: undefined, nivel: undefined,
+        firstTime: true
       }
     }
     
@@ -73,72 +67,58 @@ columns = [
 
       
 async toggle(id){
-    await this.setModalInfo(skere[id])
     
-
-    console.log(this.state.id)
-    console.log(this.state.nombre)
-    console.log(this.state.correo)
-    console.log(this.state.telefono)
-    console.log(this.state.horario)
-    console.log(this.state.nivel)
-
+    console.log(evaluatorsCopy[id])
+    var nombre = evaluatorsCopy[id].ev_name
     this.setState({
-        ordenados:true,
-        modal:true
-    })
-    
-
-}
-
-async setModalInfo(array){
-    await this.setState({
-        ordenados: false,
-        id: array.ev_id,
-        nombre: array.ev_name,
-        correo: array.ev_email,
-        telefono: array.ev_phone,
-        horario: array.schedules,
-        nivel: array.ev_academic_level,
-        firstTime: false
+        firstTime: false,
+        nombre: nombre,
+        correo: evaluatorsCopy[id].ev_email,
+        modal: true
     })
 }
+
 
 toggleModal = () =>{
     this.setState({
-        modal: !this.state.modal
+        modal: !this.state.modal,
+        firstTime: false
     });
 }
 
 
 
-approveAlert(ev_id){
-    axios.post(`http://${url}:3001/evaluators/update-status/${ev_id}`, {
+async aproveAlert(ev_id){
+    this.setState({
+        ordenados: false,
+        
+    });
+    const res = await axios.post(`http://${url}:3001/evaluators/update/${ev_id}`, {
         request: {
-          msg: {
-              status : 1
-          }
-      }
-      })
-      .then(Swal.fire(
-        '¡Aprobado!',
-        'Evaluador aprobado.',
-        'success'
-      ))
-      .catch(function (error) {
-        console.log(error);
-      });
+            msg: {
+                name: this.state.evaluators.ev_name,
+                email: this.state.evaluators.ev_email,
+                phone: this.state.evaluators.ev_phone,
+                academic_level:this.state.evaluators.ev_academic_level,
+                status: "1",
+                sch_id: this.state.evaluators.schedules
+            }
+        }
+    })
+    if(res.data.status===200){
+        this.actualizarTabla()
+    }
+      
 }
 
 handleChange = e => {
-    const target = e.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    const name = target.name;
-
+    const name = e.target.name
     this.setState({
-      [name]: value
-    });
-  }
+        firstTime: false,
+        [name]: e.target.value
+   });
+}
+
 
 handleClick = e => this.toggle(e.target.id);
 
@@ -147,15 +127,13 @@ handleClick = e => this.toggle(e.target.id);
 async actualizarTabla(){
     const res = await axios.get(`evaluators/1`)
     const respuesta = res.data.msg;
-    await this.setState({
+    this.setState({
         evaluators: respuesta.evaluators
     });
-    skere = (this.state.evaluators)
-    console.log(skere[0])
+
     if(res.data.status===200){
         this.setState({
-            ordenados:true,
-            horario: 4
+            ordenados:true
         })
     }
 }
@@ -167,17 +145,20 @@ componentDidMount(){
 
 
 render(){
-    if(this.state.ordenados && this.state.firstTime){
+    if(this.state.ordenados){
+        console.log('render')
         var i = 0;
-        
-        this.state.evaluators.forEach(element => {
-            element.schedules = element.schedules.sch_schedule
-            element.handle = 
-            <div className="text-center">
-               <MDBBtn id={i} color="orange" size="sm" onClick={this.handleClick}><MDBIcon icon="pen" className="mr-2" /> Editar</MDBBtn>
-            </div>
-            i++;
-        });
+        if(this.state.firstTime){
+            this.state.evaluators.forEach(element => {
+                element.schedules = element.schedules.sch_id
+                element.handle = 
+                <div className="text-center">
+                   <MDBBtn id={i} color="orange" size="sm" onClick={this.handleClick}><MDBIcon icon="pen" className="mr-2" /> Editar</MDBBtn>
+                </div>
+                i++;
+            });
+         evaluatorsCopy = this.state.evaluators   
+        }
     }
     return (
         <div>
@@ -214,20 +195,15 @@ render(){
                     <MDBModalHeader toggle={this.toggleModal}>Editar Evaluador</MDBModalHeader>
                     <MDBModalBody>
                         <form>
-                            <MDBInput label="Codigo:" hint={(this.state.id).toString()} disabled type="text" />
-                            <MDBInput label="Nombre:" name="nombre" value={(this.state.nombre)} type="text" onChange={this.handleChange} />
+                            <MDBInput label="Codigo:" hint={(evaluatorsCopy[this.state.id].ev_id).toString()} disabled type="text" />
+                            <MDBInput label="Nombre:" name="nombre" value={this.state.nombre} type="text" onChange={this.handleChange} />
                             <MDBInput label="Correo:" name="correo" value={(this.state.correo)} type="email" onChange={this.handleChange} />
                             <MDBInput label="Telefono:" name="telefono" value={(this.state.telefono).toString()} type="text" onChange={this.handleChange} />
                             <label className="d-block">Horario:
                                 <select name="horario" className="browser-default custom-select" value={this.state.horario} onChange={this.handleChange} >
-                                    <option value="Jueves 8:00am-12:00pm">Jueves 8:00am-12:00pm</option>
-                                    <option value="Jueves 1:00pm-4:00pm">Jueves 1:00pm-4:00pm</option>
-                                    <option value="Viernes 8:00am-12:00pm">Viernes 8:00am-12:00pm</option>
-                                    <option value="Viernes 1:00pm-4:00pm">Viernes 1:00pm-4:00pm</option>
-                                    <option value="Sabado 8:00am-12:00pm">Sabado 8:00am-12:00pm</option>
-                                    <option value="Sabado 1:00pm-4:00pm">Sabado 1:00pm-4:00pm</option>
-                                    <option value="Domingo 8:00am-12:00pm">Domingo 8:00am-12:00pm</option>
-                                    <option value="Domingo 1:00pm-4:00pm">Domingo 1:00pm-4:00pm</option>
+                                    <option value="1">Jueves 8:00am-12:00pm</option>
+                                    <option value="2">Jueves 1:00pm-4:00pm</option>
+                                    <option value="3">Viernes 8:00am-12:00pm</option>
                                 </select>
                             </label>
                             <label className="d-block">
