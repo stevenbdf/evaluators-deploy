@@ -1,11 +1,10 @@
 const express = require('express')
 const router = express.Router()
-const db = require('../config/database')
-const User = require('../models/model')
+const Model = require('../models/model')
 
 //Get user list
 router.get('/', async (req, res) => {
-    let users = await User.findAll();
+    let users = await Model.User.findAll();
     if (users[0] == undefined) {
         res.json({
             status: 204,

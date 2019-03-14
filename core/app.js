@@ -1,6 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const path = require('path')
+const binn = require('./routes/binnacles.js')
 
 const port = 3001
 
@@ -29,7 +30,7 @@ app.use(function (req, res, next) {
 
 app.get('/', (request, response) => {
     response.json({
-        message: "Hola mundo"
+        message:binn.findAll
     })
 })
 
@@ -37,6 +38,7 @@ app.get('/', (request, response) => {
 app.use('/users', require('./routes/users'))
 app.use('/evaluators', require('./routes/evaluators'))
 app.use('/schedules', require('./routes/schedules'))
+app.use('/binnacles', require('./routes/binnacles'))
 
 app.listen(port, () => {
     console.log(`App running on port ${port}.`)
