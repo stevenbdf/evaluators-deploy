@@ -14,7 +14,7 @@ router.get('/:status', async (req, res) => {
                 ev_status: req.params.status
             },
             include: [
-                { model: Model.Schedule, as: 'schedules' }
+                { model: Model.Schedule, as: 'schedule' }
             ]
         })
         console.log(req.connection.remoteAddress.split(':')[3]+' evaluators findAll by status '+req.params.status)
@@ -227,13 +227,12 @@ router.post('/update-status/:id', async (req, res) => {
 
 //Add a Evaluator
 router.post('/add', async (req, res) => {
-
     try {
         let obj = req.body.request.msg
 
         const data = {
             ev_name: obj.name,
-            ev_email: obj.email,
+            ev_email: obj.email.toLowerCase(),
             ev_phone: obj.phone,
             ev_academic_level: obj.academic_level,
             ev_status: obj.status,
@@ -244,7 +243,12 @@ router.post('/add', async (req, res) => {
 
         if (ev_name.trim().length == 0 || ev_email.trim().length == 0 || ev_phone.trim().length == 0 || ev_academic_level.trim().length == 0 ||
             ev_status.trim().length == 0 || sch_id.trim().length == 0) {
-                res.json({esta_mierda:'esta vacia'})
+                res.json({
+                    code: 411,
+                    message: "Length Required",
+                    msg: {}
+                })
+                
         } else {
             let row = await Model.Evaluator.create({
                 ev_name,
@@ -254,14 +258,12 @@ router.post('/add', async (req, res) => {
                 ev_status,
                 sch_id,
             })
-
-            res.json({ row })
-
             res.json({
                 code: 205,
                 message: "Reset Content",
-                msg: {}
+                msg: row
             })
+
         }
 
     } catch (err) {

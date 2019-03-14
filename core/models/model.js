@@ -39,6 +39,7 @@ const User = db.define('users', {
     us_lastname: Sequelize.STRING,
     us_email: Sequelize.STRING,
     us_password: Sequelize.STRING,
+    handle: Sequelize.STRING,
 }, {
         timestamps: false,
     }
@@ -52,16 +53,15 @@ const Binnacle = db.define('binnacles', {
     },
     bin_return_code: Sequelize.INTEGER,
     bin_message: Sequelize.STRING,
-    bin_datetime: Sequelize.DATE
-
+    bin_datetime: Sequelize.DATE,
+    handle: Sequelize.STRING,
 }, {
         timestamps: false,
     }
 )
 
-Binnacle.belongsTo(Evaluator, {as: 'evaluators', foreignKey: 'id_author'})
-Binnacle.belongsTo(User, {as: 'users', foreignKey: 'id_author'})
-Evaluator.belongsTo(Schedule, { as: 'schedules', foreignKey: 'sch_id' })
+Binnacle.belongsTo(User , {as: 'user', foreignKey: 'us_id'})
+Evaluator.belongsTo(Schedule, { as: 'schedule', foreignKey: 'sch_id' })
 
 module.exports = {
     Schedule,

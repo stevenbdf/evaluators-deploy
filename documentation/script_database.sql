@@ -30,19 +30,20 @@ CREATE TABLE binnacles(
 	bin_return_code INT NOT NULL,
 	bin_message VARCHAR(255) NOT NULL,
 	bin_datetime TIMESTAMP NOT NULL,
-	id_author INT NOT NULL,
-	FOREIGN KEY(id_author) REFERENCES users(us_id),
-	FOREIGN KEY(id_author) REFERENCES evaluators(ev_id)
+	us_id INT NOT NULL REFERENCES users(us_id),
+	handle VARCHAR(1) NULL
 );
 
 CREATE TABLE levels(
 	lv_id SERIAL NOT NULL PRIMARY KEY,
-	lv_name VARCHAR(60) NOT NULL
+	lv_name VARCHAR(60) NOT NULL,
+	handle VARCHAR(1) NULL
 );
 
 CREATE TABLE locals(
 	lc_id SERIAL NOT NULL PRIMARY KEY,
-	lc_name VARCHAR(60) NOT NULL
+	lc_name VARCHAR(60) NOT NULL,
+	handle VARCHAR(1) NULL
 );
 
 CREATE TABLE courses(
@@ -50,11 +51,13 @@ CREATE TABLE courses(
 	cou_name VARCHAR(60) NOT NULL,
 	cou_teacher_guide VARCHAR(120) NOT NULL,
 	lv_id INT NOT NULL REFERENCES levels(lv_id),
-	lc_id INT NOT NULL REFERENCES locals(lc_id)
+	lc_id INT NOT NULL REFERENCES locals(lc_id),
+	handle VARCHAR(1) NULL
 );
 
 CREATE TABLE assignments(
 	asg_id SERIAL NOT NULL PRIMARY KEY,
 	cou_id INT NOT NULL REFERENCES courses(cou_id),
-	ev_id INT NOT NULL REFERENCES evaluators(ev_id)
+	ev_id INT NOT NULL REFERENCES evaluators(ev_id),
+	handle VARCHAR(1) NULL
 );
