@@ -1,10 +1,54 @@
-{
-    "request": {
-        "msg": {
-            "name":"Rodrigo",
-            "lastname":"Castillo",
-            "email":"rodrigo.castillo@gmail.com",
-            "password":"qwerty 123"            
+[
+    "findAll",
+    {
+        "url": "http://localhost:3001/users",
+        "method": "get"
+    },
+    "add",
+    {
+        "url": "http://localhost:3001/users/add",
+        "method": "post"
+    },
+    {
+        "request": {
+            "msg": {
+                "name": "Rodrigo Alejandro",
+                "lastname": "Castillo Monterrosa",
+                "email": "dev.rodrig@gmail.com",
+                "password": "qwerty 123"
+            }
         }
+    },
+    "update",
+    {
+        "url": "http://localhost:3001/users/update/:id",
+        "method": "post"
+    },
+    {
+        "request": {
+            "msg": {
+                "name": "",
+                "lastname": "La",
+                "email": "",
+                "password": ""
+            }
+        }
+    },
+    "delete",
+    {
+        "url": "http://localhost:3001/users/delete",
+        "method": "post"
+    },
+    {
+        "request": {
+            "msg": {
+                "id": "1"
+            }
+        }
+    },
+    "findById",
+    {
+        "url": "http://localhost:3001/users/findById/:id",
+        "method": "get"
     }
-}
+]

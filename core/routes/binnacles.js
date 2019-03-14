@@ -61,6 +61,7 @@ router.post('/add', async (req, res) => {
             bin_datetime,
             us_id,
         })
+        console.log(req.connection.remoteAddress.split(':')[3] + ' binnacles add')
         res.json({
             code: 205,
             message: "Reset Content",
@@ -95,6 +96,7 @@ router.post('/delete', async (req, res) => {
                     bin_id: obj.id
                 }
             })
+            console.log(req.connection.remoteAddress.split(':')[3] + ' binnacles delete '+obj.id)
             res.json({
                 code: 205,
                 message: "Reset Content",
@@ -112,7 +114,6 @@ router.post('/delete', async (req, res) => {
         })
     }
 })
-
 
 //update binnacle
 router.post('/update/:id', async (req, res) => {
@@ -134,6 +135,7 @@ router.post('/update/:id', async (req, res) => {
                         }
                 }
             )
+            console.log(req.connection.remoteAddress.split(':')[3] + ' binnacles update '+req.params.id)
             res.json({
                 code: 205,
                 message: "Reset Content",

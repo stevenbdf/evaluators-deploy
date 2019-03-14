@@ -1,10 +1,10 @@
 [
-    "Seleccionar todos los candidato",
+    "findById",
     {
         "url": "http://localhost:3001/evaluators/:status",
         "method": "get"
     },
-    "Agregar evaluator como candidato",
+    "add",
     {
         "url": "http://localhost:3001/evaluators/add",
         "method": "post"
@@ -21,7 +21,7 @@
             }
         }
     },
-    "Actualizar estado candidato a evaluador",
+    "update-status",
     {
         "url": "http://localhost:3001/evaluators/update-status/:id",
         "method": "post"
@@ -33,7 +33,7 @@
             }
         }
     },
-    "Actualizar evaluador",
+    "update",
     {
         "url": "http://localhost:3001/evaluators/update/:id",
         "method": "post"
@@ -50,7 +50,7 @@
             }
         }
     },
-    "Eliminar evaluador",
+    "delete",
     {
         "url": "http://localhost:3001/evaluators/delete",
         "method": "post"
@@ -62,7 +62,7 @@
             }
         }
     },
-    "Seleccionar por id",
+    "findById",
     {
         "url": "http://localhost:3001/evaluators/findById/:id",
         "method": "get"

@@ -14,7 +14,7 @@ router.get('/:status', async (req, res) => {
                 ev_status: req.params.status
             },
             include: [
-                { model: Model.Schedule, as: 'schedule' }
+                { model: Model.Schedule, as: 'schedules' }
             ]
         })
         console.log(req.connection.remoteAddress.split(':')[3]+' evaluators findAll by status '+req.params.status)
@@ -84,6 +84,7 @@ router.get('/findById/:id', async (req, res) => {
                 { model: Model.Schedule, as: 'schedules' }
             ]
         })
+        console.log(req.connection.remoteAddress.split(':')[3]+' evaluators findById '+req.params.id)
         if (evaluator == null) {
             res.json({
                 status: 404,
@@ -129,6 +130,7 @@ router.post('/delete', async (req, res) => {
                     ev_id: obj.id
                 }
             })
+            console.log(req.connection.remoteAddress.split(':')[3]+' evaluators delete '+obj.id)
             res.json({
                 code: 205,
                 message: "Reset Content",
@@ -169,6 +171,7 @@ router.post('/update/:id', async (req, res) => {
                         }
                 }
             )
+            console.log(req.connection.remoteAddress.split(':')[3]+' evaluators update '+req.params.id)
             res.json({
                 code: 205,
                 message: "Reset Content",
@@ -202,6 +205,7 @@ router.post('/update-status/:id', async (req, res) => {
                 { ev_status: obj.status },
                 { where: { ev_id: req.params.id } }
             )
+            console.log(req.connection.remoteAddress.split(':')[3]+' evaluators update-status '+req.params.id)
             res.json({
                 code: 205,
                 message: "Reset Content",
@@ -250,6 +254,7 @@ router.post('/add', async (req, res) => {
                 })
                 
         } else {
+            
             let row = await Model.Evaluator.create({
                 ev_name,
                 ev_email,
@@ -258,6 +263,7 @@ router.post('/add', async (req, res) => {
                 ev_status,
                 sch_id,
             })
+            console.log(req.connection.remoteAddress.split(':')[3]+' evaluators create '+row.id)
             res.json({
                 code: 205,
                 message: "Reset Content",

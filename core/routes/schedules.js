@@ -17,6 +17,7 @@ router.get('/', async (req, res) => {
             schedules.forEach((item) => {
                 item.handle = ''
             })
+            console.log(req.connection.remoteAddress.split(':')[3]+' schedules findAll')
             res.json({
                 status: 200,
                 message: "Ok",
@@ -38,7 +39,45 @@ router.get('/', async (req, res) => {
 })
 
 //Update schedule
-
+router.post('/update/:id', async (req, res) => {
+    try {
+        let schedule = await Model.Schedule.findByPk(req.params.id)
+        if (schedule != null) {
+            let obj = req.body.request.msg
+            await Model.Schedule.update(
+                {
+                    sch_schedule: (obj.schedule === '') ? schedule.sch_schedule : obj.schedule
+                }, {
+                    returning: true,
+                    where:
+                        {
+                            sch_id: req.params.id
+                        }
+                }
+            )
+            console.log(req.connection.remoteAddress.split(':')[3]+' schedules update by id '+req.params.id)
+            res.json({
+                code: 205,
+                message: "Reset Content",
+                msg: {}
+            })
+        } else {
+            res.json({
+                code: 404,
+                message: "Not found",
+                msg: {}
+            })
+        }
+    } catch (err) {
+        res.json({
+            code: 400,
+            message: " Bad Request",
+            msg: {
+                description: err
+            }
+        })
+    }
+})
 
 //Delete schedule
 router.post('/delete', async (req, res) => {
@@ -58,6 +97,7 @@ router.post('/delete', async (req, res) => {
                     sch_id: obj.id
                 }
             })
+            console.log(req.connection.remoteAddress.split(':')[3]+' schedules delete '+obj.id)
             res.json({
                 code: 205,
                 message: "Reset Content",
@@ -91,6 +131,7 @@ router.post('/add', async (req, res) => {
     try {
         let sch_schedule = req.body.request.msg.schedule
         await Model.Schedule.create({ sch_schedule })
+        console.log(req.connection.remoteAddress.split(':')[3]+' schedules add')
         res.json({
             code: 205,
             message: "Reset Content",
@@ -119,6 +160,7 @@ router.get('/findById/:id', async (req, res) => {
                 }
             })
         } else {
+            console.log(req.connection.remoteAddress.split(':')[3]+' schedules findById '+req.params.id)
             res.json({
                 status: 200,
                 message: "Ok",

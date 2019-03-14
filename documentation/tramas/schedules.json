@@ -1,0 +1,48 @@
+[
+    "findAll",
+    {
+        "url": "http://localhost:3001/schedules",
+        "method": "get"
+    },
+    "add",
+    {
+        "url": "http://localhost:3001/schedules/add",
+        "method": "post"
+    },
+    {
+        "request": {
+            "msg": {
+                "schedule": "Viernes en la mañana"
+            }
+        }
+    },
+    "update",
+    {
+        "url": "http://localhost:3001/schedules/update/:id",
+        "method": "post"
+    },
+    {
+        "request": {
+            "msg": {
+                "schedule": "Lunes en la noche"
+            }
+        }
+    },
+    "delete",
+    {
+        "url": "http://localhost:3001/schedules/delete",
+        "method": "post"
+    },
+    {
+        "request": {
+            "msg": {
+                "id": "2"
+            }
+        }
+    },
+    "findById",
+    {
+        "url": "http://localhost:3001/schedules/findById/:id",
+        "method": "get"
+    }
+]

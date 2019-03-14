@@ -61,7 +61,7 @@ const Binnacle = db.define('binnacles', {
 )
 
 Binnacle.belongsTo(User , {as: 'user', foreignKey: 'us_id'})
-Evaluator.belongsTo(Schedule, { as: 'schedule', foreignKey: 'sch_id' })
+Evaluator.belongsTo(Schedule, { as: 'schedules', foreignKey: 'sch_id' })
 
 module.exports = {
     Schedule,

@@ -1,0 +1,49 @@
+[
+    "findAll",
+    {
+        "url": "http://localhost:3001/binnacles",
+        "method": "get"
+    },
+    "add",
+    {
+        "url": "http://localhost:3001/binnacles/add",
+        "method": "post"
+    },
+    {
+        "request": {
+            "msg": {
+                "return_code": "3",
+                "message": "El mensaje mas fantastico",
+                "datetime": "2019-03-14 11:03:05.871631",
+                "us_id": "1"
+            }
+        }
+    },
+    "update",
+    {
+        "url": "http://localhost:3001/binnacles/update/:id",
+        "method": "post"
+    },
+    {
+        "request": {
+            "msg": {
+                "return_code": "",
+                "message": "palomaaa puto",
+                "datetime": "",
+                "us_id": "14"
+            }
+        }
+    },
+    "delete",
+    {
+        "url": "http://localhost:3001/binnacles/delete",
+        "method": "post"
+    },
+    {
+        "request": {
+            "msg": {
+                "id": "2"
+            }
+        }
+    }
+]
