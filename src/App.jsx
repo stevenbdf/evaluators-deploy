@@ -17,8 +17,8 @@ class App extends Component {
           <Switch>
             <Route exact path="/" component={Register} />
             <ProtectedRoute exact path="/admin" component={Admin} />
-            <Route exact path="/candidates" component={Candidates} />
-            <ProtectedRoute exact path="/evaluators" component={Evaluators} />
+            <ProtectedRoute exact path="/candidates" component={Candidates} />
+            <Route exact path="/evaluators" component={Evaluators} />
             <ProtectedRoute exact path="/assignments" component={Assignments} />
             <Route exact path="/login" component={Login} />
             
