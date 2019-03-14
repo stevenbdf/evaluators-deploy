@@ -25,7 +25,7 @@ class RegisterPage extends Component {
   addEvaluator = () => {
     var horarySelected = this.getScheduleId()
     console.log(horarySelected)
-    axios.post('http://10.20.10.2:3001/evaluators/add', {
+    axios.post('http://localhost:3001/evaluators/add', {
       request: {
         msg: {
             name:this.state.name,
