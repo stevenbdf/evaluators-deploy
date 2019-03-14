@@ -7,7 +7,7 @@ import Navbar from '../../../../navbar/components/Navbar';
 import Swal from 'sweetalert2';
 import axios from './axios.js';
 
-const url = "localhost"
+const url = "10.20.0.2"
 
 class Candidates extends Component{
     constructor(props) {
@@ -147,7 +147,7 @@ class Candidates extends Component{
 
    render(){
        //if data exists
-       if(this.state.ordenados){
+       if(this.state.ordenados  && this.state.evaluators!==undefined){
             this.state.evaluators.forEach(element => {
                 var idActual = element.ev_id;
                 delete element.ev_status;

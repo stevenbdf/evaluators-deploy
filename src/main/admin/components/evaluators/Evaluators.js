@@ -7,7 +7,7 @@ import {
 import Navbar from '../../../../navbar/components/Navbar';
 import axios from '../candidates/axios';
 
-const url = "localhost";
+const url = "10.20.0.2";
 
 let evaluatorsCopy = []
 
@@ -18,8 +18,14 @@ constructor(props) {
     this.state = {  
         modal: false,
         evaluators: undefined,
+        schedules: undefined,
         ordenados: false,
-        id: 0,nombre: undefined,correo: undefined, telefono: undefined,horario: undefined, nivel: undefined,
+        id: 0,
+        nombre: undefined,
+        correo: undefined,
+        telefono: undefined,
+        horario: undefined, 
+        nivel: undefined,
         firstTime: true
       }
     }
@@ -67,13 +73,14 @@ columns = [
 
       
 async toggle(id){
-    
-    console.log(evaluatorsCopy[id])
-    var nombre = evaluatorsCopy[id].ev_name
-    this.setState({
+    await this.setState({
+        idModal: evaluatorsCopy[id].ev_id,
         firstTime: false,
-        nombre: nombre,
+        nombre: evaluatorsCopy[id].ev_name,
         correo: evaluatorsCopy[id].ev_email,
+        telefono: evaluatorsCopy[id].ev_phone,
+        horario: evaluatorsCopy[id].schedules,
+        nivel: evaluatorsCopy[id].ev_academic_level,
         modal: true
     })
 }
@@ -88,25 +95,34 @@ toggleModal = () =>{
 
 
 
-async aproveAlert(ev_id){
+async aproveAlert(ev_id,idLocal){
     this.setState({
-        ordenados: false,
-        
+        ordenados: false,  
     });
-    const res = await axios.post(`http://${url}:3001/evaluators/update/${ev_id}`, {
+    const sche = await axios.post(`http://${url}:3001/schedules/findBySchedule`, {
         request: {
             msg: {
-                name: this.state.evaluators.ev_name,
-                email: this.state.evaluators.ev_email,
-                phone: this.state.evaluators.ev_phone,
-                academic_level:this.state.evaluators.ev_academic_level,
-                status: "1",
-                sch_id: this.state.evaluators.schedules
+                schedule: this.state.horario
             }
         }
     })
-    if(res.data.status===200){
-        this.actualizarTabla()
+
+    let sche_id = sche.data.msg.sch_id
+
+    const res = await axios.post(`http://${url}:3001/evaluators/update/${ev_id}`, {
+        request: {
+            msg: {
+                name: this.state.nombre,
+                email: this.state.correo,
+                phone: this.state.telefono,
+                academic_level: this.state.nivel,
+                status: "1",
+                sch_id: sche_id
+            }
+        }
+    })
+    if(res.data.code===205){
+        this.render()
     }
       
 }
@@ -132,25 +148,33 @@ async actualizarTabla(){
     });
 
     if(res.data.status===200){
+        
+        const res = await axios.get(`schedules/`)
+        const respuesta = res.data.msg;
+        this.setState({
+            schedules: respuesta.schedules
+        })
+
         this.setState({
             ordenados:true
         })
     }
 }
 
+
 //get first data from API
 componentDidMount(){
     this.actualizarTabla()
+   
 };
 
 
 render(){
     if(this.state.ordenados){
-        console.log('render')
         var i = 0;
         if(this.state.firstTime){
             this.state.evaluators.forEach(element => {
-                element.schedules = element.schedules.sch_id
+                element.schedules = element.schedules.sch_schedule
                 element.handle = 
                 <div className="text-center">
                    <MDBBtn id={i} color="orange" size="sm" onClick={this.handleClick}><MDBIcon icon="pen" className="mr-2" /> Editar</MDBBtn>
@@ -195,15 +219,19 @@ render(){
                     <MDBModalHeader toggle={this.toggleModal}>Editar Evaluador</MDBModalHeader>
                     <MDBModalBody>
                         <form>
-                            <MDBInput label="Codigo:" hint={(evaluatorsCopy[this.state.id].ev_id).toString()} disabled type="text" />
+                            <MDBInput label="Codigo:" hint={String(this.state.idModal)} disabled type="text" />
                             <MDBInput label="Nombre:" name="nombre" value={this.state.nombre} type="text" onChange={this.handleChange} />
                             <MDBInput label="Correo:" name="correo" value={(this.state.correo)} type="email" onChange={this.handleChange} />
-                            <MDBInput label="Telefono:" name="telefono" value={(this.state.telefono).toString()} type="text" onChange={this.handleChange} />
+                            <MDBInput label="Telefono:" name="telefono" value={(this.state.telefono)} type="text" onChange={this.handleChange} />
                             <label className="d-block">Horario:
-                                <select name="horario" className="browser-default custom-select" value={this.state.horario} onChange={this.handleChange} >
-                                    <option value="1">Jueves 8:00am-12:00pm</option>
-                                    <option value="2">Jueves 1:00pm-4:00pm</option>
-                                    <option value="3">Viernes 8:00am-12:00pm</option>
+                                <select name="horario" className="browser-default custom-select" value={(this.state.horario)} onChange={this.handleChange} >
+                                    {
+                                        this.state.schedules!==undefined
+                                        &&
+                                        this.state.schedules.map(item =>
+                                            <option key={item.sch_id} value={item.sch_schedule}> {item.sch_schedule} </option>
+                                        )
+                                    }
                                 </select>
                             </label>
                             <label className="d-block">
@@ -219,7 +247,7 @@ render(){
                             </label>
                             <div className="float-right">
                                 <MDBBtn color="secondary" onClick={this.toggleModal}>Cerrar</MDBBtn>
-                                <MDBBtn color="primary" onClick={()=>{this.aproveAlert()}} >Guardar cambios</MDBBtn>
+                                <MDBBtn color="primary" onClick={()=>{this.aproveAlert(evaluatorsCopy[this.state.id].ev_id,this.state.id)}} >Guardar cambios</MDBBtn>
                             </div>
                         </form>
                     </MDBModalBody>
