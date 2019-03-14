@@ -8,7 +8,10 @@ const Evaluator = db.define('evaluators', {
         autoIncrement: true
     },
     ev_name: Sequelize.STRING,
-    ev_email: Sequelize.STRING,
+    ev_email: {
+        type: Sequelize.STRING,
+        unique: true
+    },
     ev_phone: Sequelize.STRING,
     ev_academic_level: Sequelize.STRING,
     ev_status: Sequelize.INTEGER,
@@ -19,6 +22,35 @@ const Evaluator = db.define('evaluators', {
     }
 )
 
+const Level = db.define('levels', {
+    lv_id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    }, lv_name: {
+        type: Sequelize.STRING,
+        unique: true
+    },
+    handle: Sequelize.STRING
+}, {
+        timestamps: false,
+    }
+)
+
+const Local = db.define('locals', {
+    lc_id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    }, lc_name: {
+        type: Sequelize.STRING,
+        unique: true
+    },
+    handle: Sequelize.STRING
+}, {
+        timestamps: false,
+    }
+)
 
 const Schedule = db.define('schedules', {
     sch_id: {
@@ -26,7 +58,10 @@ const Schedule = db.define('schedules', {
         primaryKey: true,
         autoIncrement: true
     },
-    sch_schedule: Sequelize.STRING,
+    sch_schedule: {
+        type: Sequelize.STRING,
+        unique: true
+    },
     handle: Sequelize.STRING
 }, {
         timestamps: false,
@@ -35,7 +70,10 @@ const Schedule = db.define('schedules', {
 
 const User = db.define('users', {
     us_id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
-    us_name: Sequelize.STRING,
+    us_name: {
+        type: Sequelize.STRING,
+        unique: true
+    },
     us_lastname: Sequelize.STRING,
     us_email: Sequelize.STRING,
     us_password: Sequelize.STRING,
@@ -45,13 +83,18 @@ const User = db.define('users', {
     }
 )
 
+
+
 const Binnacle = db.define('binnacles', {
     bin_id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    bin_return_code: Sequelize.INTEGER,
+    bin_return_code: {
+        type: Sequelize.INTEGER,
+        unique: true
+    },
     bin_message: Sequelize.STRING,
     bin_datetime: Sequelize.DATE,
     handle: Sequelize.STRING,
@@ -60,12 +103,14 @@ const Binnacle = db.define('binnacles', {
     }
 )
 
-Binnacle.belongsTo(User , {as: 'user', foreignKey: 'us_id'})
+
+Binnacle.belongsTo(User, { as: 'user', foreignKey: 'us_id' })
 Evaluator.belongsTo(Schedule, { as: 'schedules', foreignKey: 'sch_id' })
 
 module.exports = {
     Schedule,
-    Evaluator, 
+    Evaluator,
     User,
-    Binnacle
+    Binnacle,
+    Level
 }

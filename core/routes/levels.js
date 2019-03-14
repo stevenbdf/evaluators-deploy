@@ -2,11 +2,12 @@ const express = require('express')
 const router = express.Router()
 const Model = require('../models/model')
 
-//Get schedule list
+
+//Get levels list
 router.get('/', async (req, res) => {
     try {
-        let schedules = await Model.Schedule.findAll()
-        if (schedules[0] == undefined) {
+        let level = await Model.Level.findAll()
+        if (level[0] == undefined) {
             res.json({
                 status: 204,
                 message: "No Content",
@@ -14,15 +15,15 @@ router.get('/', async (req, res) => {
                 }
             })
         } else {
-            schedules.forEach((item) => {
+            level.forEach((item) => {
                 item.handle = ''
             })
-            console.log(req.connection.remoteAddress.split(':')[3] + ' schedules findAll')
+            console.log(req.connection.remoteAddress.split(':')[3] + ' levels findAll')
             res.json({
                 status: 200,
                 message: "Ok",
                 msg: {
-                    schedules
+                    level
                 }
             })
         }
@@ -165,9 +166,9 @@ router.post('/delete', async (req, res) => {
 //Add schedule
 router.post('/add', async (req, res) => {
     try {
-        let sch_schedule = req.body.request.msg.schedule
-        await Model.Schedule.create({ sch_schedule })
-        console.log(req.connection.remoteAddress.split(':')[3] + ' schedules add')
+        let lv_name = req.body.request.msg.name
+        await Model.Level.create({ lv_name })
+        console.log(req.connection.remoteAddress.split(':')[3] + ' levels add')
         res.json({
             code: 205,
             message: "Reset Content",

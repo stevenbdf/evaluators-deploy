@@ -1,6 +1,6 @@
 CREATE TABLE users(
 	us_id SERIAL NOT NULL PRIMARY KEY,
-	us_email VARCHAR(100) NOT NULL,
+	us_email VARCHAR(100) NOT NULL UNIQUE,
 	us_name VARCHAR(60) NOT NULL,
 	us_lastname VARCHAR(60) NOT NULL,
 	us_password VARCHAR(255) NOT NULL,
@@ -9,14 +9,14 @@ CREATE TABLE users(
 
 CREATE TABLE schedules(
 	sch_id SERIAL NOT NULL PRIMARY KEY,
-	sch_schedule VARCHAR(200) NOT NULL,
+	sch_schedule VARCHAR(200) NOT NULL UNIQUE,
 	handle VARCHAR(1) NULL
 );
 
 CREATE TABLE evaluators(
 	ev_id SERIAL NOT NULL PRIMARY KEY,
 	ev_name VARCHAR(60) NOT NULL,
-	ev_email VARCHAR(100) NOT NULL,
+	ev_email VARCHAR(100) NOT NULL UNIQUE,
 	ev_phone VARCHAR(20) NOT NULL,
 	ev_academic_level VARCHAR(150) NOT NULL,
 	ev_status INT NOT NULL,
@@ -36,19 +36,19 @@ CREATE TABLE binnacles(
 
 CREATE TABLE levels(
 	lv_id SERIAL NOT NULL PRIMARY KEY,
-	lv_name VARCHAR(60) NOT NULL,
+	lv_name VARCHAR(60) NOT NULL UNIQUE,
 	handle VARCHAR(1) NULL
 );
 
 CREATE TABLE locals(
 	lc_id SERIAL NOT NULL PRIMARY KEY,
-	lc_name VARCHAR(60) NOT NULL,
+	lc_name VARCHAR(60) NOT NULL UNIQUE,
 	handle VARCHAR(1) NULL
 );
 
 CREATE TABLE courses(
 	cou_id SERIAL NOT NULL PRIMARY KEY,
-	cou_name VARCHAR(60) NOT NULL,
+	cou_name VARCHAR(60) NOT NULL UNIQUE,
 	cou_teacher_guide VARCHAR(120) NOT NULL,
 	lv_id INT NOT NULL REFERENCES levels(lv_id),
 	lc_id INT NOT NULL REFERENCES locals(lc_id),

@@ -44,5 +44,17 @@
     {
         "url": "http://localhost:3001/schedules/findById/:id",
         "method": "get"
+    },
+    "findBySchedule",
+    {
+        "url": "http://localhost:3001/schedules/findBySchedule",
+        "method": "post"
+    },
+    {
+        "request": {
+            "msg": {
+                "schedule": "Jueves en la mañana"
+            }
+        }
     }
 ]
