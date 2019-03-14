@@ -6,19 +6,20 @@ import {
 import Navbar from '../../../../navbar/components/Navbar';
 import Swal from 'sweetalert2';
 import axios from './axios.js';
-import { element } from "prop-types";
 
-const url = "10.20.10.2"
+const url = "localhost"
 
 class Candidates extends Component{
     constructor(props) {
         super(props);
          
         this.state ={
-            evaluators:undefined
+            evaluators:undefined,
+            ordenados: false
         }
     } 
 
+    //table columns , added on header
     columns = [
         {
             label: '#',
@@ -58,45 +59,50 @@ class Candidates extends Component{
     
     ];
     
-
-    approveAlert(ev_id){
-        console.log(ev_id)
-        axios.post(`http://${url}:3001/evaluators/update-status/${ev_id}`, {
+    //aprove candidate function
+    async approveAlert(ev_id) {
+        this.setState({
+            ordenados: false
+        });
+        const res = await axios.post(`http://${url}:3001/evaluators/update-status/${ev_id}`, {
             request: {
-              msg: {
-                  status : 1
-              }
-          }
-          })
-          .then(
-                  this.actualizarTabla
-              
+                msg: {
+                    status : 1
+                }
+            }
+        });
+
+        if(res.data.code===205){
+            Swal.fire(
+                '¡Aprobado!',
+                'Evaluador aprobado.',
+                'success'
             )
-          .catch(function (error) {
-            console.log(error);
-          });
+           this.actualizarTabla()
+        }
+        
     }
 
+    //reject (delete from db) candidate function
     async deleteEvaluator (ev_id){
         const res = await axios.post(`http://${url}:3001/evaluators/delete`, {
-      request: {
-            msg: {
-                id: ev_id
-            }
+            request: {
+                    msg: {
+                        id: ev_id
+                    }
+                }
+            })
+        if(res.data.code===205){
+            Swal.fire(
+                '¡Rechazado!',
+                'Evaluador rechazado.',
+                'success'
+            )
+            this.actualizarTabla()
         }
-        })
-        .then(
-        Swal.fire(
-                    '¡Rechazado!',
-                    'Evaluador rechazado.',
-                    'success'
-                )
-        )
-        .catch(function (error) {
-        console.log(error);
-        });
     }
     
+    //reject alert candidate function
     rejectAlert(ev_id){
         Swal.fire({
             title: '¿Estas seguro?',
@@ -112,31 +118,37 @@ class Candidates extends Component{
             })
     }
     
+    //handle 2 buttons clicks
     handleClick = e => this.approveAlert(e.target.id);
 
     handleClickDelete = e => this.rejectAlert(e.target.id);
     
+    //refresh data table
     async actualizarTabla(){
         const res = await axios.get(`evaluators/0`)
-        
-                const respuesta = res.data.msg;
-                this.setState({
-                    evaluators: respuesta.evaluators
-                });
+        const respuesta = res.data.msg;
+        this.setState({
+            evaluators: respuesta.evaluators
+        });
+
+        if(res.data.status===200){
+            this.setState({
+                ordenados:true
+            })
+        }
     }
 
+    //get first data from API
     componentDidMount(){
         this.actualizarTabla()
     }
 
+    
+
    render(){
-        
-        const evaluatorValue =this.state.evaluators;
-        
-        if(evaluatorValue===undefined){
-            console.log('No hay candidatos que mostrar')
-        }else{
-            evaluatorValue.forEach(element => {
+       //if data exists
+       if(this.state.ordenados){
+            this.state.evaluators.forEach(element => {
                 var idActual= element.ev_id;
                 delete element.ev_status;
                 element.schedules = element.schedules.sch_schedule
@@ -145,9 +157,8 @@ class Candidates extends Component{
                     <MDBBtn id={idActual} color="green" size="sm" onClick={this.handleClick}><MDBIcon icon="check" className="mr-2" /> Aprobar</MDBBtn>
                     <MDBBtn id={idActual} color="red" size="sm" onClick={this.handleClickDelete}><MDBIcon icon="times" className="mr-2" /> Rechazar</MDBBtn>
                 </div>
-            });
-        }
-
+            })
+       }
         return (
             <div className="text-center">
             <Navbar/>
@@ -161,7 +172,12 @@ class Candidates extends Component{
                                 <MDBCardBody>
                                     <MDBTable btn responsive hover className="text-center">
                                         <MDBTableHead columns={this.columns} />
-                                        <MDBTableBody rows={this.state.evaluators} />        
+                                        {
+                                            //if data exists
+                                            this.state.ordenados
+                                            &&
+                                            <MDBTableBody rows={this.state.evaluators}/> 
+                                        }    
                                     </MDBTable>
                                 </MDBCardBody>
                             </MDBCard>
