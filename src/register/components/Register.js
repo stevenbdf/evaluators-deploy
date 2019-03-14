@@ -13,42 +13,34 @@ class RegisterPage extends Component {
       name:'',
       email:"",
       phone:"",       
-      academic_level:"",       
-      horary:"",       
-      status:0 
-
+      academic_level:""
     }
   }
-  
-  
 
-  addEvaluator = () => {
+  addEvaluator = async () => {
     var horarySelected = this.getScheduleId()
-    console.log(horarySelected)
-    axios.post('http://localhost:3001/evaluators/add', {
-      request: {
-        msg: {
-            name:this.state.name,
-            email:this.state.email,
-            phone:this.state.phone,       
-            academic_level:this.state.academic_level, 
-            status:0,
-            sch_id: horarySelected,
-            handle : ''
+    const res = await  axios.post(`http://localhost:3001/evaluators/add`, {
+      request:{
+        msg:{
+          name: String(this.state.name),
+          email:String(this.state.email),
+          phone:String(this.state.phone),
+          academic_level:String(this.state.academic_level),
+          status: "0",
+          sch_id: String(horarySelected)
         }
-    }
+      }
     })
-    .then(
-      this.aproveAlert
-    )
-    .catch(function (error) {
-      console.log(error);
-    });
+    if(res.data.code!==400){
+      this.aproveAlert()
+    }else{
+      console.log("Error 400, API request failed")
+    }
   }
+
   getScheduleId = () =>{
     var horarioString = this.state.horary
     var horarioNum
-    console.log(horarioString)
     switch(horarioString  ){
       case 'Jueves 8:00am-12:00pm':
         horarioNum = 1

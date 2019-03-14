@@ -69,9 +69,8 @@ class Candidates extends Component{
           }
           })
           .then(
-              ()=>{
                   this.actualizarTabla
-              }
+              
             )
           .catch(function (error) {
             console.log(error);
@@ -127,8 +126,7 @@ class Candidates extends Component{
     }
 
     componentDidMount(){
-        actualizarTabla()
-
+        this.actualizarTabla()
     }
 
    render(){
