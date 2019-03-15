@@ -84,6 +84,8 @@ const User = db.define('users', {
     }
 )
 
+const Course = db.define('courses',´
+)
 
 
 const Binnacle = db.define('binnacles', {

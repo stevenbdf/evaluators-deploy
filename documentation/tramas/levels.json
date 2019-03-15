@@ -1,0 +1,48 @@
+[
+    "findAll",
+    {
+        "url": "http://localhost:3001/levels",
+        "method": "get"
+    },
+    "add",
+    {
+        "url": "http://localhost:3001/levels/add",
+        "method": "post"
+    },
+    {
+        "request": {
+            "msg": {
+                "name": "Tercer año"
+            }
+        }
+    },
+    "update",
+    {
+        "url": "http://localhost:3001/levels/update/:id",
+        "method": "post"
+    },
+    {
+        "request": {
+            "msg": {
+                "name": "Segundo año"
+            }
+        }
+    },
+    "delete",
+    {
+        "url": "http://localhost:3001/levels/delete",
+        "method": "post"
+    },
+    {
+        "request": {
+            "msg": {
+                "id": "2"
+            }
+        }
+    },
+    "findById",
+    {
+        "url": "http://localhost:3001/levels/findById/:id",
+        "method": "get"
+    }    
+]

@@ -1,0 +1,48 @@
+[
+    "findAll",
+    {
+        "url": "http://localhost:3001/locals",
+        "method": "get"
+    },
+    "add",
+    {
+        "url": "http://localhost:3001/locals/add",
+        "method": "post"
+    },
+    {
+        "request": {
+            "msg": {
+                "name": "61.12"
+            }
+        }
+    },
+    "update",
+    {
+        "url": "http://localhost:3001/locals/update/:id",
+        "method": "post"
+    },
+    {
+        "request": {
+            "msg": {
+                "name": "81.11"
+            }
+        }
+    },
+    "delete",
+    {
+        "url": "http://localhost:3001/locals/delete",
+        "method": "post"
+    },
+    {
+        "request": {
+            "msg": {
+                "id": "2"
+            }
+        }
+    },
+    "findById",
+    {
+        "url": "http://localhost:3001/locals/findById/:id",
+        "method": "get"
+    }    
+]

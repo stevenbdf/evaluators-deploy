@@ -3,11 +3,11 @@ const router = express.Router()
 const Model = require('../models/model')
 
 
-//Get levels list
+//Get locals list
 router.get('/', async (req, res) => {
     try {
-        let level = await Model.Level.findAll()
-        if (level[0] == undefined) {
+        let locals = await Model.Local.findAll()
+        if (locals[0] == undefined) {
             res.json({
                 status: 204,
                 message: "No Content",
@@ -15,15 +15,15 @@ router.get('/', async (req, res) => {
                 }
             })
         } else {
-            level.forEach((item) => {
+            locals.forEach((item) => {
                 item.handle = ''
             })
-            console.log(req.connection.remoteAddress.split(':')[3] + ' levels findAll')
+            console.log(req.connection.remoteAddress.split(':')[3] + ' locals findAll')
             res.json({
                 status: 200,
                 message: "Ok",
                 msg: {
-                    level
+                    locals
                 }
             })
         }
@@ -39,24 +39,24 @@ router.get('/', async (req, res) => {
     }
 })
 
-//Update level
+//Update local
 router.post('/update/:id', async (req, res) => {
     try {
-        let level = await Model.Level.findByPk(req.params.id)
-        if (level != null) {
+        let local = await Model.Local.findByPk(req.params.id)
+        if (local != null) {
             let obj = req.body.request.msg
-            await Model.Level.update(
+            await Model.Local.update(
                 {
-                    lv_name: (obj.name === '') ? level.lv_name : obj.name
+                    lc_name: (obj.name === '') ? local.lc_name : obj.name
                 }, {
                     returning: true,
                     where:
                     {
-                        lv_id: req.params.id
+                        lc_id: req.params.id
                     }
                 }
             )
-            console.log(req.connection.remoteAddress.split(':')[3] + ' levels update by id ' + req.params.id)
+            console.log(req.connection.remoteAddress.split(':')[3] + ' locals update by id ' + req.params.id)
             res.json({
                 code: 205,
                 message: "Reset Content",
@@ -80,12 +80,12 @@ router.post('/update/:id', async (req, res) => {
     }
 })
 
-//Delete levels
+//Delete locals
 router.post('/delete', async (req, res) => {
     try {
         let obj = req.body.request.msg
-        let sch = await Model.Level.findByPk(obj.id)
-        if (sch == null) {
+        let local = await Model.Local.findByPk(obj.id)
+        if (local == null) {
             res.json({
                 status: 404,
                 message: "Not found",
@@ -93,12 +93,12 @@ router.post('/delete', async (req, res) => {
                 }
             })
         } else {
-            await Model.Level.destroy({
+            await Model.Local.destroy({
                 where: {
-                    lv_id: obj.id
+                    lc_id: obj.id
                 }
             })
-            console.log(req.connection.remoteAddress.split(':')[3] + ' levels delete ' + obj.id)
+            console.log(req.connection.remoteAddress.split(':')[3] + ' locals delete ' + obj.id)
             res.json({
                 code: 205,
                 message: "Reset Content",
@@ -116,19 +116,19 @@ router.post('/delete', async (req, res) => {
     }
 })
 
-//Add level
+//Add local
 router.post('/add', async (req, res) => {
     try {
-        let lv_name = req.body.request.msg.name
-        if (lv_name.length == 0) {
+        let lc_name = req.body.request.msg.name
+        if (lc_name.length == 0) {
             res.json({
                 code: 411,
                 message: "Length Required",
                 msg: {}
             })
         } else {
-            await Model.Level.create({ lv_name })
-            console.log(req.connection.remoteAddress.split(':')[3] + ' levels add')
+            await Model.Local.create({ lc_name })
+            console.log(req.connection.remoteAddress.split(':')[3] + ' locals add')
             res.json({
                 code: 205,
                 message: "Reset Content",
@@ -149,8 +149,8 @@ router.post('/add', async (req, res) => {
 //findById
 router.get('/findById/:id', async (req, res) => {
     try {
-        let level = await Model.Level.findByPk(req.params.id)
-        if (level == null) {
+        let local = await Model.Local.findByPk(req.params.id)
+        if (local == null) {
             res.json({
                 status: 404,
                 message: "Not found",
@@ -158,12 +158,12 @@ router.get('/findById/:id', async (req, res) => {
                 }
             })
         } else {
-            console.log(req.connection.remoteAddress.split(':')[3] + ' levels findById ' + req.params.id)
+            console.log(req.connection.remoteAddress.split(':')[3] + ' locals findById ' + req.params.id)
             res.json({
                 status: 200,
                 message: "Ok",
                 msg: {
-                    level
+                    local
                 }
             })
         }
