@@ -1,11 +1,13 @@
 const express = require('express')
 const router = express.Router()
+const Sequelize = require('sequelize')
 const Model = require('../models/model')
+const Op = Sequelize.Op
 
 var status_user
 
 //Get evaluator list by sttus
-router.get('/:status', async (req, res) => {
+router.get('/status/:status', async (req, res) => {
     status_user = req.query.status
     if (req.params.status === '0' || req.params.status === '1') {
         var evaluators = await Model.Evaluator.findAll({
@@ -73,6 +75,49 @@ router.get('/:status', async (req, res) => {
         })
     }
 
+})
+
+//Get evaluator different 0
+router.get('/find', async (req, res) => {
+    try {
+        let evaluator = await Model.Evaluator.findAll({
+            attributes: ['ev_id', 'ev_name', 'ev_email', 'ev_phone', 'ev_academic_level', 'ev_status'],
+            include: [
+                { model: Model.Schedule, as: 'schedules' }
+            ],
+            where:{
+                ev_status:
+                {
+                    [Op.ne]:0
+                },
+            }
+        })
+        console.log(req.connection.remoteAddress.split(':')[3]+' evaluators findById '+req.params.id)
+        if (evaluator == null) {
+            res.json({
+                status: 404,
+                message: "Not found",
+                msg: {
+                }
+            })
+        } else {
+            res.json({
+                status: 200,
+                message: "Ok",
+                msg: {
+                    evaluator
+                }
+            })
+        }
+    } catch (err) {
+        res.json({
+            code: 400,
+            message: " Bad Request",
+            msg: {
+                description: err
+            }
+        })
+    }
 })
 
 //FindById Evaluator
