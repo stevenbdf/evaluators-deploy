@@ -86,9 +86,9 @@ router.post('/update/:id', async (req, res) => {
                 }, {
                     returning: true,
                     where:
-                        {
-                            sch_id: req.params.id
-                        }
+                    {
+                        sch_id: req.params.id
+                    }
                 }
             )
             console.log(req.connection.remoteAddress.split(':')[3] + ' schedules update by id ' + req.params.id)
@@ -141,24 +141,13 @@ router.post('/delete', async (req, res) => {
             })
         }
     } catch (err) {
-        res.json({ err })
-        if (err.parent.code == '23503') {
-            res.json({
-                code: 400,
-                message: " Bad Requested",
-                msg: {
-                    description: err
-                }
-            })
-        } else {
-            res.json({
-                code: 400,
-                message: " Bad Requested",
-                msg: {
-                    description: err
-                }
-            })
-        }
+        res.json({
+            code: 400,
+            message: " Bad Requested",
+            msg: {
+                description: err
+            }
+        })
     }
 })
 
