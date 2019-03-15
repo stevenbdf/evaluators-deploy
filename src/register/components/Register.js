@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn, MDBCard, MDBCardBody, MDBIcon } from 'mdbreact';
 import './Register.css';
 import Swal from 'sweetalert2';
-import axios from 'axios';
+import axios from '../../main/admin/components/candidates/axios.js';
 
 class RegisterPage extends Component {
 
@@ -13,13 +13,20 @@ class RegisterPage extends Component {
       name:'',
       email:"",
       phone:"",       
-      academic_level:""
+      academic_level:"",
+      schedules: undefined
     }
   }
 
   addEvaluator = async () => {
-    var horarySelected = this.getScheduleId()
-    const res = await  axios.post(`http://10.20.0.2:3001/evaluators/add`, {
+    const sche = await axios.post(`http://localhost:3001/schedules/findBySchedule`, {
+        request: {
+            msg: {
+                schedule: this.state.horary
+            }
+        }
+    })
+    const res = await  axios.post(`http://localhost:3001/evaluators/add`, {
       request:{
         msg:{
           name: String(this.state.name),
@@ -27,7 +34,7 @@ class RegisterPage extends Component {
           phone:String(this.state.phone),
           academic_level:String(this.state.academic_level),
           status: "0",
-          sch_id: String(horarySelected)
+          sch_id: String(sche.data.msg.sch_id)
         }
       }
     })
@@ -38,40 +45,6 @@ class RegisterPage extends Component {
     }
   }
 
-  getScheduleId = () =>{
-    var horarioString = this.state.horary
-    var horarioNum
-    switch(horarioString  ){
-      case 'Jueves 8:00am-12:00pm':
-        horarioNum = 1
-        break;
-      case 'Jueves 1:00pm-4:00pm':
-        horarioNum = 2
-        break;
-      case 'Viernes 8:00am-12:00pm':
-        horarioNum = 3
-        break;
-      case 'Viernes 1:00pm-4:00pm':
-        horarioNum = 4
-          break;
-      case 'Sabado 8:00am-12:00pm':
-        horarioNum = 5
-        break;
-      case 'Sabado 1:00pm-4:00pm':
-        horarioNum = 6
-        break;
-      case 'Domingo 8:00am-12:00pm':
-        horarioNum = 7
-        break;
-      case 'Domingo 1:00pm-4:00pm':
-        horarioNum = 8
-          break;
-      default:
-        horarioNum = 0
-          break;
-    }
-    return horarioNum;
-  }
 
   handleChange = (event) => {
     const target = event.target;
@@ -91,7 +64,13 @@ class RegisterPage extends Component {
       )
   };
 
-
+  async componentDidMount(){
+    const res = await axios.get(`schedules/`)
+    const respuesta = res.data.msg;
+    this.setState({
+        schedules: respuesta.schedules
+    })
+  }
 
 
   
@@ -149,14 +128,13 @@ render(){
                           <MDBCol>
                             <select name="horary" className="browser-default custom-select" value={this.state.horary} onChange={this.handleChange} >
                               <option>Seleccione un horario...</option>
-                              <option value="Jueves 8:00am-12:00pm">Jueves 8:00am-12:00pm</option>
-                              <option value="Jueves 1:00pm-4:00pm">Jueves 1:00pm-4:00pm</option>
-                              <option value="Viernes 8:00am-12:00pm">Viernes 8:00am-12:00pm</option>
-                              <option value="Viernes 1:00pm-4:00pm">Viernes 1:00pm-4:00pm</option>
-                              <option value="Sabado 8:00am-12:00pm">Sabado 8:00am-12:00pm</option>
-                              <option value="Sabado 1:00pm-4:00pm">Sabado 1:00pm-4:00pm</option>
-                              <option value="Domingo 8:00am-12:00pm">Domingo 8:00am-12:00pm</option>
-                              <option value="Domingo 1:00pm-4:00pm">Domingo 1:00pm-4:00pm</option>
+                              {
+                                this.state.schedules!==undefined
+                                &&
+                                this.state.schedules.map(item =>
+                                  <option key={item.sch_id} value={item.sch_schedule}> {item.sch_schedule} </option>
+                                )
+                              }
                             </select>
                           </MDBCol>
                         </MDBRow>
