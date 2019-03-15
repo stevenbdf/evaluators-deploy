@@ -50,5 +50,10 @@
     {
         "url": "http://localhost:3001/users/findById/:id",
         "method": "get"
+    },
+    "findByEmail",
+    {
+        "url": "http://localhost:3001/users/findByEmail/:email",
+        "method": "get"
     }
 ]

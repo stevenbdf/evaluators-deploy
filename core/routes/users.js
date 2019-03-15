@@ -24,6 +24,30 @@ router.get('/', async (req, res) => {
     }
 })
 
+//findByEmial
+router.get('/findByEmail/:email', async (req, res) => {
+    let users = await Model.User.findAll({
+        where:{us_email:req.params.email}
+    });
+    if (users[0] == undefined) {
+        res.json({
+            status: 204,
+            message: "No Content",
+            msg: {                
+            }
+        })
+    } else {
+        console.log(req.connection.remoteAddress.split(':')[3]+' users findAll')
+        res.json({
+            status: 200,
+            message: "Ok",
+            msg: {
+                users
+            }
+        })
+    }
+})
+
 //Add a user
 router.post('/add', async (req, res) => {
 
@@ -38,7 +62,7 @@ router.post('/add', async (req, res) => {
         }
 
         let { us_name, us_lastname, us_email, us_password } = data
-
+        
         await Model.User.create({
             us_name,
             us_lastname,

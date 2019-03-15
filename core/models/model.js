@@ -29,7 +29,8 @@ const Level = db.define('levels', {
         autoIncrement: true
     }, lv_name: {
         type: Sequelize.STRING,
-        unique: true
+        unique: true,
+        allowNull: false
     },
     handle: Sequelize.STRING
 }, {
