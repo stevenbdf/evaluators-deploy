@@ -5,7 +5,7 @@ import {
 } from 'mdbreact';
 import Navbar from '../../../../navbar/components/Navbar';
 import Swal from 'sweetalert2';
-import axios from './axios.js';
+import axios from '../candidates/axios';
 
 const url = "10.20.0.103"
 
@@ -125,7 +125,7 @@ class Candidates extends Component{
     
     //refresh data table
     async actualizarTabla(){
-        const res = await axios.get(`evaluators/status/0`)
+        const res = await axios.get(`evaluators/0`)
         const respuesta = res.data.msg;
         this.setState({
             evaluators: respuesta.evaluators
@@ -146,19 +146,7 @@ class Candidates extends Component{
     
 
    render(){
-       //if data exists
-       if(this.state.ordenados  && this.state.evaluators!==undefined){
-            this.state.evaluators.forEach(element => {
-                var idActual = element.ev_id;
-                delete element.ev_status;
-                element.schedules = element.schedules.sch_schedule
-                element.handle = 
-                <div className="text-center">
-                    <MDBBtn id={idActual} color="green" size="sm" onClick={this.handleClick}><MDBIcon icon="check" className="mr-2" /> Aprobar</MDBBtn>
-                    <MDBBtn id={idActual} color="red" size="sm" onClick={this.handleClickDelete}><MDBIcon icon="times" className="mr-2" /> Rechazar</MDBBtn>
-                </div>
-            })
-       }
+
         return (
             <div className="text-center">
             <Navbar/>
@@ -167,18 +155,10 @@ class Candidates extends Component{
                         <MDBCol>
                             <MDBCard>
                                 <MDBCardHeader>
-                                    <h1 className="text-center">Candidatos a Evaluadores</h1>
+                                    <h1 className="text-center">Mantenimientos</h1>
                                 </MDBCardHeader>
                                 <MDBCardBody>
-                                    <MDBTable btn responsive hover className="text-center">
-                                        <MDBTableHead columns={this.columns} />
-                                        {
-                                            //if data exists
-                                            this.state.ordenados
-                                            &&
-                                            <MDBTableBody rows={this.state.evaluators}/> 
-                                        }    
-                                    </MDBTable>
+                                    
                                 </MDBCardBody>
                             </MDBCard>
                         </MDBCol>

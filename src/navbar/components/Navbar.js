@@ -24,9 +24,6 @@ render() {
               <MDBNavLink to="/admin">Administrador</MDBNavLink>
             </MDBNavItem>
             <MDBNavItem>
-              <MDBNavLink to="/admin">Usuario</MDBNavLink>
-            </MDBNavItem>
-            <MDBNavItem>
               <MDBNavLink to="/login">Cerrar Sesión</MDBNavLink>
             </MDBNavItem>
           </MDBNavbarNav>

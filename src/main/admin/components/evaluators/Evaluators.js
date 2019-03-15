@@ -158,7 +158,7 @@ class Evaluators extends Component {
     //set handle attr for evaluators (table rows)
     setButtons = async () => {
         try {
-            const res = await axios.get(`evaluators/1`)
+            const res = await axios.get(`evaluators/status/1`)
             const respuesta = res.data.msg;
             this.setState({
                 evaluators: respuesta.evaluators
@@ -189,7 +189,7 @@ class Evaluators extends Component {
     //get first data from API
     async componentDidMount() {
         if (this.state.evaluators === undefined) {
-            const res = await axios.get(`evaluators/1`)
+            const res = await axios.get(`evaluators/status/1`)
             const respuesta = res.data.msg;
             this.setState({
                 evaluators: respuesta.evaluators
