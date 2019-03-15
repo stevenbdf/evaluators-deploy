@@ -46,12 +46,12 @@ class Evaluators extends Component {
             sort: 'asc'
         },
         {
-            label: 'Correo',
-            field: 'correo',
+            label: 'Apellido',
+            field: 'apellido',
             sort: 'asc'
         },
         {
-            label: 'Telefono',
+            label: 'Email',
             field: 'telefono',
             sort: 'asc'
         },
@@ -225,7 +225,7 @@ class Evaluators extends Component {
                         <MDBCol>
                             <MDBCard>
                                 <MDBCardHeader>
-                                    <h1 className="text-center">Evaluadores Aprobados</h1>
+                                    <h1 className="text-center">Usuarios</h1>
                                     <MDBCol md="4" className="offset-md-8" >
                                         <MDBInput label="Buscar" icon="search" />
                                     </MDBCol>
