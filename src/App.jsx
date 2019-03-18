@@ -17,13 +17,13 @@ class App extends Component {
       <Router>
         <div>
           <Switch>
-            <Route exact path="/" component={Register} />
+          <Route exact path="/" component={Register} />
             <ProtectedRoute exact path="/admin" component={Admin} />
             <ProtectedRoute exact path="/candidates" component={Candidates} />
             <ProtectedRoute exact path="/evaluators" component={Evaluators} />
             <ProtectedRoute exact path="/assignments" component={Assignments} />
             <ProtectedRoute exact path="/users" component={Users} />
-            <ProtectedRoute exact path="/maintenance" component={Maintenance} />
+            <Route exact path="/maintenance" component={Maintenance} />
             <Route exact path="/login" component={Login} />
             
           </Switch>

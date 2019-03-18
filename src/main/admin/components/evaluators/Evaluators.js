@@ -8,7 +8,7 @@ import Navbar from '../../../../navbar/components/Navbar';
 import axios from '../candidates/axios';
 import Swal from 'sweetalert2';
 
-const url = "10.20.0.103";
+const url = "localhost";
 
 let evaluatorsCopy = []
 

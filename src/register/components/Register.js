@@ -19,14 +19,14 @@ class RegisterPage extends Component {
   }
 
   addEvaluator = async () => {
-    const sche = await axios.post(`http://10.20.0.103:3001/schedules/findBySchedule`, {
+    const sche = await axios.post(`http://localhost:3001/schedules/findBySchedule`, {
         request: {
             msg: {
                 schedule: this.state.horary
             }
         }
     })
-    const res = await  axios.post(`http://10.20.0.103:3001/evaluators/add`, {
+    const res = await  axios.post(`http://localhost:3001/evaluators/add`, {
       request:{
         msg:{
           name: String(this.state.name),
