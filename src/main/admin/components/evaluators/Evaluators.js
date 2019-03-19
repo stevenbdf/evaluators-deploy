@@ -75,16 +75,20 @@ class Evaluators extends Component {
 
     //set input values for open modal
     toggle = async (id) => {
-        await this.setState({
-            idModal: evaluatorsCopy[id].ev_id,
-            firstTime: false,
-            nombre: evaluatorsCopy[id].ev_name,
-            correo: evaluatorsCopy[id].ev_email,
-            telefono: evaluatorsCopy[id].ev_phone,
-            horario: evaluatorsCopy[id].schedules,
-            nivel: evaluatorsCopy[id].ev_academic_level,
-            modal: true
-        })
+        if (evaluatorsCopy[id] !== undefined) {
+            await this.setState({
+                idModal: evaluatorsCopy[id].ev_id,
+                firstTime: false,
+                nombre: evaluatorsCopy[id].ev_name,
+                correo: evaluatorsCopy[id].ev_email,
+                telefono: evaluatorsCopy[id].ev_phone,
+                horario: evaluatorsCopy[id].schedules,
+                nivel: evaluatorsCopy[id].ev_academic_level,
+                modal: true
+            })
+        } else {
+            console.log('demasiadas peticiones vuelve a intentarlo')
+        }
     }
 
     //dismiss modal on close
@@ -110,34 +114,39 @@ class Evaluators extends Component {
             }
         })
 
-        const res = await axios.post(`http://${url}:3001/evaluators/update/${ev_id}`, {
-            request: {
-                msg: {
-                    name: this.state.nombre,
-                    email: this.state.correo,
-                    phone: this.state.telefono,
-                    academic_level: this.state.nivel,
-                    status: "1",
-                    sch_id: sche.data.msg.sch_id
+        if (sche.data.msg.sch_id !== undefined) {
+            const res = await axios.post(`http://${url}:3001/evaluators/update/${ev_id}`, {
+                request: {
+                    msg: {
+                        name: this.state.nombre,
+                        email: this.state.correo,
+                        phone: this.state.telefono,
+                        academic_level: this.state.nivel,
+                        status: "1",
+                        sch_id: sche.data.msg.sch_id
+                    }
                 }
-            }
-        })
-
-        if (res.data.code === 205) {
-            await Swal.fire(
-                '¡Actualizado!',
-                'Evaluador actualizado.',
-                'success'
-            )
-            await this.setButtons()
-            this.setState({
-                ordenados: true,
-                modal: false,
-                firstTime: false
             })
-        } else {
-            console.log('Error al actualizar evaluador')
+
+            if (res.data.code === 205) {
+                await Swal.fire(
+                    '¡Actualizado!',
+                    'Evaluador actualizado.',
+                    'success'
+                )
+                await this.setButtons()
+                this.setState({
+                    ordenados: true,
+                    modal: false,
+                    firstTime: false
+                })
+            } else {
+                console.log('Error al actualizar evaluador')
+            }
+        }else{
+            console.log('error al obtener horarios')
         }
+
 
     }
 
@@ -159,12 +168,12 @@ class Evaluators extends Component {
     setButtons = async () => {
         try {
             const res = await axios.get(`evaluators/status/1`)
-            const respuesta = res.data.msg;
-            this.setState({
-                evaluators: respuesta.evaluators
-            });
 
             if (res.data.status === 200) {
+                const respuesta = res.data.msg;
+                this.setState({
+                    evaluators: respuesta.evaluators
+                });
                 this.setEvaluatorsHandle()
             }
         } catch (error) {
@@ -191,19 +200,14 @@ class Evaluators extends Component {
         if (this.state.evaluators === undefined) {
             const res = await axios.get(`evaluators/status/1`)
             const respuesta = res.data.msg;
-            this.setState({
-                evaluators: respuesta.evaluators
-            });
+
+            const resSche = await axios.get(`schedules/`)
+            const respuestaSche = resSche.data.msg;
 
             if (res.data.status === 200) {
-
-                const res = await axios.get(`schedules/`)
-                const respuesta = res.data.msg;
                 this.setState({
-                    schedules: respuesta.schedules
-                })
-
-                this.setState({
+                    evaluators: respuesta.evaluators,
+                    schedules: respuestaSche.schedules,
                     ordenados: true
                 })
             }
@@ -218,7 +222,7 @@ class Evaluators extends Component {
             }
         }
         return (
-            <div>
+            <div className="text-center">
                 <Navbar />
                 <MDBContainer fluid>
                     <MDBRow center className="my-5">
