@@ -5,10 +5,11 @@ import {
     MDBModalBody, MDBModalHeader, MDBInput
 } from 'mdbreact';
 import Navbar from '../../../../navbar/components/Navbar';
+import ModalComponent from './Modal.js';
 import Swal from 'sweetalert2';
 import axios from '../candidates/axios';
 
-const url = "localhost"
+const url = "10.20.0.2"
 let schedulesCopy = []
 
 class Candidates extends Component {
@@ -23,7 +24,8 @@ class Candidates extends Component {
                 schedule: undefined
             },
             ordenados: false,
-            modal: false
+            modal: false,
+            modalAdd: false
         }
     }
 
@@ -75,6 +77,37 @@ class Candidates extends Component {
             })
         } else {
             console.log('Error al actualizar evaluador')
+        }
+    }
+
+    //update function (call from modal only)
+    addAlert = async () => {
+        await this.setState({
+            ordenados: false,
+        });
+
+        const res = await axios.post(`http://${url}:3001/schedules/add`, {
+            request: {
+                msg: {
+                    schedule: String(this.state.schedulesModal.schedule)
+                }
+            }
+        })
+
+        if (res.data.code === 205) {
+            await Swal.fire(
+                '¡Guardado!',
+                'Horario agregado.',
+                'success'
+            )
+            await this.setButtonsSchedules()
+            await this.setState({
+                ordenados: true,
+                modalAdd: false,
+                firstTime: false
+            })
+        } else {
+            console.log('Error al agregar evaluador')
         }
     }
 
@@ -159,9 +192,19 @@ class Candidates extends Component {
     toggle = async (id) => {
         if (schedulesCopy[id] !== undefined) {
             this.setDataModalSchedules(id)
-        } else {
-            console.log('demasiadas peticiones vuelve a intentarlo')
         }
+    }
+
+    //set input values for open modal
+    toggleAdd(){
+        this.setState({
+            schedulesModal: {
+                id: '',
+                schedule: ''
+            },
+            firstTime: false,
+            modalAdd: true
+        })
     }
 
     //dismiss modal on close
@@ -172,7 +215,17 @@ class Candidates extends Component {
         });
     }
 
+    //dismiss modal on close
+    toggleModalAdd = () => {
+        this.setState({
+            modalAdd: !this.state.modalAdd,
+            firstTime: false
+        });
+    }
+
     handleClickEditSchedules = (e) => this.toggle(e.target.id);
+
+    handleClickAddSchedules = (e) => this.toggleAdd();
 
     handleClickDeleteSchedules = e => this.deleteAlert(e.target.id);
 
@@ -238,6 +291,7 @@ class Candidates extends Component {
                                             <MDBCard>
                                                 <MDBCardHeader>
                                                     <h1 className="text-center">Horarios</h1>
+                                                    <MDBBtn  color="green" size="sm" onClick={this.handleClickAddSchedules}><MDBIcon icon="pen" className="mr-2" /> Agregar</MDBBtn>
                                                 </MDBCardHeader>
                                                 <MDBCardBody>
                                                     <MDBTable btn responsive hover className="text-center">
@@ -271,19 +325,27 @@ class Candidates extends Component {
                         //if data exists
                         this.state.ordenados
                         &&
-                        <MDBModal isOpen={this.state.modal} toggle={this.toggleModal}>
-                            <MDBModalHeader toggle={this.toggleModal}>Editar Horario</MDBModalHeader>
-                            <MDBModalBody>
-                                <form>
-                                    <MDBInput label="Codigo:" hint={String(this.state.schedulesModal.id)} disabled type="text" />
-                                    <MDBInput label="Nombre:" name="nombre" value={this.state.schedulesModal.schedule} type="text" onChange={this.handleChangeSchedule} />
-                                    <div className="float-right">
-                                        <MDBBtn color="secondary" onClick={this.toggleModal}>Cerrar</MDBBtn>
-                                        <MDBBtn color="primary" onClick={() => { this.updateAlert(this.state.schedulesModal.id) }} >Guardar cambios</MDBBtn>
-                                    </div>
-                                </form>
-                            </MDBModalBody>
-                        </MDBModal>
+                        <ModalComponent
+                        modal={this.state.modal}
+                        toggleModal={this.toggleModal}
+                        id={this.state.schedulesModal.id}
+                        schedule={this.state.schedulesModal.schedule}
+                        handleChangeSchedule={this.handleChangeSchedule}
+                        handleModalClick={this.updateAlert}
+                        />
+                    }
+                    {
+                        //if data exists
+                        this.state.ordenados
+                        &&
+                        <ModalComponent
+                        modal={this.state.modalAdd}
+                        toggleModal={this.toggleModalAdd}
+                        id={this.state.schedulesModal.id}
+                        schedule={this.state.schedulesModal.schedule}
+                        handleChangeSchedule={this.handleChangeSchedule}
+                        handleModalClick={this.addAlert}
+                        />
                     }
                 </MDBContainer>
             </div>
