@@ -69,6 +69,7 @@ const Schedule = db.define('schedules', {
     }
 )
 
+
 const User = db.define('users', {
     us_id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
     us_name: {
@@ -84,10 +85,26 @@ const User = db.define('users', {
     }
 )
 
-/*
-const Course = db.define('courses',´
-)*/
 
+const Course = db.define('courses', {
+    cou_id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    cou_name: {
+        type: Sequelize.STRING,
+        unique: true
+    },
+    cou_teacher_guide: {
+        type: Sequelize.STRING,
+        unique: true
+    },
+    handle: Sequelize.STRING,
+}, {
+        timestamps: false,
+    }
+)
 
 const Binnacle = db.define('binnacles', {
     bin_id: {
@@ -110,11 +127,15 @@ const Binnacle = db.define('binnacles', {
 
 Binnacle.belongsTo(User, { as: 'user', foreignKey: 'us_id' })
 Evaluator.belongsTo(Schedule, { as: 'schedules', foreignKey: 'sch_id' })
+Course.belongsTo(Local,{as:'local', foreignKey: 'lc_id'})
+Course.belongsTo(Level,{as:'level', foreignKey: 'lv_id'})
 
 module.exports = {
     Schedule,
     Evaluator,
     User,
     Binnacle,
-    Level
+    Level,
+    Local,
+    Course
 }
