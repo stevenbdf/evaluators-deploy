@@ -41,6 +41,7 @@ app.use('/schedules', require('./routes/schedules'))
 app.use('/binnacles', require('./routes/binnacles'))
 app.use('/levels', require('./routes/levels'))
 app.use('/locals', require('./routes/locals'))
+app.use('/courses', require('./routes/courses'))
 
 app.listen(port, () => {
     console.log(`App running on port ${port}.`)
