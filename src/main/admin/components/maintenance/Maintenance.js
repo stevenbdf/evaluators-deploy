@@ -8,6 +8,7 @@ import TableComponent from './Table';
 import axios from '../candidates/axios';
 import Schedules from './Schedules.js';
 import Levels from './Levels.js';
+import Locals from './Locals.js';
 
 
 class Maintenance extends Component {
@@ -24,13 +25,19 @@ class Maintenance extends Component {
             levelsModal: {
                 id: undefined,
                 level: undefined
-            }
-            ,
+            },
+            locals: undefined,
+            localsModal:{
+                id: undefined,
+                local: undefined
+            },
             render: false,
             modal: false,
             modalAdd: false,
             modalLvl: false,
-            modalAddLvl: false
+            modalAddLvl: false,
+            modalLocal: false,
+            modalAddLocal: false
         }
     }
     // instance classes
@@ -38,13 +45,17 @@ class Maintenance extends Component {
 
     LevelsInstancia = new Levels(this);
 
+    LocalsInstancia = new Locals(this);
+
     //dismiss all modals
     toggleModal = () => {
         this.setState({
             modal: false,
             modalLvl: false,
             modalAdd: false,
-            modalAddLvl: false
+            modalAddLvl: false,
+            modalLocal: false,
+            modalAddLocal: false
         });
     }
 
@@ -63,6 +74,14 @@ class Maintenance extends Component {
     handleClickAddLevels = (e) => this.LevelsInstancia.toggleAddLevels();
 
     handleClickDeleteLevels = (e) => this.LevelsInstancia.deleteLevelAlert(e.target.id);
+    
+    /*Locals handle clicks */
+
+    handleClickEditLocals = (e) => this.LocalsInstancia.toggleLocals(e.target.id);
+
+    handleClickAddLocals = (e) => this.LocalsInstancia.toggleAddLocals();
+
+    handleClickDeleteLocals = (e) => this.LocalsInstancia.deleteLocalAlert(e.target.id);
 
     //reload data manually
     getNewData = async () => {
@@ -83,6 +102,16 @@ class Maintenance extends Component {
                 const respuesta = resLvl.data.msg;
                 await this.setState({
                     levels: respuesta.level
+                });
+
+            }
+
+            const resLocal = await axios.get(`locals`)
+
+            if (resLocal.data.status === 200) {
+                const respuesta = resLocal.data.msg;
+                await this.setState({
+                    locals: respuesta.locals
                 });
 
             }
@@ -113,6 +142,15 @@ class Maintenance extends Component {
                 })
             }
         }
+        if (this.state.locals === undefined) {
+            const res = await axios.get(`locals`)
+            if (res.data.status === 200) {
+                const respuesta = res.data.msg;
+                this.setState({
+                    locals: respuesta.locals
+                })
+            }
+        }
     }
     
     //set buttons
@@ -136,7 +174,16 @@ class Maintenance extends Component {
                 </div>
             )
         });
-
+        await this.state.locals.map((element,index) => {
+            return(
+                element.handle =
+                <div className="text-center">
+                    <MDBBtn id={index} color="orange" size="sm" onClick={this.handleClickEditLocals}><MDBIcon icon="pen" className="mr-2" /> Editar</MDBBtn>
+                    <MDBBtn id={index} color="red" size="sm" onClick={this.handleClickDeleteLocals}><MDBIcon icon="times" className="mr-2" /> Eliminar</MDBBtn>
+                </div>
+            )
+        });
+        this.LocalsInstancia.setLocalsCopy(this.state.locals)
         this.LevelsInstancia.setLevelsCopy(this.state.levels);
         this.SchedulesInstancia.setSchedulesCopy(this.state.schedules);
 
@@ -164,8 +211,8 @@ class Maintenance extends Component {
                                     <h1 className="text-center">Mantenimientos</h1>
                                 </MDBCardHeader>
                                 <MDBCardBody>
-                                    <MDBRow className="my-5">
-                                        <MDBCol size="12" md="6">
+                                    <MDBRow className="d-flex justify-content-center">
+                                        <MDBCol size="12" md="6" className="mt-4">
                                             <MDBCard>
                                                 <MDBCardHeader>
                                                     <h1 className="text-center">Horarios</h1>
@@ -184,7 +231,7 @@ class Maintenance extends Component {
                                                 </MDBCardBody>
                                             </MDBCard>
                                         </MDBCol>
-                                        <MDBCol size="12" md="6">
+                                        <MDBCol size="12" md="6" className="mt-4">
                                             <MDBCard>
                                                 <MDBCardHeader>
                                                     <h1 className="text-center">Niveles</h1>
@@ -203,25 +250,30 @@ class Maintenance extends Component {
                                                 </MDBCardBody>
                                             </MDBCard>
                                         </MDBCol>
+                                        <MDBCol size="12" md="6" className="mt-4">
+                                            <MDBCard>
+                                                <MDBCardHeader>
+                                                    <h1 className="text-center">Locales</h1>
+                                                    <MDBBtn color="green" size="sm" onClick={this.handleClickAddLocals}><MDBIcon icon="plus " className="mr-2" /> Agregar</MDBBtn>
+                                                </MDBCardHeader>
+                                                <MDBCardBody>
+                                                    {
+                                                        //if data exists
+                                                        this.state.levels
+                                                        &&
+                                                        <TableComponent
+                                                            columns={this.LocalsInstancia.getColumnsLocal()}
+                                                            rows={this.state.locals}
+                                                        />
+                                                    }
+                                                </MDBCardBody>
+                                            </MDBCard>
+                                        </MDBCol>
                                     </MDBRow>
                                 </MDBCardBody>
                             </MDBCard>
                         </MDBCol>
                     </MDBRow>
-                    {
-                        //if data exists
-                        this.state.render
-                        &&
-                        <ModalComponent
-                            modal={this.state.modal}
-                            title={'Modificar horario'}
-                            toggleModal={this.toggleModal}
-                            id={this.state.schedulesModal.id}
-                            name={this.state.schedulesModal.schedule}
-                            handleChange={this.SchedulesInstancia.handleChangeSchedule}
-                            handleModalClick={this.SchedulesInstancia.updateAlert}
-                        />
-                    }
                     {
                         //if data exists
                         this.state.render
@@ -234,6 +286,20 @@ class Maintenance extends Component {
                             name={this.state.schedulesModal.schedule}
                             handleChange={this.SchedulesInstancia.handleChangeSchedule}
                             handleModalClick={this.SchedulesInstancia.addAlert}
+                        />
+                    }
+                    {
+                        //if data exists
+                        this.state.render
+                        &&
+                        <ModalComponent
+                            modal={this.state.modal}
+                            title={'Modificar horario'}
+                            toggleModal={this.toggleModal}
+                            id={this.state.schedulesModal.id}
+                            name={this.state.schedulesModal.schedule}
+                            handleChange={this.SchedulesInstancia.handleChangeSchedule}
+                            handleModalClick={this.SchedulesInstancia.updateAlert}
                         />
                     }
                     {
@@ -262,6 +328,34 @@ class Maintenance extends Component {
                             name={this.state.levelsModal.level}
                             handleChange={this.LevelsInstancia.handleChangeLevels}
                             handleModalClick={this.LevelsInstancia.updateLevelAlert}
+                        />
+                    }
+                    {
+                        //if data exists
+                        this.state.render
+                        &&
+                        <ModalComponent
+                            modal={this.state.modalAddLocal}
+                            title={'Agregar local'}
+                            toggleModal={this.toggleModal}
+                            id={this.state.localsModal.id}
+                            name={this.state.localsModal.local}
+                            handleChange={this.LocalsInstancia.handleChangeLocals}
+                            handleModalClick={this.LocalsInstancia.addLocalAlert}
+                        />
+                    }
+                    {
+                        //if data exists
+                        this.state.render
+                        &&
+                        <ModalComponent
+                            modal={this.state.modalLocal}
+                            title={'Modificar local'}
+                            toggleModal={this.toggleModal}
+                            id={this.state.localsModal.id}
+                            name={this.state.localsModal.local}
+                            handleChange={this.LocalsInstancia.handleChangeLocals}
+                            handleModalClick={this.LocalsInstancia.updateLocalAlert}
                         />
                     }
 

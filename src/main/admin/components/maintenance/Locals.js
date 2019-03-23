@@ -1,21 +1,22 @@
 import Swal from 'sweetalert2';
 import axios from '../candidates/axios';
 
-export default class Levels {
+export default class Locals {
     constructor(context) {
         this.context = context
     }
-    levelsCopy = [];
 
-    columnsLevel = [
+    localsCopy = [];
+
+    columnsLocals = [
         {
             label: '#',
             field: 'id',
             sort: 'asc'
         },
         {
-            label: 'Nivel',
-            field: 'nivel',
+            label: 'Local',
+            field: 'local',
             sort: 'asc'
         },
         {
@@ -25,83 +26,65 @@ export default class Levels {
         }
     ];
 
-    getColumnsLevel() {
-        return this.columnsLevel;
+    setLocalsCopy(param) {
+        this.localsCopy = param;
     }
 
-    setLevelsCopy(param) {
-        this.levelsCopy = param;
-    }  
+    getColumnsLocal(){
+        return this.columnsLocals;
+    }
 
     //handle input onChange event
-    handleChangeLevels = (e) => {
+    handleChangeLocals = (e) => {
         this.context.setState({
             firstTime: false,
-            levelsModal: {
-                id: this.context.state.levelsModal.id,
-                level: e.target.value
+            localsModal: {
+                id: this.context.state.localsModal.id,
+                local: e.target.value
             }
         });
     }
 
-    setDataModalLevels = async (id) => {
-        await this.context.setState({
-            levelsModal: {
-                id: this.levelsCopy[id].lv_id,
-                level: this.levelsCopy[id].lv_name
-            },
-            firstTime: false,
-            modalLvl: true
-        })
-    }
-
-    //set levels input values for open modal
-    toggleLevels = async (id) => {
-        if (this.levelsCopy[id] !== undefined) {
-            this.setDataModalLevels(id)
-        }
-    }
-
-    toggleAddLevels() {
+    toggleAddLocals() {
         this.context.setState({
-            levelsModal: {
+            localsModal: {
                 id: '',
-                level: ''
+                local: ''
             },
             firstTime: false,
-            modalAddLvl: true
+            modalAddLocal: true
         })
     }
 
     //add levels function (call from modal only)
-    addLevelAlert = async () => {
+    addLocalAlert = async () => {
         await this.context.setState({
             render: false,
         });
 
-        const res = await axios.post(`levels/add`, {
+        const res = await axios.post(`locals/add`, {
             request: {
                 msg: {
-                    name: String(this.context.state.levelsModal.level)
+                    name: String(this.context.state.localsModal.local)
                 }
             }
         })
         if (res.data.code === 205) {
             await Swal.fire(
                 '¡Guardado!',
-                'Nivel agregado.',
+                'Local agregado.',
                 'success'
             )
             await this.context.getNewData()
             await this.context.setState({
                 render: true,
-                modalAddLvl: false,
+                modalAddLocal: false,
                 firstTime: false
             })
         } else {
             Swal.fire(
                 '¡Error!',
-                'Nivel ya registrado.',
+                'Local ya registrado.',
                 'error'
             )
             await this.context.setState({
@@ -110,16 +93,34 @@ export default class Levels {
         }
     }
 
-    //update Levels function (call from modal only)
-    updateLevelAlert = async (lv_id) => {
+    setDataModalLocals = async (id) => {
+        await this.context.setState({
+            localsModal: {
+                id: this.localsCopy[id].lc_id,
+                local: this.localsCopy[id].lc_name
+            },
+            firstTime: false,
+            modalLocal: true
+        })
+    }
+
+    //set locals input values for open modal
+    toggleLocals = async (id) => {
+        if (this.localsCopy[id] !== undefined) {
+            this.setDataModalLocals(id)
+        }
+    }
+
+    //update Locals function (call from modal only)
+    updateLocalAlert = async (lc_id) => {
         await this.context.setState({
             render: false,
         });
 
-        const res = await axios.post(`levels/update/${lv_id}`, {
+        const res = await axios.post(`locals/update/${lc_id}`, {
             request: {
                 msg: {
-                    name: String(this.context.state.levelsModal.level)
+                    name: String(this.context.state.localsModal.local)
                 }
             }
         })
@@ -127,29 +128,29 @@ export default class Levels {
         if (res.data.code === 205) {
             await Swal.fire(
                 '¡Actualizado!',
-                'Nivel actualizado.',
+                'Local actualizado.',
                 'success'
             )
             await this.context.getNewData()
             await this.context.setState({
                 render: true,
-                modalLvl: false,
+                modalLocal: false,
                 firstTime: false
             })
         } else {
-            console.log('Error al actualizar nivel')
+            console.log('Error al actualizar local')
         }
     }
 
     //delete function (call from modal only)
-    deleteLevelAlert = async (lv_id) => {
+    deleteLocalAlert = async (lc_id) => {
         await this.context.setState({
             render: false,
         });
 
         Swal.fire({
             title: '¿Estas seguro?',
-            text: "No podras recuperar la información de un nivel eliminado.",
+            text: "No podras recuperar la información de un local eliminado.",
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -159,10 +160,10 @@ export default class Levels {
         })
             .then(async (result) => {
                 if (result.value) {
-                    const res = await axios.post(`levels/delete`, {
+                    const res = await axios.post(`locals/delete`, {
                         request: {
                             msg: {
-                                id: this.levelsCopy[lv_id].lv_id
+                                id: this.localsCopy[lc_id].lc_id
                             }
                         }
                     })
@@ -170,24 +171,24 @@ export default class Levels {
                     if (res.data.code === 205) {
                         await Swal.fire(
                             '¡Eliminado!',
-                            'Nivel eliminado.',
+                            'Local eliminado.',
                             'success'
                         )
                         await this.context.getNewData()
                         this.context.setState({
                             render: true,
-                            modalLvl: false,
+                            modalLocal: false,
                             firstTime: false
                         })
                     } else if (res.data.code === 400) {
                         await Swal.fire(
                             '¡No borrado!',
-                            'Existen cursos relacionados a este nivel.',
+                            'Existen cursos relacionados a este local.',
                             'error'
                         )
                         this.context.setState({
                             render: true,
-                            modalLvl: false,
+                            modalLocal: false,
                             firstTime: false
                         })
                     } else {
@@ -196,12 +197,11 @@ export default class Levels {
                 } else {
                     this.context.setState({
                         render: true,
-                        modalLvl: false,
+                        modalLocal: false,
                         firstTime: false
                     })
                 }
             })
     }
-
 
 }
