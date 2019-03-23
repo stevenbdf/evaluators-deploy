@@ -1,17 +1,16 @@
 import React, { Component } from "react";
 import {
-    MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody, MDBCardHeader,MDBBtn, MDBIcon
+    MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody, MDBCardHeader, MDBBtn, MDBIcon
 } from 'mdbreact';
 import Navbar from '../../../../navbar/components/Navbar';
 import ModalComponent from './Modal';
 import TableComponent from './Table';
-import Swal from 'sweetalert2';
 import axios from '../candidates/axios';
+import Schedules from './Schedules.js';
+import Levels from './Levels.js';
 
-let schedulesCopy = []
-let levelsCopy = []
 
-class Candidates extends Component {
+class Maintenance extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -22,7 +21,7 @@ class Candidates extends Component {
                 schedule: undefined
             },
             levels: undefined,
-            levelsModal:{
+            levelsModal: {
                 id: undefined,
                 level: undefined
             }
@@ -34,380 +33,12 @@ class Candidates extends Component {
             modalAddLvl: false
         }
     }
+    // instance classes
+    SchedulesInstancia = new Schedules(this);
 
-    //schedules' table columns, added on header
-    columnsSchedule = [
-        {
-            label: '#',
-            field: 'id',
-            sort: 'asc'
-        },
-        {
-            label: 'Horario',
-            field: 'horario',
-            sort: 'asc'
-        },
-        {
-            label: 'Acciones',
-            field: 'handle',
-            sort: 'asc'
-        }
+    LevelsInstancia = new Levels(this);
 
-    ];
-
-    //levels' table columns , added on header
-    columnsLevel = [
-        {
-            label: '#',
-            field: 'id',
-            sort: 'asc'
-        },
-        {
-            label: 'Nivel',
-            field: 'nivel',
-            sort: 'asc'
-        },
-        {
-            label: 'Acciones',
-            field: 'handle',
-            sort: 'asc'
-        }
-
-    ];
-
-    //update Schedules function (call from modal only)
-    updateAlert = async (sch_id) => {
-        await this.setState({
-            render: false,
-        });
-
-        const res = await axios.post(`schedules/update/${sch_id}`, {
-            request: {
-                msg: {
-                    schedule: String(this.state.schedulesModal.schedule)
-                }
-            }
-        })
-
-        if (res.data.code === 205) {
-            await Swal.fire(
-                '¡Actualizado!',
-                'Horario actualizado.',
-                'success'
-            )
-            await this.getNewData()
-            await this.setState({
-                render: true,
-                modal: false,
-                firstTime: false
-            })
-        } else {
-            console.log('Error al actualizar evaluador')
-        }
-    }
-
-    //update Levels function (call from modal only)
-    updateLevelAlert = async (lv_id) => {
-        await this.setState({
-            render: false,
-        });
-
-        const res = await axios.post(`levels/update/${lv_id}`, {
-            request: {
-                msg: {
-                    name: String(this.state.levelsModal.level)
-                }
-            }
-        })
-
-        if (res.data.code === 205) {
-            await Swal.fire(
-                '¡Actualizado!',
-                'Nivel actualizado.',
-                'success'
-            )
-            await this.getNewData()
-            await this.setState({
-                render: true,
-                modalLvl: false,
-                firstTime: false
-            })
-        } else {
-            console.log('Error al actualizar nivel')
-        }
-    }
-
-    //add schedules function (call from modal only)
-    addAlert = async () => {
-        await this.setState({
-            render: false,
-        });
-
-        const res = await axios.post(`schedules/add`, {
-            request: {
-                msg: {
-                    schedule: String(this.state.schedulesModal.schedule)
-                }
-            }
-        })
-        if (res.data.code === 205) {
-            await Swal.fire(
-                '¡Guardado!',
-                'Horario agregado.',
-                'success'
-            )
-            await this.getNewData()
-            await this.setState({
-                render: true,
-                modalAdd: false,
-                firstTime: false
-            })
-        } else {
-            Swal.fire(
-                '¡Error!',
-                'Evaluador ya registrado.',
-                'error'
-            )
-            await this.setState({
-                render: true
-            })
-        }
-    }
-
-    //add levels function (call from modal only)
-    addLevelAlert = async () => {
-        await this.setState({
-            render: false,
-        });
-
-        const res = await axios.post(`levels/add`, {
-            request: {
-                msg: {
-                    name: String(this.state.levelsModal.level)
-                }
-            }
-        })
-        console.log(res.data)
-        if (res.data.code === 205) {
-            await Swal.fire(
-                '¡Guardado!',
-                'Nivel agregado.',
-                'success'
-            )
-            await this.getNewData()
-            await this.setState({
-                render: true,
-                modalAddLvl: false,
-                firstTime: false
-            })
-        } else {
-            Swal.fire(
-                '¡Error!',
-                'Nivel ya registrado.',
-                'error'
-            )
-            await this.setState({
-                render: true
-            })
-        }
-    }
-
-    //delete schedules function (call from modal only)
-    deleteAlert = async (sch_id) => {
-        await this.setState({
-            render: false,
-        });
-
-        Swal.fire({
-            title: '¿Estas seguro?',
-            text: "No podras recuperar la información de un horario eliminado.",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            cancelButtonText: 'Cancelar',
-            confirmButtonText: 'Si, eliminar'
-        })
-            .then(async () => {
-                const res = await axios.post(`schedules/delete`, {
-                    request: {
-                        msg: {
-                            id: schedulesCopy[sch_id].sch_id
-                        }
-                    }
-                })
-
-                if (res.data.code === 205) {
-                    await Swal.fire(
-                        '¡Eliminado!',
-                        'Horario eliminado.',
-                        'success'
-                    )
-                    await this.getNewData()
-                    this.setState({
-                        render: true,
-                        modal: false,
-                        firstTime: false
-                    })
-                } else if (res.data.code === 400) {
-                    await Swal.fire(
-                        '¡No borrado!',
-                        'Existen evaluadores y/o candidatos relacionados a este horario.',
-                        'error'
-                    )
-                    this.setState({
-                        render: true,
-                        modal: false,
-                        firstTime: false
-                    })
-                } else {
-                    console.log(res)
-                }
-            })
-    }
-
-    //delete function (call from modal only)
-    deleteLevelAlert = async (lv_id) => {
-        await this.setState({
-            render: false,
-        });
-
-        Swal.fire({
-            title: '¿Estas seguro?',
-            text: "No podras recuperar la información de un nivel eliminado.",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            cancelButtonText: 'Cancelar',
-            confirmButtonText: 'Si, eliminar'
-        })
-            .then(async () => {
-                const res = await axios.post(`levels/delete`, {
-                    request: {
-                        msg: {
-                            id: levelsCopy[lv_id].lv_id
-                        }
-                    }
-                })
-
-                if (res.data.code === 205) {
-                    await Swal.fire(
-                        '¡Eliminado!',
-                        'Nivel eliminado.',
-                        'success'
-                    )
-                    await this.getNewData()
-                    this.setState({
-                        render: true,
-                        modalLvl: false,
-                        firstTime: false
-                    })
-                } else if (res.data.code === 400) {
-                    await Swal.fire(
-                        '¡No borrado!',
-                        'Existen cursos relacionados a este nivel.',
-                        'error'
-                    )
-                    this.setState({
-                        render: true,
-                        modalLvl: false,
-                        firstTime: false
-                    })
-                } else {
-                    console.log(res)
-                }
-            })
-    }
-
-    
-    getNewData = async () => {
-        try {
-            const resSche = await axios.get(`schedules`)
-
-            if (resSche.data.status === 200) {
-                const respuesta = resSche.data.msg;
-                await this.setState({
-                    schedules: respuesta.schedules
-                });
-                
-            }
-
-            const resLvl = await axios.get(`levels`)
-
-            if (resLvl.data.status === 200) {
-                const respuesta = resLvl.data.msg;
-                await this.setState({
-                    levels: respuesta.level
-                });
-                
-            }
-
-            await this.setHandles()
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    setDataModalSchedules = async (id) => {
-        await this.setState({
-            schedulesModal: {
-                id: schedulesCopy[id].sch_id,
-                schedule: schedulesCopy[id].sch_schedule
-            },
-            firstTime: false,
-            modal: true
-        })
-    }
-    //set schedules input values for open modal
-    toggle = async (id) => {
-        if (schedulesCopy[id] !== undefined) {
-            this.setDataModalSchedules(id)
-        }
-    }
-
-    //set input values for open modal
-    toggleAdd(){
-        this.setState({
-            schedulesModal: {
-                id: '',
-                schedule: ''
-            },
-            firstTime: false,
-            modalAdd: true
-        })
-    }
-
-    setDataModalLevels = async (id) => {
-        await this.setState({
-            levelsModal: {
-                id: levelsCopy[id].lv_id,
-                level: levelsCopy[id].lv_name
-            },
-            firstTime: false,
-            modalLvl: true
-        })
-    }
-
-    //set levels input values for open modal
-    toggleLevels = async (id) => {
-        if (levelsCopy[id] !== undefined) {
-            this.setDataModalLevels(id)
-        }
-    }
-
-    toggleAddLevels(){
-        this.setState({
-            levelsModal:{
-                id: '',
-                level: ''
-            },
-            firstTime: false,
-            modalAddLvl: true
-        })
-    }
-
-    //dismiss modal on close
+    //dismiss all modals
     toggleModal = () => {
         this.setState({
             modal: false,
@@ -417,47 +48,53 @@ class Candidates extends Component {
         });
     }
 
-    /*Schedules clicks */
+    /*Schedules handle clicks */
 
-    handleClickEditSchedules = (e) => this.toggle(e.target.id);
+    handleClickEditSchedules = (e) => this.SchedulesInstancia.toggle(e.target.id);
 
-    handleClickAddSchedules = (e) => this.toggleAdd();
+    handleClickAddSchedules = (e) => this.SchedulesInstancia.toggleAdd();
 
-    handleClickDeleteSchedules = e => this.deleteAlert(e.target.id);
+    handleClickDeleteSchedules = e => this.SchedulesInstancia.deleteAlert(e.target.id);
 
-    /*Levels clicks */
+    /*Levels handle clicks */
 
-    handleClickEditLevels = (e) => this.toggleLevels(e.target.id);
+    handleClickEditLevels = (e) => this.LevelsInstancia.toggleLevels(e.target.id);
 
-    handleClickAddLevels = (e) => this.toggleAddLevels();
+    handleClickAddLevels = (e) => this.LevelsInstancia.toggleAddLevels();
 
-    handleClickDeleteLevels = (e) => this.deleteLevelAlert(e.target.id);
+    handleClickDeleteLevels = (e) => this.LevelsInstancia.deleteLevelAlert(e.target.id);
 
-    
+    //reload data manually
+    getNewData = async () => {
+        try {
+            const resSche = await axios.get(`schedules`)
 
-    //handle input onChange event
-    handleChangeSchedule = (e) => {
-        this.setState({
-            firstTime: false,
-            schedulesModal: {
-                id: this.state.schedulesModal.id,
-                schedule: e.target.value
+            if (resSche.data.status === 200) {
+                const respuesta = resSche.data.msg;
+                await this.setState({
+                    schedules: respuesta.schedules
+                });
+
             }
-        });
+
+            const resLvl = await axios.get(`levels`)
+
+            if (resLvl.data.status === 200) {
+                const respuesta = resLvl.data.msg;
+                await this.setState({
+                    levels: respuesta.level
+                });
+
+            }
+
+            await this.setHandles()
+        } catch (error) {
+            console.log(error)
+        }
     }
 
-    //handle input onChange event
-    handleChangeLevels = (e) => {
-        this.setState({
-            firstTime: false,
-            levelsModal: {
-                id: this.state.levelsModal.id,
-                level: e.target.value
-            }
-        });
-    }
-
-    async getDataTables(){
+    //reload data in mount
+    getDataTables = async () => {
         if (this.state.schedules === undefined) {
             const res = await axios.get(`schedules`)
             if (res.data.status === 200) {
@@ -467,7 +104,7 @@ class Candidates extends Component {
                 })
             }
         }
-        if(this.state.levels === undefined){
+        if (this.state.levels === undefined) {
             const res = await axios.get(`levels`)
             if (res.data.status === 200) {
                 const respuesta = res.data.msg;
@@ -477,42 +114,43 @@ class Candidates extends Component {
             }
         }
     }
-
-    //get first data from API
-    async componentDidMount() {
-        await this.getDataTables()
-        await this.setHandles()
-    };
-
+    
+    //set buttons
     setHandles = async () => {
-        let i = 0;
-        await this.state.schedules.forEach(element => {
-            element.handle =
+        await this.state.schedules.map((element,index) => {
+            return(
+                element.handle =
                 <div className="text-center">
-                    <MDBBtn id={i} color="orange" size="sm" onClick={this.handleClickEditSchedules}><MDBIcon icon="pen" className="mr-2" /> Editar</MDBBtn>
-                    <MDBBtn id={i} color="red" size="sm" onClick={this.handleClickDeleteSchedules}><MDBIcon icon="times" className="mr-2" /> Eliminar</MDBBtn>
+                    <MDBBtn id={index} color="orange" size="sm" onClick={this.handleClickEditSchedules}><MDBIcon icon="pen" className="mr-2" /> Editar</MDBBtn>
+                    <MDBBtn id={index} color="red" size="sm" onClick={this.handleClickDeleteSchedules}><MDBIcon icon="times" className="mr-2" /> Eliminar</MDBBtn>
                 </div>
-            i++;
+            )
+            
         });
-        let j = 0;
-        await this.state.levels.forEach(element => {
-            element.handle =
+        await this.state.levels.map((element,index) => {
+            return(
+                element.handle =
                 <div className="text-center">
-                    <MDBBtn id={j} color="orange" size="sm" onClick={this.handleClickEditLevels}><MDBIcon icon="pen" className="mr-2" /> Editar</MDBBtn>
-                    <MDBBtn id={j} color="red" size="sm" onClick={this.handleClickDeleteLevels}><MDBIcon icon="times" className="mr-2" /> Eliminar</MDBBtn>
+                    <MDBBtn id={index} color="orange" size="sm" onClick={this.handleClickEditLevels}><MDBIcon icon="pen" className="mr-2" /> Editar</MDBBtn>
+                    <MDBBtn id={index} color="red" size="sm" onClick={this.handleClickDeleteLevels}><MDBIcon icon="times" className="mr-2" /> Eliminar</MDBBtn>
                 </div>
-            j++;
+            )
         });
-        schedulesCopy = this.state.schedules
-        levelsCopy = this.state.levels
-        
+
+        this.LevelsInstancia.setLevelsCopy(this.state.levels);
+        this.SchedulesInstancia.setSchedulesCopy(this.state.schedules);
+
         this.setState({
             render: true
         })
 
     }
 
-
+    //set data for every render
+    async componentDidMount() {
+        await this.getDataTables()
+        await this.setHandles()
+    };
 
     render() {
         return (
@@ -531,16 +169,16 @@ class Candidates extends Component {
                                             <MDBCard>
                                                 <MDBCardHeader>
                                                     <h1 className="text-center">Horarios</h1>
-                                                    <MDBBtn  color="green" size="sm" onClick={this.handleClickAddSchedules}><MDBIcon icon="plus " className="mr-2" /> Agregar</MDBBtn>
+                                                    <MDBBtn color="green" size="sm" onClick={this.handleClickAddSchedules}><MDBIcon icon="plus " className="mr-2" /> Agregar</MDBBtn>
                                                 </MDBCardHeader>
-                                                <MDBCardBody>            
+                                                <MDBCardBody>
                                                     {
                                                         //if data exists
                                                         this.state.schedules
                                                         &&
-                                                        <TableComponent 
-                                                        columns={this.columnsSchedule}
-                                                        rows={this.state.schedules}
+                                                        <TableComponent
+                                                            columns={this.SchedulesInstancia.getColumnsSchedule()}
+                                                            rows={this.state.schedules}
                                                         />
                                                     }
                                                 </MDBCardBody>
@@ -550,16 +188,16 @@ class Candidates extends Component {
                                             <MDBCard>
                                                 <MDBCardHeader>
                                                     <h1 className="text-center">Niveles</h1>
-                                                    <MDBBtn  color="green" size="sm" onClick={this.handleClickAddLevels}><MDBIcon icon="plus " className="mr-2" /> Agregar</MDBBtn>
+                                                    <MDBBtn color="green" size="sm" onClick={this.handleClickAddLevels}><MDBIcon icon="plus " className="mr-2" /> Agregar</MDBBtn>
                                                 </MDBCardHeader>
                                                 <MDBCardBody>
                                                     {
                                                         //if data exists
                                                         this.state.levels
                                                         &&
-                                                        <TableComponent 
-                                                        columns={this.columnsLevel}
-                                                        rows={this.state.levels}
+                                                        <TableComponent
+                                                            columns={this.LevelsInstancia.getColumnsLevel()}
+                                                            rows={this.state.levels}
                                                         />
                                                     }
                                                 </MDBCardBody>
@@ -575,13 +213,13 @@ class Candidates extends Component {
                         this.state.render
                         &&
                         <ModalComponent
-                        modal={this.state.modal}
-                        title={'Modificar horario'}
-                        toggleModal={this.toggleModal}
-                        id={this.state.schedulesModal.id}
-                        name={this.state.schedulesModal.schedule}
-                        handleChange={this.handleChangeSchedule}
-                        handleModalClick={this.updateAlert}
+                            modal={this.state.modal}
+                            title={'Modificar horario'}
+                            toggleModal={this.toggleModal}
+                            id={this.state.schedulesModal.id}
+                            name={this.state.schedulesModal.schedule}
+                            handleChange={this.SchedulesInstancia.handleChangeSchedule}
+                            handleModalClick={this.SchedulesInstancia.updateAlert}
                         />
                     }
                     {
@@ -589,13 +227,13 @@ class Candidates extends Component {
                         this.state.render
                         &&
                         <ModalComponent
-                        modal={this.state.modalAdd}
-                        title={'Agregar horario'}
-                        toggleModal={this.toggleModal}
-                        id={this.state.schedulesModal.id}
-                        name={this.state.schedulesModal.schedule}
-                        handleChange={this.handleChangeSchedule}
-                        handleModalClick={this.addAlert}
+                            modal={this.state.modalAdd}
+                            title={'Agregar horario'}
+                            toggleModal={this.toggleModal}
+                            id={this.state.schedulesModal.id}
+                            name={this.state.schedulesModal.schedule}
+                            handleChange={this.SchedulesInstancia.handleChangeSchedule}
+                            handleModalClick={this.SchedulesInstancia.addAlert}
                         />
                     }
                     {
@@ -603,13 +241,13 @@ class Candidates extends Component {
                         this.state.render
                         &&
                         <ModalComponent
-                        modal={this.state.modalAddLvl}
-                        title={'Agregar nivel'}
-                        toggleModal={this.toggleModal}
-                        id={this.state.levelsModal.id}
-                        name={this.state.levelsModal.level}
-                        handleChange={this.handleChangeLevels}
-                        handleModalClick={this.addLevelAlert}
+                            modal={this.state.modalAddLvl}
+                            title={'Agregar nivel'}
+                            toggleModal={this.toggleModal}
+                            id={this.state.levelsModal.id}
+                            name={this.state.levelsModal.level}
+                            handleChange={this.LevelsInstancia.handleChangeLevels}
+                            handleModalClick={this.LevelsInstancia.addLevelAlert}
                         />
                     }
                     {
@@ -617,16 +255,16 @@ class Candidates extends Component {
                         this.state.render
                         &&
                         <ModalComponent
-                        modal={this.state.modalLvl}
-                        title={'Modificar nivel'}
-                        toggleModal={this.toggleModal}
-                        id={this.state.levelsModal.id}
-                        name={this.state.levelsModal.level}
-                        handleChange={this.handleChangeLevels}
-                        handleModalClick={this.updateLevelAlert}
+                            modal={this.state.modalLvl}
+                            title={'Modificar nivel'}
+                            toggleModal={this.toggleModal}
+                            id={this.state.levelsModal.id}
+                            name={this.state.levelsModal.level}
+                            handleChange={this.LevelsInstancia.handleChangeLevels}
+                            handleModalClick={this.LevelsInstancia.updateLevelAlert}
                         />
                     }
-                    
+
                 </MDBContainer>
             </div>
         );
@@ -635,4 +273,4 @@ class Candidates extends Component {
 
 
 
-export default Candidates;
+export default Maintenance;
