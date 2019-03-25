@@ -7,7 +7,7 @@ import {
 
 const  Modal = (props) => {
     return (
-        <MDBModal isOpen={props.modal} toggle={props.toggleModal}>
+        <MDBModal isOpen={props.modal} toggle={props.toggleModal} centered>
             <MDBModalHeader toggle={props.toggleModal}>{props.title}</MDBModalHeader>
             <MDBModalBody>
                 <form>
