@@ -22,6 +22,18 @@ const Evaluator = db.define('evaluators', {
     }
 )
 
+const Assignment = db.define('assignments', {
+    asg_id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    handle: Sequelize.STRING
+}, {
+    timestamps: false,
+    }
+)
+
 const Level = db.define('levels', {
     lv_id: {
         type: Sequelize.INTEGER,
@@ -124,11 +136,12 @@ const Binnacle = db.define('binnacles', {
     }
 )
 
-
+Assignment.belongsTo(Course, { as: 'course', foreignKey: 'cou_id'})
+Assignment.belongsTo(Evaluator, { as: 'evaluator', foreignKey: 'ev_id'})
 Binnacle.belongsTo(User, { as: 'user', foreignKey: 'us_id' })
 Evaluator.belongsTo(Schedule, { as: 'schedules', foreignKey: 'sch_id' })
-Course.belongsTo(Local,{as:'local', foreignKey: 'lc_id'})
-Course.belongsTo(Level,{as:'level', foreignKey: 'lv_id'})
+Course.belongsTo(Local, { as: 'local', foreignKey: 'lc_id' })
+Course.belongsTo(Level, { as: 'level', foreignKey: 'lv_id' })
 
 module.exports = {
     Schedule,
@@ -137,5 +150,6 @@ module.exports = {
     Binnacle,
     Level,
     Local,
-    Course
+    Course,
+    Assignment
 }

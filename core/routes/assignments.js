@@ -3,11 +3,11 @@ const router = express.Router()
 const Model = require('../models/model')
 
 
-//Get courses list
+//Get assignments list
 router.get('/', async (req, res) => {
     try {
-        let courses = await Model.Course.findAll({
-            attributes:['cou_id','cou_name','cou_teacher_guide','lc_id','lv_id']
+        let courses = await Model.Assignment.findAll({
+            attributes:['asg_id','cou_id','ev_id','handle']
         })
         if (courses[0] == undefined) {
             res.json({
@@ -17,10 +17,7 @@ router.get('/', async (req, res) => {
                 }
             })
         } else {
-            courses.forEach((item) => {
-                item.handle = ''
-            })
-            console.log(req.connection.remoteAddress.split(':')[3] + ' courses findAll')
+            console.log(req.connection.remoteAddress.split(':')[3] + ' assignment findAll')
             res.json({
                 status: 200,
                 message: "Ok",
@@ -41,26 +38,24 @@ router.get('/', async (req, res) => {
     }
 })
 
-//Update course
+//Update assignment
 router.post('/update/:id', async (req, res) => {
     try {
-        let course = await Model.Course.findByPk(req.params.id)
-        if (course != null) {
+        let assignment = await Model.Assignment.findByPk(req.params.id)
+        if (assignment != null) {
             let obj = req.body.request.msg
-            await Model.Course.update(
+            await Model.Assignment.update(
                 {
-                    cou_name: (obj.name === '') ? course.cou_name : obj.name,
-                    cou_teacher_guide: (obj.name === '') ? course.cou_teacher_guide : obj.teacher_guide,
-                    lv_id: (obj.name === '') ? course.lv_id : obj.lv_id,
-                    lc_id: (obj.name === '') ? course.lc_id : obj.lc_id
+                    cou_id: (obj.cou_id === '') ? assignment.cou_id : obj.cou_id,
+                    ev_id: (obj.ev_id === '') ? assignment.ev_id : obj.ev_id
                 }, {    
                     where:
                         {
-                            cou_id: req.params.id
+                            asg_id: req.params.id
                         }
                 }
             )
-            console.log(req.connection.remoteAddress.split(':')[3] + ' courses update by id ' + req.params.id)
+            console.log(req.connection.remoteAddress.split(':')[3] + ' assignment update by id ' + req.params.id)
             res.json({
                 code: 205,
                 message: "Reset Content",
@@ -84,12 +79,12 @@ router.post('/update/:id', async (req, res) => {
     }
 })
 
-//Delete course
+//Delete assignment
 router.post('/delete', async (req, res) => {
     try {
         let obj = req.body.request.msg
-        let cou = await Model.Course.findByPk(obj.id)
-        if (cou == null) {
+        let assig = await Model.Assignment.findByPk(obj.id)
+        if (assig == null) {
             res.json({
                 status: 404,
                 message: "Not found",
@@ -97,12 +92,12 @@ router.post('/delete', async (req, res) => {
                 }
             })
         } else {
-            await Model.Course.destroy({
+            await Model.Assignment.destroy({
                 where: {
-                    cou_id: obj.id
+                    asg_id: obj.id
                 }
             })
-            console.log(req.connection.remoteAddress.split(':')[3] + ' course delete ' + obj.id)
+            console.log(req.connection.remoteAddress.split(':')[3] + ' assignment delete ' + obj.id)
             res.json({
                 code: 205,
                 message: "Reset Content",
@@ -120,11 +115,11 @@ router.post('/delete', async (req, res) => {
     }
 })
 
-//Add course
+//Add assignment
 router.post('/add', async (req, res) => {
     try {
         let obj = req.body.request.msg
-        if (obj.name.length == 0 || obj.teacher_guide.length == 0 || obj.lv_id.length == 0 || obj.lc_id.length == 0) {
+        if (obj.cou_id.length == 0 || obj.ev_id.length == 0) {
             res.json({
                 code: 411,
                 message: "Length Required",
@@ -133,20 +128,16 @@ router.post('/add', async (req, res) => {
         } else {
 
             const data = {
-                cou_name: obj.name,
-                cou_teacher_guide: obj.teacher_guide,
-                lv_id: obj.lv_id,
-                lc_id: obj.lc_id,
+                cou_id: obj.cou_id,
+                ev_id: obj.ev_id,
             }
 
-            let { cou_name, cou_teacher_guide, lv_id, lc_id } = data
-            await Model.Course.create({
-                cou_name,
-                cou_teacher_guide,
-                lv_id, 
-                lc_id
+            let { cou_id, ev_id } = data
+            await Model.Assignment.create({
+                cou_id, 
+                ev_id
             })
-            console.log(req.connection.remoteAddress.split(':')[3] + ' course add')
+            console.log(req.connection.remoteAddress.split(':')[3] + ' assignment add')
             res.json({
                 code: 205,
                 message: "Reset Content",
@@ -167,10 +158,10 @@ router.post('/add', async (req, res) => {
 //findById
 router.get('/findById/:id', async (req, res) => {
     try {
-        let course = await Model.Course.findByPk(req.params.id,{
-            attributes:['cou_id','cou_name','cou_teacher_guide','lc_id','lv_id','handle']
+        let assignment = await Model.Assignment.findByPk(req.params.id,{
+            attributes:['asg_id','cou_id','ev_id','handle']
         })
-        if (course == null) {
+        if (assignment == null) {
             res.json({
                 status: 404,
                 message: "Not found",
@@ -178,12 +169,12 @@ router.get('/findById/:id', async (req, res) => {
                 }
             })
         } else {
-            console.log(req.connection.remoteAddress.split(':')[3] + ' course findById ' + req.params.id)
+            console.log(req.connection.remoteAddress.split(':')[3] + ' assignment findById ' + req.params.id)
             res.json({
                 status: 200,
                 message: "Ok",
                 msg: {
-                    course
+                    assignment
                 }
             })
         }

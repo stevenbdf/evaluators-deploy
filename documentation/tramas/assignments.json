@@ -1,0 +1,50 @@
+[
+    "findAll",
+    {
+        "url": "http://localhost:3001/assignments",
+        "method": "get"
+    },
+    "add",
+    {
+        "url": "http://localhost:3001/assignments/add",
+        "method": "post"
+    },
+    {
+        "request": {
+            "msg": {
+                "cou_id":"1",
+                "ev_id":"1"
+            }
+        }
+    },
+    "update",
+    {
+        "url": "http://localhost:3001/assignments/update/:id",
+        "method": "post"
+    },
+    {
+        "request": {
+            "msg": {
+                "cou_id":"4",
+                "ev_id":"4"
+            }
+        } 
+    },
+    "delete",
+    {
+        "url": "http://localhost:3001/assignments/delete",
+        "method": "post"
+    },
+    {
+        "request": {
+            "msg": {
+                "id": "2"
+            }
+        }
+    },
+    "findById",
+    {
+        "url": "http://localhost:3001/assignments/findById/:id",
+        "method": "get"
+    }    
+]

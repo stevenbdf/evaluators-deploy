@@ -1,0 +1,54 @@
+[
+    "findAll",
+    {
+        "url": "http://localhost:3001/courses",
+        "method": "get"
+    },
+    "add",
+    {
+        "url": "http://localhost:3001/courses/add",
+        "method": "post"
+    },
+    {
+        "request": {
+            "msg": {
+                "name":"arqui",
+                "teacher_guide":"arquitecta",
+                "lv_id":"1",
+                "lc_id":"1"
+            }
+        }
+    },
+    "update",
+    {
+        "url": "http://localhost:3001/courses/update/:id",
+        "method": "post"
+    },
+    {
+        "request": {
+            "msg": {
+                "name":"eca",
+                "teacher_guide":"electronica",
+                "lv_id":"1",
+                "lc_id":"1"
+            }
+        }
+    },
+    "delete",
+    {
+        "url": "http://localhost:3001/courses/delete",
+        "method": "post"
+    },
+    {
+        "request": {
+            "msg": {
+                "id": "2"
+            }
+        }
+    },
+    "findById",
+    {
+        "url": "http://localhost:3001/courses/findById/:id",
+        "method": "get"
+    }    
+]
