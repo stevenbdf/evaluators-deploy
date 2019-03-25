@@ -23,7 +23,7 @@ class App extends Component {
             <ProtectedRoute exact path="/evaluators" component={Evaluators} />
             <ProtectedRoute exact path="/assignments" component={Assignments} />
             <ProtectedRoute exact path="/users" component={Users} />
-            <ProtectedRoute exact path="/maintenance" component={Maintenance} />
+            <Route exact path="/maintenance" component={Maintenance} />
             <Route exact path="/login" component={Login} />
           </Switch>
         </div>

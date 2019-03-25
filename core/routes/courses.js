@@ -7,7 +7,11 @@ const Model = require('../models/model')
 router.get('/', async (req, res) => {
     try {
         let courses = await Model.Course.findAll({
-            attributes:['cou_id','cou_name','cou_teacher_guide','lc_id','lv_id']
+            attributes:['cou_id','cou_name','cou_teacher_guide'],
+            include:[
+                { model: Model.Local, as: 'local' },
+                { model: Model.Level, as: 'level' }
+            ]
         })
         if (courses[0] == undefined) {
             res.json({
