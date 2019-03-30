@@ -101,7 +101,11 @@ class Maintenance extends Component {
 
     /*Courses handle clicks */
 
+    handleClickEditCourses = (e) => this.CoursesInstancia.toggleCourses(e.target.id);
+
     handleClickAddCourses = (e) => this.CoursesInstancia.toggleAddCourses();
+
+    handleClickDeleteCourses = (e) => this.CoursesInstancia.deleteCourseAlert(e.target.id);
 
     //reload data manually
     getNewData = async () => {
@@ -229,8 +233,8 @@ class Maintenance extends Component {
                 element.level = element.level.lv_name,
                 element.handle =
                 <div className="text-center">
-                    <MDBBtn id={index} color="orange" size="sm" onClick={this.handleClickEditLocals}><MDBIcon icon="pen" className="mr-2" /> Editar</MDBBtn>
-                    <MDBBtn id={index} color="red" size="sm" onClick={this.handleClickDeleteLocals}><MDBIcon icon="times" className="mr-2" /> Eliminar</MDBBtn>
+                    <MDBBtn id={index} color="orange" size="sm" onClick={this.handleClickEditCourses}><MDBIcon icon="pen" className="mr-2" /> Editar</MDBBtn>
+                    <MDBBtn id={index} color="red" size="sm" onClick={this.handleClickDeleteCourses}><MDBIcon icon="times" className="mr-2" /> Eliminar</MDBBtn>
                 </div>
             )
         });
@@ -441,18 +445,33 @@ class Maintenance extends Component {
                                     title={'Agregar Curso'}
                                     toggleModal={this.toggleModal}
                                     id={this.state.coursesModal.id}
-
                                     curso={this.state.coursesModal.course}
-
                                     profesor={this.state.coursesModal.teacher}
-
                                     selectLevels={this.state.coursesModal.level}
                                     levels={this.state.levels}
-
                                     selectLocals={this.state.coursesModal.local}
                                     locals={this.state.locals}
                                     handleChange={this.CoursesInstancia.handleChange}
                                     handleModalClick={this.CoursesInstancia.addCourseAlert}
+                                />
+                            }
+                            {
+                                //if data exists
+                                this.state.render
+                                &&
+                                <ModalCoursesComponent
+                                    modal={this.state.modalCourse}
+                                    title={'Modificar Curso'}
+                                    toggleModal={this.toggleModal}
+                                    id={this.state.coursesModal.id}
+                                    curso={this.state.coursesModal.course}
+                                    profesor={this.state.coursesModal.teacher}
+                                    selectLevels={this.state.coursesModal.level}
+                                    levels={this.state.levels}
+                                    selectLocals={this.state.coursesModal.local}
+                                    locals={this.state.locals}
+                                    handleChange={this.CoursesInstancia.handleChange}
+                                    handleModalClick={this.CoursesInstancia.updateCourseAlert}
                                 />
                             }
 
