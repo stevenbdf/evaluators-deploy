@@ -47,16 +47,44 @@ export default class Courses {
     setCoursesCopy(param) {
         this.coursesCopy = param;
     }
-    
+
     handleChange = (event) => {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
-        const name = target.name;
+        const name = target.name
+        
+        let valoresState = {
+            course: this.context.state.coursesModal.course,
+            teacher: this.context.state.coursesModal.teacher,
+            local: this.context.state.coursesModal.local,
+            level: this.context.state.coursesModal.level
+        }
+              
+        switch(name){
+            case 'curso':
+                valoresState.course = value
+                break;
+            case 'profesor':
+                valoresState.teacher = value
+                break;
+            case 'local':
+                valoresState.local = value
+                break;
+            case 'nivel':
+                valoresState.level = value
+                break;
+            default:
+                console.log('Error: input name sin coincidencias')
+                break;
+        }
     
         this.context.setState({
           coursesModal:{
             id: this.context.state.coursesModal.id,
-            [name]: value
+            course: valoresState.course,
+            teacher: valoresState.teacher,
+            local: valoresState.local,
+            level: valoresState.level
           }
         });
     }
@@ -81,11 +109,16 @@ export default class Courses {
             render: false,
         });
 
-        const res = await axios.post(`course/add`, {
+        
+        // Falta obtener id de nivel y cursos,
+        // luego ejecutar peticiones para guardar
+        // curso
+
+
+        const res = await axios.post(`levels/add`, {
             request: {
                 msg: {
-                    name: String(this.context.state.levelsModal.level),
-                    
+                    name: String(this.context.state.levelsModal.level)
                 }
             }
         })

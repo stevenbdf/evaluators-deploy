@@ -441,13 +441,18 @@ class Maintenance extends Component {
                                     title={'Agregar Curso'}
                                     toggleModal={this.toggleModal}
                                     id={this.state.coursesModal.id}
-                                    name={this.state.coursesModal.course}
+
+                                    curso={this.state.coursesModal.course}
+
+                                    profesor={this.state.coursesModal.teacher}
+
                                     selectLevels={this.state.coursesModal.level}
                                     levels={this.state.levels}
+
                                     selectLocals={this.state.coursesModal.local}
                                     locals={this.state.locals}
                                     handleChange={this.CoursesInstancia.handleChange}
-                                    handleModalClick={this.LocalsInstancia.updateLocalAlert}
+                                    handleModalClick={this.CoursesInstancia.addCourseAlert}
                                 />
                             }
 

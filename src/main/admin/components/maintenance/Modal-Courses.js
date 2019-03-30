@@ -12,7 +12,7 @@ const Modal = (props) => {
             <MDBModalBody>
                 <form>
                     <MDBInput label="Codigo:" hint={String(props.id)} disabled type="text" />
-                    <MDBInput label="Curso:" name="nombre" value={props.curso} type="text" onChange={props.handleChange} />
+                    <MDBInput label="Curso:" name="curso" value={props.curso} type="text" onChange={props.handleChange} />
                     <MDBInput label="Profesor/a Guia:" name="profesor" value={props.profesor} type="text" onChange={props.handleChange} />
                     <select name="nivel" className="browser-default custom-select" value={props.selectLevels} onChange={props.handleChange} >
                         <option>Seleccione un nivel...</option>
