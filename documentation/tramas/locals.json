@@ -44,5 +44,17 @@
     {
         "url": "http://localhost:3001/locals/findById/:id",
         "method": "get"
-    }    
+    },
+    "findByName",
+    {
+        "url": "http://localhost:3001/locals/get",
+        "method": "post"
+    },
+    {
+        "request": {
+            "msg": {
+                "name": "80.13"
+            }
+        }
+    }     
 ]

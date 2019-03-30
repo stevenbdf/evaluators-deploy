@@ -39,6 +39,43 @@ router.get('/', async (req, res) => {
     }
 })
 
+//Get level by name
+router.post('/get', async (req, res) => {
+    try {
+        let obj = req.body.request.msg
+        let level = await Model.Level.findAll({
+            attributes:['lv_id'],
+            where:{lv_name:obj.name}
+        })
+        if (level[0] == undefined) {
+            res.json({
+                status: 204,
+                message: "No Content",
+                msg: {
+                }
+            })
+        } else {
+            console.log(req.connection.remoteAddress.split(':')[3] + ' level findByName')
+            res.json({
+                status: 200,
+                message: "Ok",
+                msg: {
+                    level
+                }
+            })
+        }
+
+    } catch (err) {
+        res.json({
+            code: 400,
+            message: " Bad Request",
+            msg: {
+                description: err
+            }
+        })
+    }
+})
+
 //Update level
 router.post('/update/:id', async (req, res) => {
     try {

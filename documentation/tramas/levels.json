@@ -44,5 +44,17 @@
     {
         "url": "http://localhost:3001/levels/findById/:id",
         "method": "get"
+    },
+    "findByName",
+    {
+        "url": "http://localhost:3001/levels/get",
+        "method": "post"
+    },
+    {
+        "request": {
+            "msg": {
+                "name": "momaso"
+            }
+        }
     }    
 ]
