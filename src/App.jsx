@@ -8,7 +8,7 @@ import Evaluators from './main/admin/components/evaluators/Evaluators';
 import Maintenance from './main/admin/components/maintenance/Maintenance';
 import Login from './login/components/Login';
 import Admin from './main/admin/components/Admin';
-import {ProtectedRoute} from './login/components/protectedRoute';
+import { ProtectedRoute } from './login/components/protectedRoute';
 
 
 class App extends Component {
@@ -17,10 +17,10 @@ class App extends Component {
       <Router>
         <div>
           <Switch>
-          <Route exact path="/" component={Register} />
+            <Route exact path="/" component={Register} />
             <ProtectedRoute exact path="/admin" component={Admin} />
             <ProtectedRoute exact path="/candidates" component={Candidates} />
-            <ProtectedRoute exact path="/evaluators" component={Evaluators} />
+            <Route exact path="/evaluators" component={Evaluators} />
             <ProtectedRoute exact path="/assignments" component={Assignments} />
             <ProtectedRoute exact path="/users" component={Users} />
             <Route exact path="/maintenance" component={Maintenance} />

@@ -269,7 +269,7 @@ class Maintenance extends Component {
                                         </MDBCardHeader>
                                         <MDBCardBody>
                                             <MDBRow className="d-flex justify-content-center">
-                                                <MDBCol size="12" md="6" className="mt-4">
+                                                <MDBCol size="12" className="mt-4">
                                                     <MDBCard>
                                                         <MDBCardHeader>
                                                             <h1 className="text-center">Horarios</h1>
@@ -280,6 +280,7 @@ class Maintenance extends Component {
                                                                 //if data exists
                                                                 this.state.schedules
                                                                 &&
+
                                                                 <TableComponent
                                                                     columns={this.SchedulesInstancia.getColumnsSchedule()}
                                                                     rows={this.state.schedules}
@@ -288,7 +289,7 @@ class Maintenance extends Component {
                                                         </MDBCardBody>
                                                     </MDBCard>
                                                 </MDBCol>
-                                                <MDBCol size="12" md="6" className="mt-4">
+                                                <MDBCol size="12" className="mt-4">
                                                     <MDBCard>
                                                         <MDBCardHeader>
                                                             <h1 className="text-center">Cursos</h1>
@@ -309,7 +310,7 @@ class Maintenance extends Component {
                                                         </MDBCardBody>
                                                     </MDBCard>
                                                 </MDBCol>
-                                                <MDBCol size="12" md="6" className="mt-4">
+                                                <MDBCol size="12" className="mt-4">
                                                     <MDBCard>
                                                         <MDBCardHeader>
                                                             <h1 className="text-center">Niveles</h1>
@@ -328,7 +329,7 @@ class Maintenance extends Component {
                                                         </MDBCardBody>
                                                     </MDBCard>
                                                 </MDBCol>
-                                                <MDBCol size="12" md="6" className="mt-4">
+                                                <MDBCol size="12" className="mt-4">
                                                     <MDBCard>
                                                         <MDBCardHeader>
                                                             <h1 className="text-center">Locales</h1>

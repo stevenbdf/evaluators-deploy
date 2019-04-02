@@ -1,12 +1,25 @@
 import React from 'react';
-import {MDBTableHead, MDBTable, MDBTableBody} from 'mdbreact';
+import { MDBDataTable } from 'mdbreact';
 
 const Table = (props) => {
+    var data = {
+        columns: props.columns,
+        rows: props.rows
+    }
     return (
-        <MDBTable btn responsive hover className="text-center">
-            <MDBTableHead columns={props.columns} />
-                <MDBTableBody rows={props.rows} />
-        </MDBTable>
+        <MDBDataTable
+            hover
+            searchLabel="Buscar"
+            entriesLabel="Mostrar entradas"
+            paginationLabel={["Anterior", "Siguiente"]}
+            infoLabel={["Mostrando de", "a", "de", "entradas"]}
+            striped
+            entriesOptions={[5, 10, 20, 50, 100]}
+            entries={5}
+            responsive
+            bordered
+            data={data}
+        />
     )
 }
 
