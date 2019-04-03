@@ -120,6 +120,47 @@ router.get('/find', async (req, res) => {
     }
 })
 
+//Get evaluator by shedule
+router.post('/findBySchedule', async (req, res) => {
+    try {
+        let obj = req.body.request.msg
+        let evaluator = await Model.Evaluator.findAll({
+            attributes: ['ev_id', 'ev_name', 'ev_email', 'ev_phone', 'ev_academic_level', 'ev_status'],
+            include: [
+                { model: Model.Schedule, as: 'schedules' }
+            ],
+            where:{
+                sch_id:obj.id
+            }
+        })
+        console.log(req.connection.remoteAddress.split(':')[3]+' evaluators findBySchedule '+req.params.id)
+        if (evaluator == null) {
+            res.json({
+                status: 404,
+                message: "Not found",
+                msg: {
+                }
+            })
+        } else {
+            res.json({
+                status: 200,
+                message: "Ok",
+                msg: {
+                    evaluator
+                }
+            })
+        }
+    } catch (err) {
+        res.json({
+            code: 400,
+            message: " Bad Request",
+            msg: {
+                description: err
+            }
+        })
+    }
+})
+
 //FindById Evaluator
 router.get('/findById/:id', async (req, res) => {
     try {

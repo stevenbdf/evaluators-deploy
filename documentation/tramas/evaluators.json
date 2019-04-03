@@ -66,5 +66,17 @@
     {
         "url": "http://localhost:3001/evaluators/findById/:id",
         "method": "get"
+    },
+    "findBySchedule",
+    {
+        "url": "http://localhost:3001/evaluators/findBySchedule",
+        "method": "post"
+    },
+    {
+        "request": {
+            "msg": {
+                "id": "341"
+            }
+        }
     }
 ]
