@@ -198,54 +198,69 @@ class Maintenance extends Component {
 
     //set buttons
     setHandles = async () => {
-        await this.state.schedules.map((element, index) => {
-            return (
-                element.handle =
-                <div className="text-center">
-                    <MDBBtn id={index} color="orange" size="sm" onClick={this.handleClickEditSchedules}><MDBIcon icon="pen" className="mr-2" /> Editar</MDBBtn>
-                    <MDBBtn id={index} color="red" size="sm" onClick={this.handleClickDeleteSchedules}><MDBIcon icon="times" className="mr-2" /> Eliminar</MDBBtn>
-                </div>
-            )
+        if(this.state.schedules !== undefined){
+            await this.state.schedules.map((element, index) => {
+                return (
+                    element.handle =
+                    <div className="text-center">
+                        <MDBBtn id={index} color="orange" size="sm" onClick={this.handleClickEditSchedules}><MDBIcon icon="pen" className="mr-2" /> Editar</MDBBtn>
+                        <MDBBtn id={index} color="red" size="sm" onClick={this.handleClickDeleteSchedules}><MDBIcon icon="times" className="mr-2" /> Eliminar</MDBBtn>
+                    </div>
+                )
+            });
+            this.SchedulesInstancia.setSchedulesCopy(this.state.schedules);
+        }
+        
+        if(this.state.levels !== undefined){
+            await this.state.levels.map((element, index) => {
+                return (
+                    element.handle =
+                    <div className="text-center">
+                        <MDBBtn id={index} color="orange" size="sm" onClick={this.handleClickEditLevels}><MDBIcon icon="pen" className="mr-2" /> Editar</MDBBtn>
+                        <MDBBtn id={index} color="red" size="sm" onClick={this.handleClickDeleteLevels}><MDBIcon icon="times" className="mr-2" /> Eliminar</MDBBtn>
+                    </div>
+                )
+            });
+            this.LevelsInstancia.setLevelsCopy(this.state.levels);
+        }
+        
+        if(this.state.locals !== undefined){
+            await this.state.locals.map((element, index) => {
+                return (
+                    element.handle =
+                    <div className="text-center">
+                        <MDBBtn id={index} color="orange" size="sm" onClick={this.handleClickEditLocals}><MDBIcon icon="pen" className="mr-2" /> Editar</MDBBtn>
+                        <MDBBtn id={index} color="red" size="sm" onClick={this.handleClickDeleteLocals}><MDBIcon icon="times" className="mr-2" /> Eliminar</MDBBtn>
+                    </div>
+                )
+            });
+            this.LocalsInstancia.setLocalsCopy(this.state.locals)
+        }
 
-        });
-        await this.state.levels.map((element, index) => {
-            return (
-                element.handle =
-                <div className="text-center">
-                    <MDBBtn id={index} color="orange" size="sm" onClick={this.handleClickEditLevels}><MDBIcon icon="pen" className="mr-2" /> Editar</MDBBtn>
-                    <MDBBtn id={index} color="red" size="sm" onClick={this.handleClickDeleteLevels}><MDBIcon icon="times" className="mr-2" /> Eliminar</MDBBtn>
-                </div>
-            )
-        });
-        await this.state.locals.map((element, index) => {
-            return (
-                element.handle =
-                <div className="text-center">
-                    <MDBBtn id={index} color="orange" size="sm" onClick={this.handleClickEditLocals}><MDBIcon icon="pen" className="mr-2" /> Editar</MDBBtn>
-                    <MDBBtn id={index} color="red" size="sm" onClick={this.handleClickDeleteLocals}><MDBIcon icon="times" className="mr-2" /> Eliminar</MDBBtn>
-                </div>
-            )
-        });
+        if(this.state.courses !== undefined){
+            await this.state.courses.map((element, index) => {
+                return (
+                    element.local = element.local.lc_name,
+                    element.level = element.level.lv_name,
+                    element.handle =
+                    <div className="text-center">
+                        <MDBBtn id={index} color="orange" size="sm" onClick={this.handleClickEditCourses}><MDBIcon icon="pen" className="mr-2" /> Editar</MDBBtn>
+                        <MDBBtn id={index} color="red" size="sm" onClick={this.handleClickDeleteCourses}><MDBIcon icon="times" className="mr-2" /> Eliminar</MDBBtn>
+                    </div>
+                )
+            });
+            this.CoursesInstancia.setCoursesCopy(this.state.courses);
+        }
 
-        await this.state.courses.map((element, index) => {
-            return (
-                element.local = element.local.lc_name,
-                element.level = element.level.lv_name,
-                element.handle =
-                <div className="text-center">
-                    <MDBBtn id={index} color="orange" size="sm" onClick={this.handleClickEditCourses}><MDBIcon icon="pen" className="mr-2" /> Editar</MDBBtn>
-                    <MDBBtn id={index} color="red" size="sm" onClick={this.handleClickDeleteCourses}><MDBIcon icon="times" className="mr-2" /> Eliminar</MDBBtn>
-                </div>
-            )
-        });
-        this.LocalsInstancia.setLocalsCopy(this.state.locals)
-        this.LevelsInstancia.setLevelsCopy(this.state.levels);
-        this.SchedulesInstancia.setSchedulesCopy(this.state.schedules);
-        this.CoursesInstancia.setCoursesCopy(this.state.courses);
+        
+        
+        
 
         this.setState({
             render: true
         })
+
+
     }
 
     //set data for every render
