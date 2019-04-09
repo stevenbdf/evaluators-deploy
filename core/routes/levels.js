@@ -76,6 +76,46 @@ router.post('/get', async (req, res) => {
     }
 })
 
+//Get course by level id
+router.post('/getCourses', async (req, res) => {
+    try {
+        let obj = req.body.request.msg
+        let courses = await Model.Course.findAll({
+            attributes:['cou_id','cou_name','cou_teacher_guide'],
+            where:{lv_id:obj.id},
+            include: [
+                { model: Model.Local, as: 'local' }
+            ]
+        })
+        if (courses[0] == undefined) {
+            res.json({
+                status: 204,
+                message: "No Content",
+                msg: {
+                }
+            })
+        } else {
+            console.log(req.connection.remoteAddress.split(':')[3] + ' get Courses by Level')
+            res.json({
+                status: 200,
+                message: "Ok",
+                msg: {
+                    courses
+                }
+            })
+        }
+
+    } catch (err) {
+        res.json({
+            code: 400,
+            message: " Bad Request",
+            msg: {
+                description: err
+            }
+        })
+    }
+})
+
 //Update level
 router.post('/update/:id', async (req, res) => {
     try {

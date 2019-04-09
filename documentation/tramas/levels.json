@@ -56,5 +56,17 @@
                 "name": "momaso"
             }
         }
+    },
+    "getCourses by Level",
+    {
+        "url": "http://localhost:3001/levels/getCourses",
+        "method": "post"
+    },
+    {
+        "request": {
+            "msg": {
+                "id":"1" 
+            }
+        }
     }    
 ]
