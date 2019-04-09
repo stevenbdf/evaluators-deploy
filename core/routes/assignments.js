@@ -6,10 +6,14 @@ const Model = require('../models/model')
 //Get assignments list
 router.get('/', async (req, res) => {
     try {
-        let courses = await Model.Assignment.findAll({
-            attributes:['asg_id','cou_id','ev_id','handle']
+        let assignments = await Model.Assignment.findAll({
+            attributes:['asg_id'],
+            include: [
+                { model: Model.Course, as: 'course'},
+                { model: Model.Evaluator, as: 'evaluator'}
+            ],
         })
-        if (courses[0] == undefined) {
+        if (assignments[0] == undefined) {
             res.json({
                 status: 204,
                 message: "No Content",
@@ -22,7 +26,7 @@ router.get('/', async (req, res) => {
                 status: 200,
                 message: "Ok",
                 msg: {
-                    courses
+                    assignments
                 }
             })
         }
