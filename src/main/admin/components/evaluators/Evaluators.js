@@ -285,17 +285,22 @@ class Evaluators extends Component {
                                     <h1 className="text-center">Evaluadores Aprobados</h1>
                                 </MDBCardHeader>
                                 <MDBCardBody>
-                                    <MDBDataTable
-                                        hover
-                                        searchLabel="Buscar"
-                                        entriesLabel="Mostrar entradas"
-                                        paginationLabel={["Anterior", "Siguiente"]}
-                                        infoLabel={["Mostrando de", "a", "de", "entradas"]}
-                                        striped
-                                        responsive
-                                        bordered
-                                        data={data}
-                                    />
+                                    {
+                                        data !== undefined
+                                        &&
+                                        <MDBDataTable
+                                            hover
+                                            searchLabel="Buscar"
+                                            entriesLabel="Mostrar entradas"
+                                            paginationLabel={["Anterior", "Siguiente"]}
+                                            infoLabel={["Mostrando de", "a", "de", "entradas"]}
+                                            striped
+                                            order={['ev_id', 'asc']}
+                                            responsive
+                                            bordered
+                                            data={data}
+                                        />
+                                    }
                                 </MDBCardBody>
                             </MDBCard>
                         </MDBCol>
@@ -337,7 +342,7 @@ class Evaluators extends Component {
                                         />
                                         <label className="d-block">
                                             Horario:
-                    <select
+                                            <select
                                                 name="horario"
                                                 className="browser-default custom-select"
                                                 value={this.state.horario}
@@ -354,18 +359,18 @@ class Evaluators extends Component {
                                         </label>
                                         <label className="d-block">
                                             Nivel Academico:
-                    <select
-                                                name="nivel"
+                                            <select
+                                                name='nivel'
                                                 className="browser-default custom-select"
                                                 value={this.state.nivel}
                                                 onChange={this.handleChange}
                                             >
                                                 <option value="Bachillerato Técnico">
                                                     Bachillerato Técnico
-                      </option>
+                                                </option>
                                                 <option value="Técnico Universitario">
                                                     Técnico Universitario
-                      </option>
+                                                </option>
                                                 <option value="Ingenieria">Ingenieria</option>
                                                 <option value="Licenciatura">Licenciatura</option>
                                                 <option value="Maestria">Maestria</option>
@@ -375,15 +380,10 @@ class Evaluators extends Component {
                                         <div className="float-right">
                                             <MDBBtn color="secondary" onClick={this.toggleModal}>
                                                 Cerrar
-                    </MDBBtn>
-                                            <MDBBtn
-                                                color="primary"
-                                                onClick={() => {
-                                                    this.aproveAlert(this.state.idModal);
-                                                }}
-                                            >
-                                                Guardar cambios
-                    </MDBBtn>
+                                            </MDBBtn>
+                                            <MDBBtn color="primary" onClick={() => {
+                                                this.aproveAlert(this.state.idModal);
+                                            }}> Guardar cambios</MDBBtn>
                                         </div>
                                     </form>
                                 </MDBModalBody>

@@ -11,12 +11,12 @@ export default class Locals {
     columnsLocals = [
         {
             label: '#',
-            field: 'id',
+            field: 'lc_id',
             sort: 'asc'
         },
         {
             label: 'Local',
-            field: 'local',
+            field: 'lc_name',
             sort: 'asc'
         },
         {
@@ -30,7 +30,7 @@ export default class Locals {
         this.localsCopy = param;
     }
 
-    getColumnsLocal(){
+    getColumnsLocal() {
         return this.columnsLocals;
     }
 
