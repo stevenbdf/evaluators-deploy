@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import {
     MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody, MDBCardHeader,
-    MDBBtn, MDBIcon, MDBTable, MDBTableHead, MDBTableBody, MDBInput, MDBModal, MDBModalHeader, MDBModalBody
+    MDBBtn, MDBIcon, MDBDataTable, MDBInput, MDBModal, MDBModalHeader, MDBModalBody
 } from 'mdbreact';
 import Navbar from '../../../../navbar/components/Navbar';
 import Swal from 'sweetalert2'
@@ -23,10 +23,12 @@ class Assignments extends Component {
                 level: undefined,
                 course: undefined
             },
+            assignments: undefined,
             evaluators: undefined,
             schedules: undefined,
             levels: undefined,
-            courses: undefined
+            courses: undefined,
+            renderDataTable: false
         }
     }
 
@@ -67,18 +69,22 @@ class Assignments extends Component {
         },
         {
             label: 'Evaluador',
-            field: 'evaluador',
+            field: 'evaluator',
             sort: 'asc'
         },
         {
             label: 'Nivel',
-            field: 'nivel',
+            field: 'level',
             sort: 'asc'
         },
         {
             label: 'Curso',
-            field: 'curso',
+            field: 'course',
             sort: 'asc'
+        },
+        {
+            label: 'Acciones',
+            field: 'handle'
         }
 
     ];
@@ -267,6 +273,25 @@ class Assignments extends Component {
         }
     }
 
+    async setHandles() {
+        await this.state.assignments.map((element, index) => {
+            const levelName = this.state.levels.filter(item => item.lv_id === element.course.lv_id)
+            return (
+                element.level = (levelName.length === 1 ? levelName[0].lv_name : 'Error:indefinido'),
+                element.course = element.course.cou_name,
+                element.evaluator = element.evaluator.ev_name,
+                element.handle =
+                <div className="text-center">
+                    <MDBBtn id={index} color="orange" size="sm"><MDBIcon icon="pen" className="mr-2" /> Editar</MDBBtn>
+                    <MDBBtn id={index} color="red" size="sm"><MDBIcon icon="times" className="mr-2" /> Eliminar</MDBBtn>
+                </div>
+            )
+        });
+        this.setState({
+            renderDataTable: true
+        })
+    }
+
     async getDataOptions() {
         const resSche = await axios.get(`schedules/`)
         if (resSche.status === 200) {
@@ -284,11 +309,27 @@ class Assignments extends Component {
         }
     }
 
+    async getDataTable() {
+        const res = await axios.get(`assignments/`)
+        if (res.status === 200) {
+            const respuesta = res.data.msg;
+            this.setState({
+                assignments: respuesta.assignments
+            })
+        }
+    }
+
     async componentDidMount() {
         await this.getDataOptions()
+        await this.getDataTable()
+        await this.setHandles()
     }
 
     render() {
+        const data = {
+            columns: this.columns,
+            rows: this.state.assignments
+        }
         return (
             <div >
                 <Navbar />
@@ -373,15 +414,25 @@ class Assignments extends Component {
                             <MDBCard>
                                 <MDBCardHeader>
                                     <h1 className="text-center">Listado de asignaciones</h1>
-                                    <MDBCol md="4" className="offset-md-8" >
-                                        <MDBInput label="Buscar" icon="search" />
-                                    </MDBCol>
                                 </MDBCardHeader>
                                 <MDBCardBody>
-                                    <MDBTable btn responsive hover className="text-center">
-                                        <MDBTableHead columns={this.columns} />
-                                        <MDBTableBody rows={this.dataRows} />
-                                    </MDBTable>
+                                {
+                                    this.state.renderDataTable
+                                    &&
+                                    <MDBDataTable
+                                        hover
+                                        searchLabel="Buscar"
+                                        entriesLabel="Mostrar entradas"
+                                        paginationLabel={["Anterior", "Siguiente"]}
+                                        infoLabel={["Mostrando de", "a", "de", "entradas"]}
+                                        striped
+                                        entriesOptions={[5, 10, 20, 50, 100]}
+                                        entries={5}
+                                        responsive
+                                        bordered
+                                        data={data}
+                                    />
+                                }
                                 </MDBCardBody>
                             </MDBCard>
                         </MDBCol>
@@ -437,7 +488,5 @@ class Assignments extends Component {
         );
     };
 }
-
-
 
 export default Assignments;
