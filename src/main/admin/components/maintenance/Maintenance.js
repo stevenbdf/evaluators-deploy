@@ -75,7 +75,7 @@ class Maintenance extends Component {
         });
     }
 
-    /*Schedules handle clicks */
+    /*Schedules handle events */
 
     handleClickEditSchedules = (e) => this.SchedulesInstancia.toggle(e.target.id);
 
@@ -83,7 +83,7 @@ class Maintenance extends Component {
 
     handleClickDeleteSchedules = e => this.SchedulesInstancia.deleteAlert(e.target.id);
 
-    /*Levels handle clicks */
+    /*Levels handle events */
 
     handleClickEditLevels = (e) => this.LevelsInstancia.toggleLevels(e.target.id);
 
@@ -91,7 +91,7 @@ class Maintenance extends Component {
 
     handleClickDeleteLevels = (e) => this.LevelsInstancia.deleteLevelAlert(e.target.id);
 
-    /*Locals handle clicks */
+    /*Locals handle events */
 
     handleClickEditLocals = (e) => this.LocalsInstancia.toggleLocals(e.target.id);
 
@@ -99,7 +99,7 @@ class Maintenance extends Component {
 
     handleClickDeleteLocals = (e) => this.LocalsInstancia.deleteLocalAlert(e.target.id);
 
-    /*Courses handle clicks */
+    /*Courses handle events */
 
     handleClickEditCourses = (e) => this.CoursesInstancia.toggleCourses(e.target.id);
 

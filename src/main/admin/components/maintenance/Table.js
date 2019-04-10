@@ -6,7 +6,6 @@ const Table = (props) => {
         columns: props.columns,
         rows: props.rows
     }
-    const orden = props.order;
     return (
         <MDBDataTable
             hover
@@ -17,7 +16,6 @@ const Table = (props) => {
             striped
             entriesOptions={[5, 10, 20, 50, 100]}
             entries={5}
-            order={[orden, 'asc']}
             responsive
             bordered
             data={data}
