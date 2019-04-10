@@ -130,7 +130,11 @@ router.post('/findBySchedule', async (req, res) => {
                 { model: Model.Schedule, as: 'schedules' }
             ],
             where:{
-                sch_id:obj.id
+                sch_id:obj.id,
+                ev_status:
+                {
+                    [Op.ne]:0
+                },
             }
         })
         console.log(req.connection.remoteAddress.split(':')[3]+' evaluators findBySchedule '+req.params.id)
