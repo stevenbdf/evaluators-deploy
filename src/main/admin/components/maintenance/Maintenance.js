@@ -81,7 +81,7 @@ class Maintenance extends Component {
 
     handleClickAddSchedules = (e) => this.SchedulesInstancia.toggleAdd();
 
-    handleClickDeleteSchedules = e => this.SchedulesInstancia.deleteAlert(e.target.id);
+    handleClickDeleteSchedules = (e) => this.SchedulesInstancia.deleteAlert(e.target.id);
 
     /*Levels handle events */
 
@@ -506,6 +506,7 @@ class Maintenance extends Component {
                 );
             }
         } catch (error) {
+            console.log(error)
             return (
                 <div>
                     <h1>Cargando...</h1>

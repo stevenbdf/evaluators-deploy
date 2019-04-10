@@ -48,7 +48,7 @@
 
 	CREATE TABLE courses(
 		cou_id SERIAL NOT NULL PRIMARY KEY,
-		cou_name VARCHAR(60) NOT NULL UNIQUE,
+		cou_name VARCHAR(60) NOT NULL,
 		cou_teacher_guide VARCHAR(120) NOT NULL,
 		lv_id INT NOT NULL REFERENCES levels(lv_id),
 		lc_id INT NOT NULL REFERENCES locals(lc_id),
