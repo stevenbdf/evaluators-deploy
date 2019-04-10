@@ -18,6 +18,7 @@ class Assignments extends Component {
             nivel: '',
             curso: '',
             selectedValues: {
+                id: undefined,
                 schedule: undefined,
                 evaluator: undefined,
                 level: undefined,
@@ -32,39 +33,12 @@ class Assignments extends Component {
         }
     }
 
-    aproveAlert(titulo, descrip) {
-        Swal.fire(
-            titulo,
-            descrip,
-            'success'
-        )
-    };
-
-    rejectAlert() {
-        Swal.fire({
-            title: '¿Estas seguro?',
-            text: "No podras recuperar la información de un candidato rechazado.",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            cancelButtonText: 'Cancelar',
-            confirmButtonText: 'Si, rechazar'
-        }).then((result) => {
-            if (result.value) {
-                Swal.fire(
-                    '¡Rechazado!',
-                    'Evaluador rechazado.',
-                    'success'
-                )
-            }
-        })
-    }
+    assignmentsCopy = []
 
     columns = [
         {
             label: '#',
-            field: 'id',
+            field: 'asg_id',
             sort: 'asc'
         },
         {
@@ -89,54 +63,17 @@ class Assignments extends Component {
 
     ];
 
-    dataRows = [
-        {
-            "id": 1,
-            "nombre": "Steven Benjamin Diaz Flores",
-            "nivel": "Primer año bachillerato",
-            "curso": "Desarrollo de Software Grupo 1",
-            "handle": ""
-        },
-        {
-            "id": 2,
-            "nombre": "Rodrigo Alejandro Castillo Monterrosa",
-            "nivel": "Primer año bachillerato",
-            "curso": "Desarrollo de Software Grupo 1",
-            "handle": ""
-        },
-        {
-            "id": 3,
-            "nombre": "Katherine Michelle Fuentes Medrano",
-            "nivel": "Primer año bachillerato",
-            "curso": "Electromecanica Grupo 2",
-            "handle": ""
-        },
-        {
-            "id": 4,
-            "nombre": "Alicia Alejandra Mendizabal Figueroa",
-            "nivel": "9no Grado",
-            "curso": "D",
-            "handle": ""
-        },
-        {
-            "id": 5,
-            "nombre": "Boris Ilich Huezo Arriola",
-            "nivel": "Segundo año bachillerato",
-            "curso": "Administrativo Contable Grupo 1",
-            "handle": ""
-        }
-    ]
-
-    toggle = (id) => {
-        console.log(id)
-        this.setState({
-            id: id,
-            nombre: this.dataRows[id - 1].nombre,
-            nivel: this.dataRows[id - 1].nivel,
-            curso: this.dataRows[id - 1].curso,
+    toggle = async (id) => {
+        await this.setState({
+            selectedValues: {
+                id: this.assignmentsCopy[id].asg_id,
+                schedule: this.state.selectedValues.schedule,
+                evaluator: this.state.selectedValues.evaluator,
+                level: this.state.selectedValues.level,
+                course: this.state.selectedValues.course
+            },
             modal: !this.state.modal
         });
-
     }
 
     toggleModal = () => {
@@ -169,6 +106,70 @@ class Assignments extends Component {
             )
             console.log(res)
         }
+    }
+
+    updateAssignmentAlert = async () => {
+        const res = await axios.post(`assignments/update/${this.state.selectedValues.id}`, {
+            request: {
+                msg: {
+                    cou_id: String(this.state.selectedValues.course),
+                    ev_id: String(this.state.selectedValues.evaluator)
+                }
+            }
+        })
+        if (res.data.code === 205) {
+            await Swal.fire(
+                '¡Modificado!',
+                'Assignacion modificada.',
+                'success'
+            )
+            this.getNewData();
+        } else {
+            Swal.fire(
+                '¡Error!',
+                'Leer consola',
+                'error'
+            )
+            console.log(res)
+        }
+    }
+
+    deleteAssignmentAlert(id) {
+        Swal.fire({
+            title: '¿Estas seguro?',
+            text: "No podras recuperar la información de una assignación eliminada.",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            cancelButtonText: 'Cancelar',
+            confirmButtonText: 'Si, rechazar'
+        }).then(async (result) => {
+            if (result.value) {
+                const res = await axios.post(`assignments/delete`, {
+                    request: {
+                        msg: {
+                            id: String(this.assignmentsCopy[id].asg_id)
+                        }
+                    }
+                })
+                if (res.data.code === 205) {
+                    await Swal.fire(
+                        '¡Eliminado!',
+                        'Assignacion eliminada',
+                        'success'
+                    )
+                    this.getNewData();
+                } else {
+                    Swal.fire(
+                        '¡Error!',
+                        'Leer consola',
+                        'error'
+                    )
+                    console.log(res)
+                }
+            }
+        })
     }
 
     scheduleSelectChange = async (event) => {
@@ -253,6 +254,7 @@ class Assignments extends Component {
 
         this.setState({
             selectedValues: {
+                id: this.state.selectedValues.id,
                 schedule: valoresState.schedule,
                 evaluator: valoresState.evaluator,
                 level: valoresState.level,
@@ -261,34 +263,26 @@ class Assignments extends Component {
         });
     }
 
-    handleClick = e => this.toggle(e.target.id);
+    handleClick = async (e) => await this.toggle(e.target.id);
 
-    componentWillMount() {
-        for (var i = 0; i < this.dataRows.length; i++) {
-            var idActual = this.dataRows[i].id;
-            this.dataRows[i].handle =
-                <div className="text-center">
-                    <MDBBtn id={idActual} color="orange" size="sm" onClick={this.handleClick} ><MDBIcon icon="pen" className="mr-2" /> Editar</MDBBtn>
-                    <MDBBtn color="red" size="sm" onClick={this.rejectAlert}><MDBIcon icon="times" className="mr-2" /> Eliminar</MDBBtn>
-                </div>
-        }
-    }
+    handleClickDelete = (e) => this.deleteAssignmentAlert(e.target.id)
 
     async setHandles() {
         if (this.state.assignments !== undefined) {
             await this.state.assignments.map((element, index) => {
                 const levelName = this.state.levels.filter(item => item.lv_id === element.course.lv_id)
                 return (
-                    element.level = (levelName.length === 1 ? levelName[0].lv_name : 'Error:indefinido'),
-                    element.course = element.course.cou_name,
                     element.evaluator = element.evaluator.ev_name,
+                    element.course = element.course.cou_name,
+                    element.level = (levelName.length === 1 ? levelName[0].lv_name : 'Error:indefinido'),
                     element.handle =
                     <div className="text-center">
-                        <MDBBtn id={index} color="orange" size="sm"><MDBIcon icon="pen" className="mr-2" /> Editar</MDBBtn>
-                        <MDBBtn id={index} color="red" size="sm"><MDBIcon icon="times" className="mr-2" /> Eliminar</MDBBtn>
+                        <MDBBtn id={index} color="orange" size="sm" onClick={this.handleClick} ><MDBIcon icon="pen" className="mr-2" /> Editar</MDBBtn>
+                        <MDBBtn id={index} color="red" size="sm" onClick={this.handleClickDelete}><MDBIcon icon="times" className="mr-2" /> Eliminar</MDBBtn>
                     </div>
                 )
             });
+            this.assignmentsCopy = this.state.assignments
         }
         this.setState({
             renderDataTable: true
@@ -347,24 +341,39 @@ class Assignments extends Component {
     }
 
     render() {
-        const data = {
-            columns: this.columns,
-            rows: this.state.assignments
+        var data
+        if (this.state.assignments !== undefined) {
+            data = {
+                columns: this.columns,
+                rows:
+                    this.state.assignments.map(item => {
+                        return (
+                            {
+                                asg_id: item.asg_id,
+                                evaluator: item.evaluator,
+                                level: item.level,
+                                course: item.course,
+                                handle: item.handle
+                            }
+                        )
+                    })
+            }
         }
         return (
             <div >
                 <Navbar />
                 <MDBContainer fluid>
                     <MDBRow center className="my-5">
-                        <MDBCol size="8">
+                        <MDBCol size="12" md="8">
                             <MDBCard>
                                 <MDBCardHeader>
                                     <h1 className="text-center">Asignar Evaluadores a Proyectos</h1>
                                 </MDBCardHeader>
                                 <MDBCardBody>
                                     <MDBRow>
-                                        <MDBCol size="6" className="offset-3">
+                                        <MDBCol size="12" md="6" className="offset-md-3">
                                             <form>
+
                                                 <label className="d-block mt-3"> Horario
                                                     <select name="schedule" className="browser-default custom-select" onChange={this.scheduleSelectChange}>
                                                         <option>Seleccione un horario...</option>
@@ -431,7 +440,7 @@ class Assignments extends Component {
                                 </MDBCardBody>
                             </MDBCard>
                         </MDBCol>
-                        <MDBCol className="mt-5">
+                        <MDBCol size="12" className="mt-5">
                             <MDBCard>
                                 <MDBCardHeader>
                                     <h1 className="text-center">Listado de asignaciones</h1>
@@ -460,46 +469,66 @@ class Assignments extends Component {
                     </MDBRow>
                 </MDBContainer>
                 <MDBModal isOpen={this.state.modal} toggle={this.toggleModal}>
-                    <MDBModalHeader toggle={this.toggleModal}>Editar Evaluador</MDBModalHeader>
+                    <MDBModalHeader toggle={this.toggleModal}>Editar Asignación</MDBModalHeader>
                     <MDBModalBody>
                         <form>
-                            {/* <label className="d-block mt-3"> Evaluador
-                                <select name="nombre" className="browser-default custom-select" value={this.state.nombre} onChange={this.handleChange}>
+                            <MDBInput
+                                label="Codigo:"
+                                hint={String(this.state.selectedValues.id)}
+                                disabled
+                                type="text"
+                            />
+                            <label className="d-block mt-3"> Horario
+                                <select name="schedule" className="browser-default custom-select" onChange={this.scheduleSelectChange}>
+                                    <option>Seleccione un horario...</option>
+                                    {
+                                        this.state.schedules !== undefined
+                                        &&
+                                        this.state.schedules.map(item =>
+                                            <option key={item.sch_id} value={item.sch_schedule}> {item.sch_schedule} </option>
+                                        )
+                                    }
+                                </select>
+                            </label>
+                            <label className="d-block mt-3"> Evaluador
+                                <select name="evaluator" className="browser-default custom-select" onChange={this.handleChange}>
                                     <option>Seleccione un evaluador...</option>
-                                    <option value="Steven Benjamin Diaz Flores">Steven Benjamin Diaz Flores</option>
-                                    <option value="Rodrigo Alejadro Castillo Monterrosa">Rodrigo Alejadro Castillo Monterrosa</option>
-                                    <option value="Katherine Michelle Fuentes Medrano">Katherine Michelle Fuentes Medrano</option>
-                                    <option value="Alicia Alejandra Mendizabal Figueroa">Alicia Alejandra Mendizabal Figueroa</option>
-                                    <option value="Boris Ilich Huezo Arriola">Boris Ilich Huezo Arriola</option>
+                                    {
+                                        this.state.evaluators !== undefined
+                                        &&
+                                        this.state.evaluators.map(item =>
+                                            <option key={item.ev_id} value={item.ev_name}> {item.ev_name} </option>
+                                        )
+                                    }
                                 </select>
                             </label>
                             <label className="d-block mt-3"> Nivel
-                                <select name="nivel" className="browser-default custom-select" value={this.state.nivel} onChange={this.handleChange}>
-                                    <option>Seleccione un nivels...</option>
-                                    <option value="7mo Grado">7mo Grado</option>
-                                    <option value="8vo Grado">8vo Grado</option>
-                                    <option value="9no Grado">9no Grado</option>
-                                    <option value="Primer año bachillerato">Primer año bachillerato</option>
-                                    <option value="Segundo año bachillerato">Segundo año bachillerato</option>
-                                    <option value="Tercer año bachillerato">Tercer año bachillerato</option>
+                                <select name="level" className="browser-default custom-select" onChange={this.levelSelectChange}>
+                                    <option>Seleccione un nivel...</option>
+                                    {
+                                        this.state.levels !== undefined
+                                        &&
+                                        this.state.levels.map(item =>
+                                            <option key={item.lv_id} value={item.lv_name}> {item.lv_name} </option>
+                                        )
+                                    }
                                 </select>
                             </label>
                             <label className="d-block mt-3"> Curso
-                                <select name="curso" className="browser-default custom-select" value={this.state.curso} onChange={this.handleChange}>
+                                <select name="course" className="browser-default custom-select" onChange={this.handleChange}>
                                     <option>Seleccione un curso...</option>
-                                    <option value="A">A</option>
-                                    <option value="B">B</option>
-                                    <option value="C">C</option>
-                                    <option value="D">D</option>
-                                    <option value="Desarrollo de Software Grupo 1">Desarrollo de Software Grupo 1</option>
-                                    <option value="Electronica Grupo 1">Electronica Grupo 1</option>
-                                    <option value="Electromecanica Grupo 2">Electromecanica Grupo 2</option>
-                                    <option value="Administrativo Contable Grupo 1">Administrativo Contable Grupo 1</option>
+                                    {
+                                        this.state.courses !== undefined
+                                        &&
+                                        this.state.courses.map(item =>
+                                            <option key={item.cou_id} value={item.cou_name}> {item.cou_name} </option>
+                                        )
+                                    }
                                 </select>
-                            </label> */}
+                            </label>
                             <div className="float-right">
                                 <MDBBtn color="secondary" onClick={this.toggleModal}>Cerrar</MDBBtn>
-                                <MDBBtn color="primary" onClick={() => { this.aproveAlert('¡Modificado!', 'Asignación modificada.') }} >Guardar cambios</MDBBtn>
+                                <MDBBtn color="primary" onClick={() => { this.updateAssignmentAlert() }} >Guardar cambios</MDBBtn>
                             </div>
                         </form>
                     </MDBModalBody>
