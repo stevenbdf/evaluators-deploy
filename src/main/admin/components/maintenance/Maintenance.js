@@ -251,11 +251,6 @@ class Maintenance extends Component {
             });
             this.CoursesInstancia.setCoursesCopy(this.state.courses);
         }
-
-        
-        
-        
-
         this.setState({
             render: true
         })

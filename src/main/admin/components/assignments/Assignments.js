@@ -160,6 +160,7 @@ class Assignments extends Component {
                 'Assignacion realizada.',
                 'success'
             )
+            this.getNewData();
         } else {
             Swal.fire(
                 '¡Error!',
@@ -274,19 +275,21 @@ class Assignments extends Component {
     }
 
     async setHandles() {
-        await this.state.assignments.map((element, index) => {
-            const levelName = this.state.levels.filter(item => item.lv_id === element.course.lv_id)
-            return (
-                element.level = (levelName.length === 1 ? levelName[0].lv_name : 'Error:indefinido'),
-                element.course = element.course.cou_name,
-                element.evaluator = element.evaluator.ev_name,
-                element.handle =
-                <div className="text-center">
-                    <MDBBtn id={index} color="orange" size="sm"><MDBIcon icon="pen" className="mr-2" /> Editar</MDBBtn>
-                    <MDBBtn id={index} color="red" size="sm"><MDBIcon icon="times" className="mr-2" /> Eliminar</MDBBtn>
-                </div>
-            )
-        });
+        if (this.state.assignments !== undefined) {
+            await this.state.assignments.map((element, index) => {
+                const levelName = this.state.levels.filter(item => item.lv_id === element.course.lv_id)
+                return (
+                    element.level = (levelName.length === 1 ? levelName[0].lv_name : 'Error:indefinido'),
+                    element.course = element.course.cou_name,
+                    element.evaluator = element.evaluator.ev_name,
+                    element.handle =
+                    <div className="text-center">
+                        <MDBBtn id={index} color="orange" size="sm"><MDBIcon icon="pen" className="mr-2" /> Editar</MDBBtn>
+                        <MDBBtn id={index} color="red" size="sm"><MDBIcon icon="times" className="mr-2" /> Eliminar</MDBBtn>
+                    </div>
+                )
+            });
+        }
         this.setState({
             renderDataTable: true
         })
@@ -309,13 +312,31 @@ class Assignments extends Component {
         }
     }
 
+    async getNewData() {
+        try {
+            const res = await axios.get(`assignments/`)
+            if (res.status === 200) {
+                const respuesta = res.data.msg;
+                this.setState({
+                    assignments: respuesta.assignments,
+                    renderDataTable: false
+                })
+            }
+            await this.setHandles()
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     async getDataTable() {
-        const res = await axios.get(`assignments/`)
-        if (res.status === 200) {
-            const respuesta = res.data.msg;
-            this.setState({
-                assignments: respuesta.assignments
-            })
+        if (this.state.assignments === undefined) {
+            const res = await axios.get(`assignments/`)
+            if (res.status === 200) {
+                const respuesta = res.data.msg;
+                this.setState({
+                    assignments: respuesta.assignments
+                })
+            }
         }
     }
 
@@ -416,23 +437,23 @@ class Assignments extends Component {
                                     <h1 className="text-center">Listado de asignaciones</h1>
                                 </MDBCardHeader>
                                 <MDBCardBody>
-                                {
-                                    this.state.renderDataTable
-                                    &&
-                                    <MDBDataTable
-                                        hover
-                                        searchLabel="Buscar"
-                                        entriesLabel="Mostrar entradas"
-                                        paginationLabel={["Anterior", "Siguiente"]}
-                                        infoLabel={["Mostrando de", "a", "de", "entradas"]}
-                                        striped
-                                        entriesOptions={[5, 10, 20, 50, 100]}
-                                        entries={5}
-                                        responsive
-                                        bordered
-                                        data={data}
-                                    />
-                                }
+                                    {
+                                        this.state.renderDataTable
+                                        &&
+                                        <MDBDataTable
+                                            hover
+                                            searchLabel="Buscar"
+                                            entriesLabel="Mostrar entradas"
+                                            paginationLabel={["Anterior", "Siguiente"]}
+                                            infoLabel={["Mostrando de", "a", "de", "entradas"]}
+                                            striped
+                                            entriesOptions={[5, 10, 20, 50, 100]}
+                                            entries={5}
+                                            responsive
+                                            bordered
+                                            data={data}
+                                        />
+                                    }
                                 </MDBCardBody>
                             </MDBCard>
                         </MDBCol>
