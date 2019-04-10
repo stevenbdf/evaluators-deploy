@@ -75,7 +75,7 @@ class Maintenance extends Component {
         });
     }
 
-    /*Schedules handle clicks */
+    /*Schedules handle events */
 
     handleClickEditSchedules = (e) => this.SchedulesInstancia.toggle(e.target.id);
 
@@ -83,7 +83,7 @@ class Maintenance extends Component {
 
     handleClickDeleteSchedules = e => this.SchedulesInstancia.deleteAlert(e.target.id);
 
-    /*Levels handle clicks */
+    /*Levels handle events */
 
     handleClickEditLevels = (e) => this.LevelsInstancia.toggleLevels(e.target.id);
 
@@ -91,7 +91,7 @@ class Maintenance extends Component {
 
     handleClickDeleteLevels = (e) => this.LevelsInstancia.deleteLevelAlert(e.target.id);
 
-    /*Locals handle clicks */
+    /*Locals handle events */
 
     handleClickEditLocals = (e) => this.LocalsInstancia.toggleLocals(e.target.id);
 
@@ -99,7 +99,7 @@ class Maintenance extends Component {
 
     handleClickDeleteLocals = (e) => this.LocalsInstancia.deleteLocalAlert(e.target.id);
 
-    /*Courses handle clicks */
+    /*Courses handle events */
 
     handleClickEditCourses = (e) => this.CoursesInstancia.toggleCourses(e.target.id);
 
@@ -287,26 +287,6 @@ class Maintenance extends Component {
                                                 <MDBCol size="12" className="mt-4">
                                                     <MDBCard>
                                                         <MDBCardHeader>
-                                                            <h1 className="text-center">Horarios</h1>
-                                                            <MDBBtn color="green" size="sm" onClick={this.handleClickAddSchedules}><MDBIcon icon="plus " className="mr-2" /> Agregar</MDBBtn>
-                                                        </MDBCardHeader>
-                                                        <MDBCardBody>
-                                                            {
-                                                                //if data exists
-                                                                this.state.schedules
-                                                                &&
-
-                                                                <TableComponent
-                                                                    columns={this.SchedulesInstancia.getColumnsSchedule()}
-                                                                    rows={this.state.schedules}
-                                                                />
-                                                            }
-                                                        </MDBCardBody>
-                                                    </MDBCard>
-                                                </MDBCol>
-                                                <MDBCol size="12" className="mt-4">
-                                                    <MDBCard>
-                                                        <MDBCardHeader>
                                                             <h1 className="text-center">Cursos</h1>
                                                             <MDBBtn color="green" size="sm" onClick={this.handleClickAddCourses}><MDBIcon icon="plus " className="mr-2" /> Agregar</MDBBtn>
                                                         </MDBCardHeader>
@@ -317,10 +297,32 @@ class Maintenance extends Component {
                                                                 &&
                                                                 (
                                                                     <TableComponent
+                                                                        order={this.CoursesInstancia.getColumnsCourses()[0].field}
                                                                         columns={this.CoursesInstancia.getColumnsCourses()}
                                                                         rows={this.state.courses}
                                                                     />
                                                                 )
+                                                            }
+                                                        </MDBCardBody>
+                                                    </MDBCard>
+                                                </MDBCol>
+                                                <MDBCol size="12" className="mt-4">
+                                                    <MDBCard>
+                                                        <MDBCardHeader>
+                                                            <h1 className="text-center">Horarios</h1>
+                                                            <MDBBtn color="green" size="sm" onClick={this.handleClickAddSchedules}><MDBIcon icon="plus " className="mr-2" /> Agregar</MDBBtn>
+                                                        </MDBCardHeader>
+                                                        <MDBCardBody>
+                                                            {
+                                                                //if data exists
+                                                                this.state.schedules
+                                                                &&
+
+                                                                <TableComponent
+                                                                    order={this.SchedulesInstancia.getColumnsSchedule()[0].field}
+                                                                    columns={this.SchedulesInstancia.getColumnsSchedule()}
+                                                                    rows={this.state.schedules}
+                                                                />
                                                             }
                                                         </MDBCardBody>
                                                     </MDBCard>
@@ -337,6 +339,7 @@ class Maintenance extends Component {
                                                                 this.state.levels
                                                                 &&
                                                                 <TableComponent
+                                                                    order={this.LevelsInstancia.getColumnsLevel()[0].field}
                                                                     columns={this.LevelsInstancia.getColumnsLevel()}
                                                                     rows={this.state.levels}
                                                                 />
@@ -356,6 +359,7 @@ class Maintenance extends Component {
                                                                 this.state.locals
                                                                 &&
                                                                 <TableComponent
+                                                                    order={this.LocalsInstancia.getColumnsLocal()[0].field}
                                                                     columns={this.LocalsInstancia.getColumnsLocal()}
                                                                     rows={this.state.locals}
                                                                 />

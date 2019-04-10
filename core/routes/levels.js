@@ -84,7 +84,8 @@ router.post('/getCourses', async (req, res) => {
             attributes:['cou_id','cou_name','cou_teacher_guide'],
             where:{lv_id:obj.id},
             include: [
-                { model: Model.Local, as: 'local' }
+                { model: Model.Local, as: 'local' },
+                { model: Model.Level, as: 'level'}
             ]
         })
         if (courses[0] == undefined) {

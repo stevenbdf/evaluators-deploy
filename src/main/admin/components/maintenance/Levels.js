@@ -10,12 +10,12 @@ export default class Levels {
     columnsLevel = [
         {
             label: '#',
-            field: 'id',
+            field: 'lv_id',
             sort: 'asc'
         },
         {
             label: 'Nivel',
-            field: 'nivel',
+            field: 'lv_name',
             sort: 'asc'
         },
         {
@@ -31,7 +31,7 @@ export default class Levels {
 
     setLevelsCopy(param) {
         this.levelsCopy = param;
-    }  
+    }
 
     //handle input onChange event
     handleChangeLevels = (e) => {

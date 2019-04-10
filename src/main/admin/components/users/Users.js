@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import {
     MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody, MDBCardHeader,
-    MDBTableHead, MDBTable, MDBTableBody, MDBBtn, MDBIcon, MDBInput,
+    MDBBtn, MDBIcon, MDBInput,
     MDBModal, MDBModalBody, MDBModalHeader
 } from 'mdbreact';
+import TableComponent from '../maintenance/Table';
 import Navbar from '../../../../navbar/components/Navbar';
 import axios from '../candidates/axios';
 import Swal from 'sweetalert2';
@@ -28,7 +29,8 @@ class Evaluators extends Component {
             telefono: undefined,
             horario: undefined,
             nivel: undefined,
-            firstTime: true
+            firstTime: true,
+            render: false
         }
     }
 
@@ -153,6 +155,9 @@ class Evaluators extends Component {
             i++;
         });
         evaluatorsCopy = this.state.evaluators
+        this.setState({
+            render: true
+        })
     }
 
     //set handle attr for evaluators (table rows)
@@ -194,31 +199,14 @@ class Evaluators extends Component {
             this.setState({
                 evaluators: respuesta.evaluators
             });
-
-            if (res.data.status === 200) {
-
-                const res = await axios.get(`schedules/`)
-                const respuesta = res.data.msg;
-                this.setState({
-                    schedules: respuesta.schedules
-                })
-
-                this.setState({
-                    ordenados: true
-                })
-            }
         }
+        this.setEvaluatorsHandle();
     };
 
 
     render() {
-        if (this.state.ordenados) {
-            if (this.state.firstTime) {
-                this.setEvaluatorsHandle()
-            }
-        }
         return (
-            <div>
+            <div className="text-center">
                 <Navbar />
                 <MDBContainer fluid>
                     <MDBRow center className="my-5">
@@ -226,66 +214,24 @@ class Evaluators extends Component {
                             <MDBCard>
                                 <MDBCardHeader>
                                     <h1 className="text-center">Usuarios</h1>
-                                    <MDBCol md="4" className="offset-md-8" >
-                                        <MDBInput label="Buscar" icon="search" />
-                                    </MDBCol>
+                                    <MDBBtn color="green" size="sm"><MDBIcon icon="plus " className="mr-2" /> Agregar</MDBBtn>
                                 </MDBCardHeader>
                                 <MDBCardBody>
-                                    <MDBTable btn responsive hover className="text-center">
-                                        <MDBTableHead columns={this.columns} />
-                                        {
-                                            //if data exists
-                                            this.state.ordenados
-                                            &&
-                                            <MDBTableBody rows={this.state.evaluators} />
-                                        }
-                                    </MDBTable>
+                                    {
+                                        //if data exists
+                                        this.state.render
+                                        &&
+                                        (
+                                            <TableComponent
+                                                columns={this.columns}
+                                                rows={this.state.evaluators}
+                                            />
+                                 )
+                             }
                                 </MDBCardBody>
                             </MDBCard>
                         </MDBCol>
                     </MDBRow>
-                    {
-                        //if data exists
-                        this.state.ordenados
-                        &&
-                        <MDBModal isOpen={this.state.modal} toggle={this.toggleModal}>
-                            <MDBModalHeader toggle={this.toggleModal}>Editar Evaluador</MDBModalHeader>
-                            <MDBModalBody>
-                                <form>
-                                    <MDBInput label="Codigo:" hint={String(this.state.idModal)} disabled type="text" />
-                                    <MDBInput label="Nombre:" name="nombre" value={this.state.nombre} type="text" onChange={this.handleChange} />
-                                    <MDBInput label="Correo:" name="correo" value={(this.state.correo)} type="email" onChange={this.handleChange} />
-                                    <MDBInput label="Telefono:" name="telefono" value={(this.state.telefono)} type="text" onChange={this.handleChange} />
-                                    <label className="d-block">Horario:
-                                    <select name="horario" className="browser-default custom-select" value={(this.state.horario)} onChange={this.handleChange} >
-                                            {
-                                                this.state.schedules !== undefined
-                                                &&
-                                                this.state.schedules.map(item =>
-                                                    <option key={item.sch_id} value={item.sch_schedule}> {item.sch_schedule} </option>
-                                                )
-                                            }
-                                        </select>
-                                    </label>
-                                    <label className="d-block">
-                                        Nivel Academico:
-                                    <select name="nivel" className="browser-default custom-select" value={this.state.nivel} onChange={this.handleChange} >
-                                            <option value="Bachillerato Técnico">Bachillerato Técnico</option>
-                                            <option value="Técnico Universitario">Técnico Universitario</option>
-                                            <option value="Ingenieria">Ingenieria</option>
-                                            <option value="Licenciatura">Licenciatura</option>
-                                            <option value="Maestria">Maestria</option>
-                                            <option value="Doctorado">Doctorado</option>
-                                        </select>
-                                    </label>
-                                    <div className="float-right">
-                                        <MDBBtn color="secondary" onClick={this.toggleModal}>Cerrar</MDBBtn>
-                                        <MDBBtn color="primary" onClick={() => { this.aproveAlert(this.state.idModal) }} >Guardar cambios</MDBBtn>
-                                    </div>
-                                </form>
-                            </MDBModalBody>
-                        </MDBModal>
-                    }
                 </MDBContainer>
             </div>
         );

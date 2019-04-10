@@ -10,22 +10,22 @@ export default class Courses {
     columnsCourses = [
         {
             label: '#',
-            field: 'id',
+            field: 'cou_id',
             sort: 'asc'
         },
         {
             label: 'Curso',
-            field: 'curso',
+            field: 'cou_name',
             sort: 'asc'
         },
         {
             label: 'Profesor/a Guia',
-            field: 'guia',
+            field: 'cou_teacher_guide',
             sort: 'asc'
         },
         {
             label: 'Nivel',
-            field: 'nivel',
+            field: 'level',
             sort: 'asc'
         },
         {
@@ -157,7 +157,6 @@ export default class Courses {
                 }
             }
         })
-        console.log(res)
         if (res.data.code === 205) {
             await Swal.fire(
                 '¡Guardado!',

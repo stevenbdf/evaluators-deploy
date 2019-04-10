@@ -2,7 +2,7 @@ import React from 'react';
 import { MDBDataTable } from 'mdbreact';
 
 const Table = (props) => {
-    var data = {
+    const data = {
         columns: props.columns,
         rows: props.rows
     }

@@ -2,7 +2,7 @@ import Swal from 'sweetalert2';
 import axios from '../candidates/axios';
 
 export default class Schedules {
-    constructor ( context ) {
+    constructor(context) {
         this.context = context
     }
     schedulesCopy = [];
@@ -10,12 +10,12 @@ export default class Schedules {
     columnsSchedule = [
         {
             label: '#',
-            field: 'id',
+            field: 'sch_id',
             sort: 'asc'
         },
         {
             label: 'Horario',
-            field: 'horario',
+            field: 'sch_schedule',
             sort: 'asc'
         },
         {
@@ -25,12 +25,12 @@ export default class Schedules {
         }
 
     ];
-    
-    getColumnsSchedule(){
+
+    getColumnsSchedule() {
         return this.columnsSchedule
     }
-    
-    setSchedulesCopy(param){
+
+    setSchedulesCopy(param) {
         this.schedulesCopy = param;
     }
 
@@ -46,7 +46,7 @@ export default class Schedules {
     }
 
     //set input values for open modal
-    toggleAdd(){
+    toggleAdd() {
         this.context.setState({
             schedulesModal: {
                 id: '',
@@ -74,7 +74,7 @@ export default class Schedules {
             confirmButtonText: 'Si, eliminar'
         })
             .then(async (result) => {
-                if(result.value){
+                if (result.value) {
                     const res = await axios.post(`schedules/delete`, {
                         request: {
                             msg: {
@@ -82,7 +82,7 @@ export default class Schedules {
                             }
                         }
                     })
-    
+
                     if (res.data.code === 205) {
                         await Swal.fire(
                             '¡Eliminado!',
@@ -109,7 +109,7 @@ export default class Schedules {
                     } else {
                         console.log(res)
                     }
-                }else{
+                } else {
                     this.context.setState({
                         render: true,
                         modal: false,
@@ -205,4 +205,4 @@ export default class Schedules {
         }
     }
 
-  }
+}
