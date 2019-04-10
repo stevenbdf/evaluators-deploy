@@ -207,7 +207,7 @@ class Evaluators extends Component {
                 )
             )
         });
-        evaluatorsCopy = this.state.evaluators;
+        evaluatorsCopy = await this.state.evaluators;
     };
 
     //set handle attr for evaluators (table rows)

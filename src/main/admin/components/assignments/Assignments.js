@@ -64,16 +64,20 @@ class Assignments extends Component {
     ];
 
     toggle = async (id) => {
-        await this.setState({
-            selectedValues: {
-                id: this.assignmentsCopy[id].asg_id,
-                schedule: this.state.selectedValues.schedule,
-                evaluator: this.state.selectedValues.evaluator,
-                level: this.state.selectedValues.level,
-                course: this.state.selectedValues.course
-            },
-            modal: !this.state.modal
-        });
+        if(this.assignmentsCopy[id] !== undefined){
+            await this.setState({
+                selectedValues: {
+                    id: this.assignmentsCopy[id].asg_id,
+                    schedule: this.state.selectedValues.schedule,
+                    evaluator: this.state.selectedValues.evaluator,
+                    level: this.state.selectedValues.level,
+                    course: this.state.selectedValues.course
+                },
+                modal: !this.state.modal
+            });
+        }else{
+            console.log('demasiadas peticiones por favor espere')
+        }
     }
 
     toggleModal = () => {
@@ -282,7 +286,7 @@ class Assignments extends Component {
                     </div>
                 )
             });
-            this.assignmentsCopy = this.state.assignments
+            this.assignmentsCopy = await this.state.assignments
         }
         this.setState({
             renderDataTable: true
