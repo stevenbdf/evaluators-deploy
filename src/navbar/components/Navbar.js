@@ -12,7 +12,7 @@ toggleCollapse = () => {
 
 render() {
   return (
-      <MDBNavbar color="default-color" dark expand="md">
+      <MDBNavbar color="default-color" fixed="top" dark expand="md">
         <MDBNavbarBrand>
           <strong className="white-text d-none d-md-block">Sistema de Control de Evaluadores</strong>
           <strong className="white-text d-block d-md-none">SCE</strong>
