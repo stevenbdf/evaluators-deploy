@@ -157,7 +157,6 @@ export default class Courses {
                 }
             }
         })
-        console.log(res)
         if (res.data.code === 205) {
             await Swal.fire(
                 '¡Guardado!',

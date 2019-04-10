@@ -17,14 +17,18 @@ class Assignments extends Component {
             nombre: '',
             nivel: '',
             curso: '',
+            selectedValues: {
+                schedule: undefined,
+                evaluator: undefined,
+                level: undefined,
+                course: undefined
+            },
             evaluators: undefined,
             schedules: undefined,
-            levels: undefined
+            levels: undefined,
+            courses: undefined
         }
     }
-
-
-
 
     aproveAlert(titulo, descrip) {
         Swal.fire(
@@ -117,7 +121,6 @@ class Assignments extends Component {
         }
     ]
 
-
     toggle = (id) => {
         console.log(id)
         this.setState({
@@ -136,17 +139,33 @@ class Assignments extends Component {
         });
     }
 
-    handleChange = (event) => {
-        const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
-        const name = target.name;
-
-        this.setState({
-            [name]: value
-        });
+    addAssignmentAlert = async () => {
+        const res = await axios.post('assignments/add', {
+            request: {
+                msg: {
+                    cou_id: String(this.state.selectedValues.course),
+                    ev_id: String(this.state.selectedValues.evaluator)
+                }
+            }
+        })
+        if (res.data.code === 205) {
+            await Swal.fire(
+                '¡Guardado!',
+                'Assignacion realizada.',
+                'success'
+            )
+        } else {
+            Swal.fire(
+                '¡Error!',
+                'Leer consola',
+                'error'
+            )
+            console.log(res)
+        }
     }
 
     scheduleSelectChange = async (event) => {
+        this.handleChange(event)
         const response = await this.state.schedules.filter(item => item.sch_schedule === event.target.value)
         if (response.length === 1) {
             const resEv = await axios.post('evaluators/findBySchedule', {
@@ -168,28 +187,74 @@ class Assignments extends Component {
     }
 
     levelSelectChange = async (event) => {
+        this.handleChange(event)
         const response = await this.state.levels.filter(item => item.lv_name === event.target.value)
         if (response.length === 1) {
-            const resEv = await axios.post('evaluators/findBySchedule', {
+            const resCou = await axios.post('levels/getCourses', {
                 request: {
                     msg: {
-                        id: String(response[0].sch_id)
+                        id: String(response[0].lv_id)
                     }
                 }
             })
-            if (resEv.status === 200) {
-                const respuesta = resEv.data.msg;
+            if (resCou.status === 200) {
+                const respuesta = resCou.data.msg;
                 this.setState({
-                    evaluators: respuesta.evaluator
+                    courses: respuesta.courses
                 })
             }
         } else {
-            console.log('Error: más de una coincidencia en el nombre del horario')
+            console.log('Error: más de una coincidencia en el nombre del nivel')
         }
     }
 
-    handleClick = e => this.toggle(e.target.id);
+    handleChange = async (event) => {
+        const target = event.target;
+        const value = target.value;
+        const name = target.name
 
+        let valoresState = {
+            schedule: this.state.selectedValues.schedule,
+            evaluator: this.state.selectedValues.evaluator,
+            level: this.state.selectedValues.level,
+            course: this.state.selectedValues.course
+        }
+
+        switch (name) {
+            case 'schedule':
+                valoresState.schedule = value
+                break;
+            case 'evaluator':
+                const responseEv = await this.state.evaluators.filter(item => item.ev_name === value)
+                responseEv.length === 1
+                    ? (valoresState.evaluator = responseEv[0].ev_id)
+                    : console.log('Error: más de una coincidencia en el nombre del evaluador')
+                break;
+            case 'level':
+                valoresState.level = value
+                break;
+            case 'course':
+                const responseCou = await this.state.courses.filter(item => item.cou_name === value)
+                responseCou.length === 1
+                    ? (valoresState.course = responseCou[0].cou_id)
+                    : console.log('Error: más de una coincidencia en el nombre del curso')
+                break;
+            default:
+                console.log('Error: input name sin coincidencias')
+                break;
+        }
+
+        this.setState({
+            selectedValues: {
+                schedule: valoresState.schedule,
+                evaluator: valoresState.evaluator,
+                level: valoresState.level,
+                course: valoresState.course
+            }
+        });
+    }
+
+    handleClick = e => this.toggle(e.target.id);
 
     componentWillMount() {
         for (var i = 0; i < this.dataRows.length; i++) {
@@ -211,7 +276,7 @@ class Assignments extends Component {
             })
         }
         const resLvl = await axios.get(`levels/`)
-        if(resLvl.status === 200){
+        if (resLvl.status === 200) {
             const respuesta = resLvl.data.msg;
             this.setState({
                 levels: respuesta.level
@@ -221,12 +286,9 @@ class Assignments extends Component {
 
     async componentDidMount() {
         await this.getDataOptions()
-        console.log(this.state.schedules, this.state.evaluators)
     }
 
-
     render() {
-
         return (
             <div >
                 <Navbar />
@@ -242,7 +304,7 @@ class Assignments extends Component {
                                         <MDBCol size="6" className="offset-3">
                                             <form>
                                                 <label className="d-block mt-3"> Horario
-                                                    <select className="browser-default custom-select" onChange={this.scheduleSelectChange}>
+                                                    <select name="schedule" className="browser-default custom-select" onChange={this.scheduleSelectChange}>
                                                         <option>Seleccione un horario...</option>
                                                         {
                                                             this.state.schedules !== undefined
@@ -254,7 +316,7 @@ class Assignments extends Component {
                                                     </select>
                                                 </label>
                                                 <label className="d-block mt-3"> Evaluador
-                                                    <select className="browser-default custom-select">
+                                                    <select name="evaluator" className="browser-default custom-select" onChange={this.handleChange}>
                                                         <option>Seleccione un evaluador...</option>
                                                         {
                                                             this.state.evaluators !== undefined
@@ -266,7 +328,7 @@ class Assignments extends Component {
                                                     </select>
                                                 </label>
                                                 <label className="d-block mt-3"> Nivel
-                                                    <select className="browser-default custom-select" onChange={this.levelSelectChange}>
+                                                    <select name="level" className="browser-default custom-select" onChange={this.levelSelectChange}>
                                                         <option>Seleccione un nivel...</option>
                                                         {
                                                             this.state.levels !== undefined
@@ -278,23 +340,22 @@ class Assignments extends Component {
                                                     </select>
                                                 </label>
                                                 <label className="d-block mt-3"> Curso
-                                                    <select className="browser-default custom-select">
+                                                    <select name="course" className="browser-default custom-select" onChange={this.handleChange}>
                                                         <option>Seleccione un curso...</option>
-                                                        <option value="1">A</option>
-                                                        <option value="2">B</option>
-                                                        <option value="3">C</option>
-                                                        <option value="4">D</option>
-                                                        <option value="5">Desarrollo de Software Grupo 1</option>
-                                                        <option value="6">Electronica Grupo 1</option>
-                                                        <option value="7">Electromecanica Grupo 2</option>
-                                                        <option value="8">Administrativo Contable Grupo 1</option>
+                                                        {
+                                                            this.state.courses !== undefined
+                                                            &&
+                                                            this.state.courses.map(item =>
+                                                                <option key={item.cou_id} value={item.cou_name}> {item.cou_name} </option>
+                                                            )
+                                                        }
                                                     </select>
                                                 </label>
 
                                                 <div className="text-center py-4 mt-3">
 
                                                     <MDBBtn color="teal" onClick={() => {
-                                                        this.aproveAlert('¡Guardada!', 'Asignación guardada.')
+                                                        this.addAssignmentAlert()
                                                     }}>
                                                         Asignar
                                                         <MDBIcon icon="paper-plane" className="ml-2" />
@@ -330,7 +391,7 @@ class Assignments extends Component {
                     <MDBModalHeader toggle={this.toggleModal}>Editar Evaluador</MDBModalHeader>
                     <MDBModalBody>
                         <form>
-                            <label className="d-block mt-3"> Evaluador
+                            {/* <label className="d-block mt-3"> Evaluador
                                 <select name="nombre" className="browser-default custom-select" value={this.state.nombre} onChange={this.handleChange}>
                                     <option>Seleccione un evaluador...</option>
                                     <option value="Steven Benjamin Diaz Flores">Steven Benjamin Diaz Flores</option>
@@ -363,7 +424,7 @@ class Assignments extends Component {
                                     <option value="Electromecanica Grupo 2">Electromecanica Grupo 2</option>
                                     <option value="Administrativo Contable Grupo 1">Administrativo Contable Grupo 1</option>
                                 </select>
-                            </label>
+                            </label> */}
                             <div className="float-right">
                                 <MDBBtn color="secondary" onClick={this.toggleModal}>Cerrar</MDBBtn>
                                 <MDBBtn color="primary" onClick={() => { this.aproveAlert('¡Modificado!', 'Asignación modificada.') }} >Guardar cambios</MDBBtn>
