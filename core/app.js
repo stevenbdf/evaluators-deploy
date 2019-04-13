@@ -3,7 +3,7 @@ const bodyParser = require('body-parser')
 const path = require('path')
 const binn = require('./routes/binnacles.js')
 
-const port = 8080
+const port = 80
 
 const db = require('./config/database')
 
