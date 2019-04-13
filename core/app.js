@@ -3,7 +3,7 @@ const bodyParser = require('body-parser')
 const path = require('path')
 const binn = require('./routes/binnacles.js')
 
-const port = 3001
+const port = 8080
 
 const db = require('./config/database')
 
@@ -12,7 +12,7 @@ db.authenticate()
         console.log('Conectado')
     })
     .catch(err => {
-        console.log('No se conecto')
+        console.log('No se conecto',err)
     })
 
 const app = express()
